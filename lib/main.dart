@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'NASA Explorer App',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -20,14 +20,5 @@ class MyApp extends StatelessWidget {
       routes: const {},
       home: const SplashScreen(),
     );
-  }
-}
-
-class RegistrationScreen extends StatelessWidget {
-  const RegistrationScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
   }
 }
