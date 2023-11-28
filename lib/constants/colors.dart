@@ -8,3 +8,6 @@ const Color kTransparentColor = Colors.transparent;
 const Color kGreyColor = Colors.grey;
 const Color kGreenColor = Colors.green;
 const Color kBlueColor = Colors.blue;
+const Color kRedColor = Colors.red;
+const Color kBackgroundColor = Color.fromARGB(255, 24, 24, 24);
+Color kGreyColor800 = Colors.grey.shade800;

@@ -185,7 +185,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               onPressed: () {
                                 setState(() {
                                   emailValidator(textEditingController2.text);
-                                  print(errorList);
+                                  debugPrint(
+                                    errorList.toString(),
+                                  );
                                 });
                               },
                             ),
