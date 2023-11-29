@@ -11,3 +11,4 @@ const Color kBlueColor = Colors.blue;
 const Color kRedColor = Colors.red;
 const Color kBackgroundColor = Color.fromARGB(255, 24, 24, 24);
 Color kGreyColor800 = Colors.grey.shade800;
+const Color kCardBackgroundColor = Color.fromARGB(255, 20, 20, 20);
