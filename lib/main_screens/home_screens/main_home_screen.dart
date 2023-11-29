@@ -8,7 +8,7 @@ import 'package:nasa_explorer_app_project/main_screens/images_screen/images_scre
 import 'package:nasa_explorer_app_project/main_screens/settings_screen/settings_screen.dart';
 
 class MainHomeScreen extends StatefulWidget {
-  const MainHomeScreen({super.key});
+  const MainHomeScreen({super.key,});
 
   @override
   State<MainHomeScreen> createState() => _MainHomeScreenState();

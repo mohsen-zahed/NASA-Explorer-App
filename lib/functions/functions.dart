@@ -44,3 +44,30 @@ void passwordValidator(String password) {
     }
   }
 }
+
+// to set condition lottie file
+String getWeatherAnimations(String? mainCondition) {
+  if (mainCondition == null) {
+    return 'assets/images/weather_icons/sunny.json';
+  }
+
+  switch (mainCondition.toLowerCase()) {
+    case 'clouds':
+    case 'mist':
+    case 'smoke':
+    case 'haze':
+    case 'dust':
+    case 'fog':
+      return 'assets/images/weather_icons/cloudy.json';
+    case 'rain':
+    case 'drizzle':
+    case 'shower rain':
+      return 'assets/images/weather_icons/rainy.json';
+    case 'thunderstorm':
+      return 'assets/images/weather_icons/thunder.json';
+    case 'clear':
+      return 'assets/images/weather_icons/sunny.json';
+    default:
+      return 'assets/images/weather_icons/sunny.json';
+  }
+}

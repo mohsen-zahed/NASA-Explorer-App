@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/advertisement_banner_slider_widget.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/app_logo_and_profile_image.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/horizontal_astronaut_figures_slider.dart';
@@ -9,13 +8,17 @@ import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/hori
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/news_container_widget.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/search_field.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kBackgroundColor,
       body: SingleChildScrollView(
         child: Container(
           width: double.infinity,
@@ -27,31 +30,35 @@ class HomeScreen extends StatelessWidget {
               opacity: .05,
             ),
           ),
-          child: const SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Padding(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 20,
               ),
               child: Column(
                 children: [
-                  SizedBox(height: 50),
-                  AppLogoAndProfileImage(),
-                  SizedBox(height: 25),
-                  SearchField(),
-                  SizedBox(height: 15),
-                  NewsContainerWidget(),
-                  SizedBox(height: 25),
-                  HorizontalImagesCarouselSlider(),
-                  SizedBox(height: 35),
-                  HorizontalSolarSystemCarouselSlider(),
-                  SizedBox(height: 35),
-                  AdvertisementBannerSliderWidget(),
-                  SizedBox(height: 35),
-                  HorizontalNASAMissionsCarouselSlider(),
-                  SizedBox(height: 35),
-                  HorizontalAstronautFiguresSlider(),
-                  SizedBox(height: 60),
+                  const SizedBox(height: 50),
+                  const AppLogoAndProfileImage(),
+                  const SizedBox(height: 25),
+                  const SearchField(),
+                  const SizedBox(height: 15),
+                  NewsContainerWidget(
+                    onTap: () {
+                      setState(() {});
+                    },
+                  ),
+                  const SizedBox(height: 25),
+                  const HorizontalImagesCarouselSlider(),
+                  const SizedBox(height: 35),
+                  const HorizontalSolarSystemCarouselSlider(),
+                  const SizedBox(height: 35),
+                  const AdvertisementBannerSliderWidget(),
+                  const SizedBox(height: 35),
+                  const HorizontalNASAMissionsCarouselSlider(),
+                  const SizedBox(height: 35),
+                  const HorizontalAstronautFiguresSlider(),
+                  const SizedBox(height: 60),
                 ],
               ),
             ),
