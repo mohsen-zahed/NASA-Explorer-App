@@ -7,6 +7,7 @@ import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/hori
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/horizontal_solar_system_carousel_slider.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/news_container_widget.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/search_field.dart';
+import 'package:nasa_explorer_app_project/widgets/background_image_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,16 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Container(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/milky-way.jpg'),
-              fit: BoxFit.cover,
-              opacity: .05,
-            ),
-          ),
+        child: BackgroundImageWidget(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: Padding(
@@ -45,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 15),
                   NewsContainerWidget(
                     onTap: () {
-                      setState(() {});
+                      // setState(() {});
                     },
                   ),
                   const SizedBox(height: 25),

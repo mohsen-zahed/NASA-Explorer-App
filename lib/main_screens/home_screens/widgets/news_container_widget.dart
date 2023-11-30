@@ -34,7 +34,7 @@ class NewsContainerWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                'LATES UPDATES',
+                'LATEST UPDATES',
                 style: Theme.of(context).textTheme.bodySmall!.copyWith(
                       color: kWhiteColor70,
                       decoration: TextDecoration.underline,

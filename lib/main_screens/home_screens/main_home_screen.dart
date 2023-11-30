@@ -3,9 +3,9 @@ import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:nasa_explorer_app_project/main_screens/add_screen/add_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/home_screen.dart';
-import 'package:nasa_explorer_app_project/main_screens/home_screens/news_screen/news_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/news_screen/news_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/images_screen/images_screen.dart';
-import 'package:nasa_explorer_app_project/main_screens/settings_screen/settings_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/profile_screen/settings_screen.dart';
 
 class MainHomeScreen extends StatefulWidget {
   const MainHomeScreen({super.key,});
@@ -23,7 +23,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
     SettingsScreen(),
   ];
 
-  int currentScreen = 0;
+  int currentScreen = 3;
   @override
   Widget build(BuildContext context) {
     return Scaffold(

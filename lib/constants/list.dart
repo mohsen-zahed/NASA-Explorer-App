@@ -3,6 +3,51 @@ import 'package:nasa_explorer_app_project/models/news_post_model.dart';
 
 List errorList = [];
 
+List<Map<String, dynamic>> solarSystemList = [
+  {
+    'planet_name': 'Earth',
+    'planet_image': 'assets/images/earth.png',
+    'planet_subTitle': 'The Green Planet',
+    'planet_description':
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio rem nostrum aliquam voluptatem tempora numquam dolorum dignissimos explicabo ullam alias quae, a nihil eligendi in perferendis atque quisquam. Impedit, praesentium.',
+  },
+  {
+    'planet_name': 'Mars',
+    'planet_image': 'assets/images/mars.png',
+    'planet_subTitle': 'The Minor Planet',
+    'planet_description':
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio rem nostrum aliquam voluptatem tempora numquam dolorum dignissimos explicabo ullam alias quae, a nihil eligendi in perferendis atque quisquam. Impedit, praesentium.',
+  },
+  {
+    'planet_name': 'Moon',
+    'planet_image': 'assets/images/moon.png',
+    'planet_subTitle': 'The Night Planet',
+    'planet_description':
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio rem nostrum aliquam voluptatem tempora numquam dolorum dignissimos explicabo ullam alias quae, a nihil eligendi in perferendis atque quisquam. Impedit, praesentium.',
+  },
+];
+
+List demoImages = [
+  'assets/images/galaxy.jpeg',
+  'assets/images/galaxy1.jpeg',
+  'assets/images/advertisement_banner.jpeg',
+  'assets/images/bg1.png',
+  'assets/images/bg2.jpeg',
+  'assets/images/milky-way.jpg',
+  'assets/images/advertisement_banner.jpeg',
+  'assets/images/bg1.png',
+  'assets/images/bg2.jpeg',
+  'assets/images/milky-way.jpg',
+  'assets/images/advertisement_banner.jpeg',
+  'assets/images/bg1.png',
+  'assets/images/bg2.jpeg',
+  'assets/images/milky-way.jpg',
+  'assets/images/advertisement_banner.jpeg',
+  'assets/images/bg1.png',
+  'assets/images/bg2.jpeg',
+  'assets/images/milky-way.jpg',
+];
+
 List<Map<String, dynamic>> bottomNavItems = [
   {
     'title': 'Home',
@@ -25,8 +70,8 @@ List<Map<String, dynamic>> bottomNavItems = [
     'size': 25.0,
   },
   {
-    'title': 'Settings',
-    'icon': Icons.settings,
+    'title': 'Profile',
+    'icon': Icons.person_pin,
     'size': 25.0,
   },
 ];

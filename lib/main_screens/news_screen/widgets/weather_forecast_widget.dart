@@ -31,7 +31,13 @@ class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
   @override
   void initState() {
     super.initState();
-    _fetchWeather();
+    try {
+      checkConnectivity();
+      _fetchWeather();
+      getDummyData();
+    } catch (e) {
+      print(e);
+    }
   }
 
   // fetch weather

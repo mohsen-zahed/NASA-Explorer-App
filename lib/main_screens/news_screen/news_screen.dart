@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
-import 'package:nasa_explorer_app_project/main_screens/home_screens/news_screen/widgets/news_post_widget.dart';
-import 'package:nasa_explorer_app_project/main_screens/home_screens/news_screen/widgets/weather_forecast_widget.dart';
+import 'package:nasa_explorer_app_project/main_screens/news_screen/widgets/news_post_widget.dart';
+import 'package:nasa_explorer_app_project/main_screens/news_screen/widgets/weather_forecast_widget.dart';
+import 'package:nasa_explorer_app_project/widgets/background_image_widget.dart';
 
 class NewsScreen extends StatefulWidget {
   const NewsScreen({super.key});
@@ -11,19 +12,12 @@ class NewsScreen extends StatefulWidget {
 }
 
 class _NewsScreenState extends State<NewsScreen> {
+
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: MediaQuery.of(context).size.height,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/milky-way.jpg'),
-            fit: BoxFit.cover,
-            opacity: .05,
-          ),
-        ),
+      body: BackgroundImageWidget(
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),

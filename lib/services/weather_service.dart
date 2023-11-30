@@ -33,7 +33,7 @@ class WeatherService {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
 
-    // get city name from place marks
+    // get city name from placemarks
     List<Placemark> placeMarks =
         await placemarkFromCoordinates(position.latitude, position.longitude);
     String city = placeMarks[0].locality ?? '';

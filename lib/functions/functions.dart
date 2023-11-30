@@ -1,4 +1,5 @@
 import 'package:nasa_explorer_app_project/constants/list.dart';
+import 'package:http/http.dart' as http;
 
 void emailValidator(String email) {
   if (email.isEmpty) {
@@ -69,5 +70,19 @@ String getWeatherAnimations(String? mainCondition) {
       return 'assets/images/weather_icons/sunny.json';
     default:
       return 'assets/images/weather_icons/sunny.json';
+  }
+}
+
+getDummyData() async {
+  var url = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&start_date=2017-07-08&end_date=2017-07-10';
+  try {
+    var response = await http.get(
+      Uri.parse(url),
+    );
+    if (response.statusCode == 200) {
+      print(response.body.length);
+    }
+  } catch (e) {
+    print(e);
   }
 }
