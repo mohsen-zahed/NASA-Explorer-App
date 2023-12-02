@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
-import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/main_screens/add_screen/add_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/home_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/news_screen/news_screen.dart';

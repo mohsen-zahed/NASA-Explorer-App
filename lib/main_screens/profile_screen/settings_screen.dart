@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
-import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/widgets/edit_image_profile_change_profile_widgets.dart';
 import 'package:nasa_explorer_app_project/widgets/background_image_widget.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_elevated_button.dart';

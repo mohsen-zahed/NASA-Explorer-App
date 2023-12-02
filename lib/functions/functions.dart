@@ -1,10 +1,7 @@
-import 'dart:convert';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:http/http.dart' as http;
-import 'package:nasa_explorer_app_project/constants/variables.dart';
-import 'package:nasa_explorer_app_project/models/image_model.dart';
 
 void emailValidator(String email) {
   if (email.isEmpty) {
@@ -78,20 +75,6 @@ String getWeatherAnimations(String? mainCondition) {
   }
 }
 
-getDummyData() async {
-  var url = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=5';
-  try {
-    var response = await http.get(
-      Uri.parse(url),
-    );
-    if (response.statusCode == 200) {
-      print(response.body.length);
-    }
-  } catch (e) {
-    print(e);
-  }
-}
-
 // Future<List<ImageModel>> fetchImages() async {
 //   var url = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=5';
 //   // try {
@@ -136,5 +119,4 @@ Future<bool> checkInternetConnectivity() async {
     return false; // User is not connected to the internet
   }
 }
-
 

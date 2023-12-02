@@ -23,6 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
       () async {
         isUserConnected = await checkInternetConnectivity();
         print(isUserConnected);
+        // ignore: use_build_context_synchronously
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(

@@ -2,6 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
+import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/models/weather_model.dart';
 import 'package:nasa_explorer_app_project/services/weather_service.dart';
@@ -15,53 +16,6 @@ class WeatherForecastWidget extends StatefulWidget {
 }
 
 class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
-  //apiKey
-  final _weatherService = WeatherService('fa88c4230ebb702c6e7b5572e44a7095');
-  WeatherModel? _weather;
-  ConnectivityResult? _connectivityResult;
-
-  // Check connectivity
-  checkConnectivity() async {
-    final connectivityResult = await Connectivity().checkConnectivity();
-    setState(() {
-      _connectivityResult = connectivityResult;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    try {
-      checkConnectivity();
-      _fetchWeather();
-      getDummyData();
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  // fetch weather
-  _fetchWeather() async {
-    if (_connectivityResult == ConnectivityResult.none) {
-      debugPrint('No internet connection available');
-      return;
-    }
-    debugPrint('connection is available.');
-
-    // get weather for city
-    try {
-      // get the current city
-      String cityName = await _weatherService.getCurrentCity();
-      final weather = await _weatherService.getWeather(cityName);
-      setState(() {
-        _weather = weather;
-      });
-    } catch (e) {
-      debugPrint(
-        e.toString(),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +33,7 @@ class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                _weather?.cityName ?? 'loading city...',
+                weatherModel?.cityName ?? 'loading city...',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: kWhiteColor,
                       fontSize: 23,
@@ -87,7 +41,7 @@ class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
                     ),
               ),
               Text(
-                _weather?.mainCondition ?? 'loading condition...',
+                weatherModel?.mainCondition ?? 'loading condition...',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: kWhiteColor,
                       fontSize: 12,
@@ -98,7 +52,7 @@ class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
           Row(
             children: [
               Text(
-                '${_weather?.temprature.round()}°C',
+                '${weatherModel?.temprature.round()}°C',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       fontSize: 25,
                       color: kWhiteColor,
@@ -107,7 +61,7 @@ class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
               ),
               const SizedBox(width: 8),
               Lottie.asset(
-                getWeatherAnimations(_weather?.mainCondition),
+                getWeatherAnimations(weatherModel?.mainCondition),
                 height: 20,
               )
             ],
