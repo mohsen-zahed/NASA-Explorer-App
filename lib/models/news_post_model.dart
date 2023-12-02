@@ -1,48 +1,38 @@
 class NewsPostModel {
-  late List<String> _image;
-  late String _text;
-  late String _userName;
-  late String _profileImage;
-  late int _postedDateYear;
-  late int _postedDateMonth;
-  late int _postedDateDay;
-  late int _likesNumber;
-  late bool _isLiked;
+  late List<String> image;
+  late String text;
+  late String userName;
+  late String profileImage;
+  late int postedDateYear;
+  late int postedDateMonth;
+  late int postedDateDay;
+  late int likesNumber;
+  late bool isLiked;
 
   NewsPostModel.init();
 
   NewsPostModel.createPost({
-    required List<String> image,
-    required String text,
-    required String userName,
-    required String profileImage,
-    required int postedDateYear,
-    required int postedDateMonth,
-    required int postedDateDay,
-    required int likesNumber,
-    required bool isLiked,
-  }) {
-    _image = image;
-    _text = text;
-    _userName = userName;
-    _profileImage = profileImage;
-    _postedDateYear = postedDateYear;
-    _postedDateMonth = postedDateMonth;
-    _postedDateDay = postedDateDay;
-    _likesNumber = likesNumber;
-    _isLiked = isLiked;
-  }
+    required this.image,
+    required this.text,
+    required this.userName,
+    required this.profileImage,
+    required this.postedDateYear,
+    required this.postedDateMonth,
+    required this.postedDateDay,
+    required this.likesNumber,
+    required this.isLiked,
+  });
 
-  List<String> getImages() => _image;
-  void setImages(List<String> image) => _image = image;
-  String getText() => _text;
-  void setText(String text) => _text = text;
-  String getUserName() => _userName;
-  String getProfileImage() => _profileImage;
-  int getPostedDateYear() => _postedDateYear;
-  int getPostedDateMonth() => _postedDateMonth;
-  int getPostedDateDay() => _postedDateDay;
-  int getLikesNumber() => _likesNumber;
-  bool getIsLiked() => _isLiked;
-  void setIsLiked(bool isLiked) => _isLiked = isLiked;
+  List<String> getImages() => image;
+  void setImages(List<String> image) => image = image;
+  String getText() => text;
+  void setText(String text) => text = text;
+  String getUserName() => userName;
+  String getProfileImage() => profileImage;
+  int getPostedDateYear() => postedDateYear;
+  int getPostedDateMonth() => postedDateMonth;
+  int getPostedDateDay() => postedDateDay;
+  int getLikesNumber() => likesNumber;
+  bool getIsLiked() => isLiked;
+  void setIsLiked(bool isLiked) => isLiked = isLiked;
 }

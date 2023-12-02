@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
+import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/main_screens/add_screen/add_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/home_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/news_screen/news_screen.dart';
-import 'package:nasa_explorer_app_project/main_screens/images_screen/images_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/images_screen/image_gallery_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/settings_screen.dart';
 
 class MainHomeScreen extends StatefulWidget {
-  const MainHomeScreen({super.key,});
+  const MainHomeScreen({
+    super.key,
+  });
 
   @override
   State<MainHomeScreen> createState() => _MainHomeScreenState();
@@ -19,11 +22,11 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
     HomeScreen(),
     NewsScreen(),
     AddScreen(),
-    ImagesScreen(),
-    SettingsScreen(),
+    ImageGalleryScreen(),
+    ProfileScreen(),
   ];
 
-  int currentScreen = 3;
+  int currentScreen = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(

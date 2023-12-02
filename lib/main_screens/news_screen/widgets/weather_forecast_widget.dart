@@ -47,11 +47,11 @@ class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
       return;
     }
     debugPrint('connection is available.');
-    // get the current city
-    String cityName = await _weatherService.getCurrentCity();
 
     // get weather for city
     try {
+      // get the current city
+      String cityName = await _weatherService.getCurrentCity();
       final weather = await _weatherService.getWeather(cityName);
       setState(() {
         _weather = weather;

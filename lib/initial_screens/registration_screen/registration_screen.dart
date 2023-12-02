@@ -6,6 +6,8 @@ import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/initial_screens/registration_screen/widgets/login_account_and_guest_account_texts.dart';
 import 'package:nasa_explorer_app_project/initial_screens/registration_screen/widgets/privacy_policy_text_acceptance.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/home_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/main_home_screen.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_elevated_button.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_text_field.dart';
 
@@ -184,9 +186,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               textButton: isUserLoging ? 'Sign in' : 'Sign up',
                               onPressed: () {
                                 setState(() {
-                                  emailValidator(textEditingController2.text);
-                                  debugPrint(
-                                    errorList.toString(),
+                                  // emailValidator(textEditingController2.text);
+                                  // debugPrint(
+                                  //   errorList.toString(),
+                                  // );
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const MainHomeScreen(),
+                                    ),
                                   );
                                 });
                               },

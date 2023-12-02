@@ -6,8 +6,8 @@ class CustomTextField extends StatelessWidget {
   const CustomTextField({
     super.key,
     required this.hintText,
-    required this.prefixIcon,
-    required this.errorText,
+     this.prefixIcon,
+     this.errorText,
     this.obsecuredField,
     this.suffixIcon,
     this.onSuffixIconTap,
@@ -16,8 +16,8 @@ class CustomTextField extends StatelessWidget {
     this.textEditingController,
   });
   final String hintText;
-  final IconData prefixIcon;
-  final String errorText;
+  final IconData? prefixIcon;
+  final String? errorText;
   final bool? obsecuredField;
   final bool? isPasswordField;
   final IconData? suffixIcon;
