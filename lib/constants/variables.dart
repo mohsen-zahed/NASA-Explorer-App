@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nasa_explorer_app_project/models/image_model.dart';
 import 'package:nasa_explorer_app_project/models/weather_model.dart';
@@ -40,6 +41,8 @@ bool isFetchingDataFailed = false;
 bool isMoreData = false;
 var isUserConnected;
 var pickedImage;
+var postImage;
+
 // variables
 // variables
 // variables
@@ -48,6 +51,15 @@ var pickedImage;
 // image picker
 ImagePicker picker = ImagePicker();
 File? image;
+
 // image picker
 // image picker
 // image picker
+
+// textEditingControllers
+// textEditingControllers
+// textEditingControllers
+final TextEditingController profileTextEditingController = TextEditingController();
+// textEditingControllers
+// textEditingControllers
+// textEditingControllers

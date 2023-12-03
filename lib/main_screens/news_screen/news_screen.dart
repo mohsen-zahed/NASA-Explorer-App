@@ -1,14 +1,13 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
-import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/main_screens/news_screen/widgets/news_post_widget.dart';
 import 'package:nasa_explorer_app_project/main_screens/news_screen/widgets/weather_forecast_widget.dart';
 import 'package:nasa_explorer_app_project/widgets/background_image_widget.dart';
 
 class NewsScreen extends StatefulWidget {
   const NewsScreen({super.key});
+  static const id = '/news_screen';
 
   @override
   State<NewsScreen> createState() => _NewsScreenState();
@@ -26,17 +25,6 @@ class _NewsScreenState extends State<NewsScreen> {
           content: Text('failed to update weather forecast'),
         ),
       );
-    }
-  }
-
-  // Check connectivity
-  Future<bool> checkConnectivity() async {
-    connectivityResult = await connectivity.checkConnectivity();
-    if (connectivityResult == ConnectivityResult.mobile ||
-        ConnectivityResult.wifi == ConnectivityResult.none) {
-      return false;
-    } else {
-      return true;
     }
   }
 
@@ -85,7 +73,10 @@ class _NewsScreenState extends State<NewsScreen> {
                       children: [
                         ...List.generate(
                           postList.length,
-                          (index) => NewsPostWidget(index: index),
+                          (index) => NewsPostWidget(
+                            index: index,
+                            itemList: postList,
+                          ),
                         ),
                       ],
                     ),

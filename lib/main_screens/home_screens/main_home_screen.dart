@@ -5,7 +5,7 @@ import 'package:nasa_explorer_app_project/main_screens/add_screen/add_screen.dar
 import 'package:nasa_explorer_app_project/main_screens/home_screens/home_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/news_screen/news_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/images_screen/image_gallery_screen.dart';
-import 'package:nasa_explorer_app_project/main_screens/profile_screen/settings_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/profile_screen/profile_screen.dart';
 
 class MainHomeScreen extends StatefulWidget {
   const MainHomeScreen({
@@ -52,7 +52,16 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                     (index) => GestureDetector(
                       onTap: () {
                         setState(() {
-                          currentScreen = index;
+                          if (index == 2) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AddScreen(),
+                              ),
+                            );
+                          } else {
+                            currentScreen = index;
+                          }
                         });
                       },
                       child: Column(

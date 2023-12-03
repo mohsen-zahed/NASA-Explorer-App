@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
+import 'package:nasa_explorer_app_project/main_screens/profile_screen/sub_screens/shared_posts_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/widgets/edit_image_profile_change_profile_widgets.dart';
 import 'package:nasa_explorer_app_project/widgets/background_image_widget.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_elevated_button.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_list_tile_widget.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_text_field.dart';
+import 'package:nasa_explorer_app_project/constants/variables.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -14,8 +16,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final TextEditingController _textEditingController = TextEditingController();
-
   var userName = 'Sarah F. Kennedy';
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 CustomListTileWidget(
                   text: 'Shared Posts',
                   leadingIcon: Icons.content_paste_go_outlined,
-                  onListTileTap: () {},
+                  onListTileTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      SharedPostsScreen.id,
+                    );
+                  },
                   trailingIcon: Icons.arrow_forward_ios_rounded,
                 ),
                 const SizedBox(height: 10),
@@ -54,7 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 const SizedBox(height: 10),
                 CustomListTileWidget(
-                  text: 'Rate Us',
+                  text: 'Like Me',
                   leadingIcon: Icons.thumb_up_alt_rounded,
                   onListTileTap: () {},
                   trailingIcon: Icons.arrow_forward_ios_rounded,
@@ -101,18 +106,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: CustomTextField(
-                textEditingController: _textEditingController,
+                textEditingController: profileTextEditingController,
                 hintText: 'Enter your new name',
               ),
             ),
             CustomElevatedButton(
               textButton: 'Submit',
               onPressed: () {
-                if (_textEditingController.value.text.isNotEmpty) {
+                if (profileTextEditingController.value.text.isNotEmpty) {
                   setState(() {
-                    userName = _textEditingController.value.text;
+                    userName = profileTextEditingController.value.text;
                     Navigator.pop(context);
-                    _textEditingController.clear();
+                    profileTextEditingController.clear();
                   });
                 }
               },

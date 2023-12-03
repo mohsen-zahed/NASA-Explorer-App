@@ -1,11 +1,8 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
-import 'package:nasa_explorer_app_project/models/weather_model.dart';
-import 'package:nasa_explorer_app_project/services/weather_service.dart';
 
 class WeatherForecastWidget extends StatefulWidget {
   const WeatherForecastWidget({
@@ -16,7 +13,6 @@ class WeatherForecastWidget extends StatefulWidget {
 }
 
 class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
-
   @override
   Widget build(BuildContext context) {
     return Container(
