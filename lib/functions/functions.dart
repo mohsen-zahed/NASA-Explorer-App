@@ -2,6 +2,9 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:http/http.dart' as http;
+import 'package:nasa_explorer_app_project/constants/variables.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void emailValidator(String email) {
   if (email.isEmpty) {
@@ -120,5 +123,49 @@ Future<bool> checkInternetConnectivity() async {
   }
 }
 
+void shareAppWithFriends(BuildContext context) {
+  shareText = 'Explore SPACE and NASA with this amazing app!!';
+  Share.share(
+    shareText,
+    subject: 'Share app with friends',
+    sharePositionOrigin:
+        Rect.fromLTWH(0, 0, MediaQuery.of(context).size.width, 100),
+  );
+}
 
+// for redirecting to any social media account
+void redirectToSocialMedia(
+    {required String link, required BuildContext context}) async {
+  socialMediaLink = Uri.parse(link);
+  try {
+    if (await canLaunchUrl(socialMediaLink!)) {
+      launchUrl(socialMediaLink!);
+    }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Couldn\'t redirect!'),
+      ),
+    );
+  }
+}
 
+// for sending mail
+void mail({required String email}) async {
+  Uri url = Uri(scheme: 'mailto', path: email);
+  if (await canLaunchUrl(url)) {
+    await launchUrl(url);
+  } else {
+    throw "Something went wrong, please try again later!";
+  }
+}
+
+// for making call
+void call({required String phoneNumber}) async {
+  Uri url = Uri(scheme: 'tel', path: phoneNumber);
+  if (await canLaunchUrl(url)) {
+    await launchUrl(url);
+  } else {
+    throw "Something went wrong, please try again later!";
+  }
+}

@@ -42,7 +42,12 @@ bool isMoreData = false;
 var isUserConnected;
 var pickedImage;
 var postImage;
-
+Uri? socialMediaLink;
+String developerName = 'Amir M. Zahed';
+String developerEmail = 'mohsenzahed0077@gmail.com';
+String developerPhone = '(+93) 797627651';
+String developerIntro =
+    "Hello! I'm $developerName, a passionate coder ready to bring ideas to life through the power of technology. With a strong background in coding, I thrive on solving complex problems and developing innovative solutions. Whether it's crafting elegant user interfaces, building robust databases, or creating efficient algorithms, I'm constantly driven to push the boundaries of what's possible. Join me on this exciting journey as we embark on the path of digital transformation and make a positive impact through the world of coding!";
 // variables
 // variables
 // variables
@@ -56,10 +61,12 @@ File? image;
 // image picker
 // image picker
 
-// textEditingControllers
-// textEditingControllers
-// textEditingControllers
-final TextEditingController profileTextEditingController = TextEditingController();
-// textEditingControllers
-// textEditingControllers
-// textEditingControllers
+// profileScreen
+// profileScreen
+// profileScreen
+String shareText = '';
+final TextEditingController profileTextEditingController =
+    TextEditingController();
+// profileScreen
+// profileScreen
+// profileScreen

@@ -1,5 +1,10 @@
+import 'dart:ffi';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
+import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/sub_screens/shared_posts_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/widgets/edit_image_profile_change_profile_widgets.dart';
 import 'package:nasa_explorer_app_project/widgets/background_image_widget.dart';
@@ -7,6 +12,7 @@ import 'package:nasa_explorer_app_project/widgets/custom_elevated_button.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_list_tile_widget.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_text_field.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -54,21 +60,77 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 CustomListTileWidget(
                   text: 'Share app with friends',
                   leadingIcon: Icons.share,
-                  onListTileTap: () {},
+                  onListTileTap: () => shareAppWithFriends(context),
                   trailingIcon: Icons.arrow_forward_ios_rounded,
                 ),
                 const SizedBox(height: 10),
                 CustomListTileWidget(
                   text: 'Like Me',
                   leadingIcon: Icons.thumb_up_alt_rounded,
-                  onListTileTap: () {},
+                  onListTileTap: () => redirectToSocialMedia(
+                    link:
+                        'https://instagram.com/mohsen_zahed80?igshid=OGQ5ZDc2ODk2ZA==',
+                    context: context,
+                  ),
                   trailingIcon: Icons.arrow_forward_ios_rounded,
                 ),
                 const SizedBox(height: 10),
                 CustomListTileWidget(
-                  text: 'About Us',
+                  text: 'About Me',
                   leadingIcon: Icons.warning_amber_rounded,
-                  onListTileTap: () {},
+                  onListTileTap: () => showAdaptiveDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        backgroundColor: kBackgroundColor,
+                        title: const Text('About Me'),
+                        content: Text.rich(
+                          TextSpan(
+                            text: '$developerIntro\n\n',
+                            children: [
+                              TextSpan(
+                                text: 'Developed by: $developerName\n',
+                                children: [
+                                  TextSpan(
+                                    text: 'Email: $developerEmail\n',
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap =
+                                          () => mail(email: developerEmail),
+                                    children: [
+                                      TextSpan(
+                                        text: 'Phone: $developerPhone',
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () =>
+                                              call(phoneNumber: developerPhone),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(color: kWhiteColor),
+                        ),
+                        actions: [
+                          TextButton(
+                            child: Text(
+                              'Close',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(color: kWhiteColor),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                   trailingIcon: Icons.arrow_forward_ios_rounded,
                 ),
                 const SizedBox(height: 50),
