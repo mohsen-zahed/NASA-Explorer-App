@@ -3,10 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
+import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/main_screens/images_screen/widgets/vertical_images_grid_view.dart';
-import 'package:nasa_explorer_app_project/models/image_model.dart';
 import 'package:nasa_explorer_app_project/widgets/background_image_widget.dart';
-import 'package:http/http.dart' as http;
 
 class ImageGalleryScreen extends StatefulWidget {
   const ImageGalleryScreen({super.key});
@@ -40,47 +39,6 @@ class _ImageGalleryScreenState extends State<ImageGalleryScreen> {
         fetchImages();
       }
     });
-  }
-
-  Future<List<ImageModel>> fetchImages() async {
-    // try {
-    var response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200) {
-      var fetchedImagesList = jsonDecode(response.body);
-      for (var x in fetchedImagesList) {
-        fetchedList.add(ImageModel.fromJson(x));
-      }
-
-      // if (fetchedList.length != 50) {
-      //   var additionalResponse = await http.get(Uri.parse(url));
-      //   if (additionalResponse.statusCode == 200) {
-      //     var additionalImagesList = jsonDecode(additionalResponse.body);
-      //     for (var x in additionalImagesList) {
-      //       fetchedList.add(ImageModel.fromJson(x));
-      //     }
-      //   }
-
-      //   setState(() {
-      //     _isMoreData = false;
-      //   });
-      // } else {
-      //   setState(() {
-      //     _isMoreData = true;
-      //   });
-      // }
-    }
-    //   print('successful');
-    //   print(fetchedList.length);
-    //   return fetchedList;
-    // } catch (e) {
-    //   print(e);
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //       content: Text('${e.toString}'),
-    //     ),
-    //   );
-    // }
-    return fetchedList;
   }
 
   @override

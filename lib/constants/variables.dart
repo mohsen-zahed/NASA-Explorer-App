@@ -16,7 +16,7 @@ var demoImagePlaceHolder =
 // APIs
 // APIs
 // APIs
-var url = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=10';
+var imagesUrl = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=10';
 List<ImageModel> fetchedList = [];
 // APIs
 // APIs
@@ -88,3 +88,9 @@ Future<Response>? newsContainerImageResponse;
 var newsImageUrl =
     'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=1';
 // home screen variable
+
+// news screen
+var newsResponse;
+var newsUrl = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=1';
+bool isNewsLoading = true;
+// news screen

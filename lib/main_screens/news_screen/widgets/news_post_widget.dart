@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
-import 'package:nasa_explorer_app_project/models/news_post_model.dart';
+import 'package:nasa_explorer_app_project/models/news_model.dart';
 
 class NewsPostWidget extends StatefulWidget {
   const NewsPostWidget({
@@ -9,13 +9,14 @@ class NewsPostWidget extends StatefulWidget {
     required this.itemList,
   });
   final int index;
-  final List<NewsPostModel> itemList;
+  final List<NewsModel> itemList;
 
   @override
   State<NewsPostWidget> createState() => _NewsPostWidgetState();
 }
 
 class _NewsPostWidgetState extends State<NewsPostWidget> {
+  bool isExpanded = false;
   int currentPostImage = 0;
   @override
   Widget build(BuildContext context) {
@@ -31,14 +32,16 @@ class _NewsPostWidgetState extends State<NewsPostWidget> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          //! image place holder widget
           Container(
             height: 200,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
             ),
             child: PageView.builder(
-              itemCount: widget.itemList[widget.index].getImages().length,
+              itemCount: 1,
               onPageChanged: (value) {
                 setState(() {
                   currentPostImage = value;
@@ -50,9 +53,16 @@ class _NewsPostWidgetState extends State<NewsPostWidget> {
                   height: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      image: AssetImage(
-                        widget.itemList[widget.index].getImages()[index],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: FadeInImage(
+                      placeholder: const AssetImage(
+                        'assets/images/loading.gif',
+                      ),
+                      placeholderFit: BoxFit.contain,
+                      image: NetworkImage(
+                        widget.itemList[widget.index].getUrl(),
                       ),
                       fit: BoxFit.cover,
                     ),
@@ -62,12 +72,13 @@ class _NewsPostWidgetState extends State<NewsPostWidget> {
             ),
           ),
           const SizedBox(height: 5),
+          //! three dot indicators
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ...List.generate(
-                widget.itemList[widget.index].getImages().length,
-                (index) => widget.itemList[widget.index].getImages().length == 1
+                0,
+                (index) => widget.itemList[widget.index].getUrl().length == 1
                     ? const SizedBox()
                     : AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
@@ -84,23 +95,50 @@ class _NewsPostWidgetState extends State<NewsPostWidget> {
               )
             ],
           ),
-          const SizedBox(height: 10),
-          ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width,
+          //! expandable widget for texts
+          ExpansionTile(
+            childrenPadding: const EdgeInsets.all(0),
+            tilePadding: const EdgeInsets.symmetric(horizontal: 5),
+            shape: InputBorder.none,
+            onExpansionChanged: (value) {
+              setState(() {
+                isExpanded = value;
+              });
+            },
+            title: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width,
+              ),
+              child: Text(
+                widget.itemList[widget.index].getTitle(),
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      color: kWhiteColor,
+                      fontSize: 18,
+                      letterSpacing: 2,
+                    ),
+              ),
             ),
-            child: Text(
-              widget.itemList[widget.index].getText(),
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: kWhiteColor),
-            ),
+            initiallyExpanded: isExpanded,
+            children: [
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width,
+                ),
+                child: Text(
+                  widget.itemList[widget.index].getexplanation(),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: kWhiteColor),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 15),
+          //! parent row: one for profile,name,date another for bookmark icon
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              //! the first row child
               Row(
                 children: [
                   Container(
@@ -114,9 +152,10 @@ class _NewsPostWidgetState extends State<NewsPostWidget> {
                         color: kWhiteColor70,
                         width: 1.5,
                       ),
-                      image: DecorationImage(
+                      image: const DecorationImage(
                         image: AssetImage(
-                            widget.itemList[widget.index].getProfileImage()),
+                          'assets/images/profile_pic.jpeg',
+                        ),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -130,7 +169,7 @@ class _NewsPostWidgetState extends State<NewsPostWidget> {
                           maxWidth: MediaQuery.of(context).size.width * 0.6,
                         ),
                         child: Text(
-                          widget.itemList[widget.index].getUserName(),
+                          widget.itemList[widget.index].getCopyRight(),
                           overflow: TextOverflow.ellipsis,
                           style:
                               Theme.of(context).textTheme.titleMedium!.copyWith(
@@ -145,37 +184,21 @@ class _NewsPostWidgetState extends State<NewsPostWidget> {
                         constraints: BoxConstraints(
                           maxWidth: MediaQuery.of(context).size.width * 0.6,
                         ),
-                        child: Text.rich(
-                          overflow: TextOverflow.ellipsis,
+                        child: Text(
+                          widget.itemList[widget.index].getDate(),
                           style:
                               Theme.of(context).textTheme.titleSmall!.copyWith(
                                     letterSpacing: -0.5,
                                     fontSize: 12,
                                     color: kWhiteColor,
                                   ),
-                          TextSpan(
-                            text:
-                                '${widget.itemList[widget.index].getPostedDateYear().toString()}-',
-                            children: [
-                              TextSpan(
-                                text:
-                                    '${widget.itemList[widget.index].getPostedDateMonth().toString()}-',
-                                children: [
-                                  TextSpan(
-                                    text: widget.itemList[widget.index]
-                                        .getPostedDateDay()
-                                        .toString(),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
                         ),
                       ),
                     ],
                   )
                 ],
               ),
+              //! the second child
               GestureDetector(
                 onTap: () {},
                 child: const Icon(

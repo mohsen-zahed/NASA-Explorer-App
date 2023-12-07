@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nasa_explorer_app_project/models/news_model.dart';
 import 'package:nasa_explorer_app_project/models/news_post_model.dart';
 
 List errorList = [];
@@ -76,7 +77,7 @@ List<Map<String, dynamic>> bottomNavItems = [
   },
 ];
 
-List<NewsPostModel> postList = [
+List<NewsPostModel> demoPostList = [
   NewsPostModel.createPost(
     image: [
       'assets/images/galaxy1.jpeg',
@@ -140,4 +141,4 @@ List<NewsPostModel> postList = [
   ),
 ];
 
-List<NewsPostModel> newsPostList = [];
+List<NewsModel> newsPostList = [];

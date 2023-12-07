@@ -28,10 +28,10 @@ class SharedPostsScreen extends StatelessWidget {
           child: Column(
             children: [
               ...List.generate(
-                postList.length,
+                newsPostList.length,
                 (index) => NewsPostWidget(
                   index: index,
-                  itemList: postList,
+                  itemList: newsPostList,
                 ),
               ),
             ],

@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:http/http.dart' as http;
 import 'package:nasa_explorer_app_project/constants/variables.dart';
+import 'package:nasa_explorer_app_project/models/image_model.dart';
+import 'package:nasa_explorer_app_project/models/news_model.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -77,6 +81,48 @@ String getWeatherAnimations(String? mainCondition) {
       return 'assets/images/weather_icons/sunny.json';
   }
 }
+
+Future<List<ImageModel>> fetchImages() async {
+  // try {
+  var response = await http.get(Uri.parse(imagesUrl));
+  if (response.statusCode == 200) {
+    var fetchedImagesList = jsonDecode(response.body);
+    for (var x in fetchedImagesList) {
+      fetchedList.add(ImageModel.fromJson(x));
+    }
+
+    // if (fetchedList.length != 50) {
+    //   var additionalResponse = await http.get(Uri.parse(url));
+    //   if (additionalResponse.statusCode == 200) {
+    //     var additionalImagesList = jsonDecode(additionalResponse.body);
+    //     for (var x in additionalImagesList) {
+    //       fetchedList.add(ImageModel.fromJson(x));
+    //     }
+    //   }
+
+    //   setState(() {
+    //     _isMoreData = false;
+    //   });
+    // } else {
+    //   setState(() {
+    //     _isMoreData = true;
+    //   });
+    // }
+  }
+  //   print('successful');
+  //   print(fetchedList.length);
+  //   return fetchedList;
+  // } catch (e) {
+  //   print(e);
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     SnackBar(
+  //       content: Text('${e.toString}'),
+  //     ),
+  //   );
+  // }
+  return fetchedList;
+}
+
 
 // Future<List<ImageModel>> fetchImages() async {
 //   var url = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=5';
@@ -169,4 +215,3 @@ void call({required String phoneNumber}) async {
     throw "Something went wrong, please try again later!";
   }
 }
-

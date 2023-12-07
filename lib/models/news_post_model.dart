@@ -23,12 +23,7 @@ class NewsPostModel {
     required this.isLiked,
   });
 
-  NewsPostModel.fromJson(List<Map<String, dynamic>> json) {
-    // for (var i = 0; i < json['images'].length; i++) {
-    //   image.add(json['images'][i]);
-    // }
-    ;
-  }
+  NewsPostModel.fromJson(List<Map<String, dynamic>> json) {}
 
   List<String> getImages() => image;
   void setImages(List<String> image) => image = image;
