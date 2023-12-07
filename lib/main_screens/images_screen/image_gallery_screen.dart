@@ -44,31 +44,31 @@ class _ImageGalleryScreenState extends State<ImageGalleryScreen> {
 
   Future<List<ImageModel>> fetchImages() async {
     // try {
-      var response = await http.get(Uri.parse(url));
-      if (response.statusCode == 200) {
-        var fetchedImagesList = jsonDecode(response.body);
-        for (var x in fetchedImagesList) {
-          fetchedList.add(ImageModel.fromJson(x));
-        }
-
-        // if (fetchedList.length != 50) {
-        //   var additionalResponse = await http.get(Uri.parse(url));
-        //   if (additionalResponse.statusCode == 200) {
-        //     var additionalImagesList = jsonDecode(additionalResponse.body);
-        //     for (var x in additionalImagesList) {
-        //       fetchedList.add(ImageModel.fromJson(x));
-        //     }
-        //   }
-
-        //   setState(() {
-        //     _isMoreData = false;
-        //   });
-        // } else {
-        //   setState(() {
-        //     _isMoreData = true;
-        //   });
-        // }
+    var response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      var fetchedImagesList = jsonDecode(response.body);
+      for (var x in fetchedImagesList) {
+        fetchedList.add(ImageModel.fromJson(x));
       }
+
+      // if (fetchedList.length != 50) {
+      //   var additionalResponse = await http.get(Uri.parse(url));
+      //   if (additionalResponse.statusCode == 200) {
+      //     var additionalImagesList = jsonDecode(additionalResponse.body);
+      //     for (var x in additionalImagesList) {
+      //       fetchedList.add(ImageModel.fromJson(x));
+      //     }
+      //   }
+
+      //   setState(() {
+      //     _isMoreData = false;
+      //   });
+      // } else {
+      //   setState(() {
+      //     _isMoreData = true;
+      //   });
+      // }
+    }
     //   print('successful');
     //   print(fetchedList.length);
     //   return fetchedList;

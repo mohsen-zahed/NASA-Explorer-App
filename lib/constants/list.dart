@@ -139,3 +139,5 @@ List<NewsPostModel> postList = [
     isLiked: false,
   ),
 ];
+
+List<NewsPostModel> newsPostList = [];

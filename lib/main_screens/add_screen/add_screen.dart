@@ -19,12 +19,12 @@ class _AddScreenState extends State<AddScreen> {
       postImage = await picker.pickImage(source: ImageSource.gallery);
       final postImageTemp = File(postImage.path);
       setState(() {
-        image = postImageTemp;
+        pickedImageForPost = postImageTemp;
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('failed to upload image'),
+          content: Text('Failed to upload image!'),
         ),
       );
     }
@@ -37,7 +37,7 @@ class _AddScreenState extends State<AddScreen> {
         child: WillPopScope(
           onWillPop: () async {
             setState(() {
-              image = null;
+              pickedImageForPost = null;
             });
             return true;
           },
@@ -56,7 +56,7 @@ class _AddScreenState extends State<AddScreen> {
                           GestureDetector(
                             onTap: () {
                               setState(() {
-                                image = null;
+                                pickedImageForPost = null;
                               });
                               Navigator.pop(context);
                             },
@@ -163,9 +163,9 @@ class _AddScreenState extends State<AddScreen> {
                                   width: double.infinity,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
-                                    child: image != null
+                                    child: pickedImageForPost != null
                                         ? Image.file(
-                                            File(image!.path),
+                                            File(pickedImageForPost!.path),
                                           )
                                         : const SizedBox(),
                                   ),

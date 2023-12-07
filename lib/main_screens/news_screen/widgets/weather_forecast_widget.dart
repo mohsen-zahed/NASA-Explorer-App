@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
@@ -13,6 +15,43 @@ class WeatherForecastWidget extends StatefulWidget {
 }
 
 class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
+  @override
+  void initState() {
+    super.initState();
+    _fetchWeather();
+  }
+
+  // fetch weather
+  _fetchWeather() async {
+    await checkInternetConnectivity();
+    if (isUserConnected == false) {
+      Timer(const Duration(seconds: 4), () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No connection, failed to update weather forecast.'),
+          ),
+        );
+      });
+      return;
+    }
+
+    debugPrint('connection is available.');
+
+    // get weather for city
+    try {
+      // get the current city
+      cityName = await weatherService.getCurrentCity();
+      final weather = await weatherService.getWeather(cityName!);
+      setState(() {
+        weatherModel = weather;
+      });
+    } catch (e) {
+      debugPrint(
+        e.toString(),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(

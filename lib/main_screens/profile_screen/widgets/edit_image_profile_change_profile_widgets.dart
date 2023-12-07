@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
 
@@ -23,22 +22,6 @@ class EditImageProfileChangeImageWidgets extends StatefulWidget {
 
 class _EditImageProfileChangeImageWidgetsState
     extends State<EditImageProfileChangeImageWidgets> {
-  void changeProfileImage() async {
-    try {
-      pickedImage = await picker.pickImage(source: ImageSource.gallery);
-      final imageTemp = File(pickedImage.path);
-      setState(() {
-        image = imageTemp;
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('failed to upload image'),
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -62,7 +45,7 @@ class _EditImageProfileChangeImageWidgetsState
             ),
             GestureDetector(
               onTap: widget.onImageTap,
-              child: image == null
+              child: pickedImageForProf == null
                   ? Container(
                       width: 130,
                       height: 130,
@@ -93,14 +76,14 @@ class _EditImageProfileChangeImageWidgetsState
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
                         child: Image.file(
-                          image!,
+                          pickedImageForProf!,
                           fit: BoxFit.cover,
                         ),
                       ),
                     ),
             ),
             GestureDetector(
-              onTap: () => changeProfileImage(),
+              onTap: widget.onImageTap,
               child: Container(
                 width: 45,
                 height: 45,

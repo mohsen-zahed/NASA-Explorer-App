@@ -2,10 +2,16 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nasa_explorer_app_project/models/image_model.dart';
 import 'package:nasa_explorer_app_project/models/weather_model.dart';
 import 'package:nasa_explorer_app_project/services/weather_service.dart';
+
+// general var
+var demoImagePlaceHolder =
+    'https://th.bing.com/th/id/OIP.xjJQYPq-KlFeHuKk5BAP-AHaHa?rs=1&pid=ImgDetMain';
+// general var
 
 // APIs
 // APIs
@@ -40,7 +46,7 @@ bool isScreenLoading = true;
 bool isFetchingDataFailed = false;
 bool isMoreData = false;
 var isUserConnected;
-var pickedImage;
+var editPickedProfileImage;
 var postImage;
 Uri? socialMediaLink;
 String developerName = 'Amir M. Zahed';
@@ -48,6 +54,7 @@ String developerEmail = 'mohsenzahed0077@gmail.com';
 String developerPhone = '(+93) 797627651';
 String developerIntro =
     "Hello! I'm $developerName, a passionate coder ready to bring ideas to life through the power of technology. With a strong background in coding, I thrive on solving complex problems and developing innovative solutions. Whether it's crafting elegant user interfaces, building robust databases, or creating efficient algorithms, I'm constantly driven to push the boundaries of what's possible. Join me on this exciting journey as we embark on the path of digital transformation and make a positive impact through the world of coding!";
+
 // variables
 // variables
 // variables
@@ -55,7 +62,8 @@ String developerIntro =
 // image picker
 // image picker
 ImagePicker picker = ImagePicker();
-File? image;
+File? pickedImageForProf;
+File? pickedImageForPost;
 
 // image picker
 // image picker
@@ -70,3 +78,13 @@ final TextEditingController profileTextEditingController =
 // profileScreen
 // profileScreen
 // profileScreen
+
+String? cityName;
+
+// home screen variables
+int currentScreen = 0;
+String newsContainerImageLink = '';
+Future<Response>? newsContainerImageResponse;
+var newsImageUrl =
+    'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=1';
+// home screen variable

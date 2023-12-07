@@ -1,3 +1,5 @@
+import 'package:nasa_explorer_app_project/constants/variables.dart';
+
 class ImageModel {
   String? apodSite;
   String? copyRight;
@@ -28,12 +30,11 @@ class ImageModel {
       copyRight: json['copyRight'] ?? '',
       date: json['date'] ?? '',
       description: json['description'] ?? '',
-      hdurl: json['hdurl'] ??
-          'https://th.bing.com/th/id/OIP.xjJQYPq-KlFeHuKk5BAP-AHaHa?rs=1&pid=ImgDetMain',
+      hdurl: json['hdurl'] ?? demoImagePlaceHolder,
       imageThumbnail: json['image_thumbnail'] ?? '',
       mediaType: json['media_type'] ?? '',
       title: json['title'] ?? '',
-      url: json['url'] ?? 'https://th.bing.com/th/id/OIP.xjJQYPq-KlFeHuKk5BAP-AHaHa?rs=1&pid=ImgDetMain',
+      url: json['url'] ?? demoImagePlaceHolder,
     );
   }
 
@@ -51,10 +52,6 @@ class ImageModel {
     return data;
   }
 
-  String getHdurl() =>
-      hdurl ??
-      'https://th.bing.com/th/id/OIP.xjJQYPq-KlFeHuKk5BAP-AHaHa?rs=1&pid=ImgDetMain';
-  String getUrl() =>
-      url ??
-      'https://th.bing.com/th/id/OIP.xjJQYPq-KlFeHuKk5BAP-AHaHa?rs=1&pid=ImgDetMain';
+  String getHdurl() => hdurl ?? demoImagePlaceHolder;
+  String getUrl() => url ?? demoImagePlaceHolder;
 }

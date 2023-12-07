@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:nasa_explorer_app_project/constants/variables.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/main_home_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/advertisement_banner_slider_widget.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/app_logo_and_profile_image.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/horizontal_astronaut_figures_slider.dart';
@@ -17,7 +19,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,9 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SearchField(),
                   const SizedBox(height: 15),
                   NewsContainerWidget(
-                    onTap: () {
-                      // setState(() {});
-                    },
+                    onTap: () {},
                   ),
                   const SizedBox(height: 25),
                   const HorizontalImagesCarouselSlider(),

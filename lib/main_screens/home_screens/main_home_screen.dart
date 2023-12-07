@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
+import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/main_screens/add_screen/add_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/home_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/news_screen/news_screen.dart';
@@ -11,6 +12,7 @@ class MainHomeScreen extends StatefulWidget {
   const MainHomeScreen({
     super.key,
   });
+
 
   @override
   State<MainHomeScreen> createState() => _MainHomeScreenState();
@@ -25,7 +27,6 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
     ProfileScreen(),
   ];
 
-  int currentScreen = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
