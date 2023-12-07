@@ -11,6 +11,8 @@ import 'package:nasa_explorer_app_project/services/weather_service.dart';
 // general var
 var demoImagePlaceHolder =
     'https://th.bing.com/th/id/OIP.xjJQYPq-KlFeHuKk5BAP-AHaHa?rs=1&pid=ImgDetMain';
+var demoProfileImageHolder =
+    'https://th.bing.com/th/id/R.2fbf59259b8a109bda114b41c2d10a2d?rik=uyExTq15zo3Neg&pid=ImgRaw&r=0';
 // general var
 
 // APIs
@@ -91,6 +93,7 @@ var newsImageUrl =
 
 // news screen
 var newsResponse;
-var newsUrl = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=1';
+var newsUrl = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=5';
 bool isNewsLoading = true;
+bool enteredFirstTime = false;
 // news screen

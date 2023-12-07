@@ -1,5 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
+import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/models/news_model.dart';
 
 class NewsPostWidget extends StatefulWidget {
@@ -56,15 +59,11 @@ class _NewsPostWidgetState extends State<NewsPostWidget> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: FadeInImage(
-                      placeholder: const AssetImage(
-                        'assets/images/loading.gif',
-                      ),
-                      placeholderFit: BoxFit.contain,
-                      image: NetworkImage(
-                        widget.itemList[widget.index].getUrl(),
-                      ),
+                    child: CachedNetworkImage(
+                      imageUrl: widget.itemList[widget.index].getUrl(),
                       fit: BoxFit.cover,
+                      placeholder: (context, url) =>
+                          Lottie.asset('assets/images/loading_image.json'),
                     ),
                   ),
                 );
@@ -135,78 +134,84 @@ class _NewsPostWidgetState extends State<NewsPostWidget> {
             ],
           ),
           //! parent row: one for profile,name,date another for bookmark icon
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              //! the first row child
-              Row(
-                children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(100),
-                      ),
-                      border: Border.all(
-                        color: kWhiteColor70,
-                        width: 1.5,
-                      ),
-                      image: const DecorationImage(
-                        image: AssetImage(
-                          'assets/images/profile_pic.jpeg',
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                //! the first row child
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(100),
                         ),
+                        border: Border.all(
+                          color: kWhiteColor70,
+                          width: 1.5,
+                        ),
+                      ),
+                      child: CachedNetworkImage(
+                        imageUrl: demoProfileImageHolder,
                         fit: BoxFit.cover,
+                        placeholder: (context, url) =>
+                            Image.network(demoImagePlaceHolder),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width * 0.6,
+                    const SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.3,
+                            maxHeight: 50,
+                          ),
+                          child: Text(
+                            widget.itemList[widget.index].getCopyRight(),
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                  letterSpacing: -1,
+                                  fontSize: 15,
+                                  color: kWhiteColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
                         ),
-                        child: Text(
-                          widget.itemList[widget.index].getCopyRight(),
-                          overflow: TextOverflow.ellipsis,
-                          style:
-                              Theme.of(context).textTheme.titleMedium!.copyWith(
-                                    letterSpacing: -1,
-                                    fontSize: 15,
-                                    color: kWhiteColor,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                        ),
-                      ),
-                      ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width * 0.6,
-                        ),
-                        child: Text(
+                        Text(
                           widget.itemList[widget.index].getDate(),
-                          style:
-                              Theme.of(context).textTheme.titleSmall!.copyWith(
-                                    letterSpacing: -0.5,
-                                    fontSize: 12,
-                                    color: kWhiteColor,
-                                  ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall!
+                              .copyWith(
+                                letterSpacing: -0.5,
+                                fontSize: 12,
+                                color: kWhiteColor,
+                              ),
                         ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-              //! the second child
-              GestureDetector(
-                onTap: () {},
-                child: const Icon(
-                  Icons.bookmark_border_rounded,
-                  color: kWhiteColor,
+                      ],
+                    )
+                  ],
                 ),
-              )
-            ],
+                //! the second child
+                GestureDetector(
+                  onTap: () {},
+                  child: const Icon(
+                    Icons.bookmark_border_rounded,
+                    color: kWhiteColor,
+                  ),
+                )
+              ],
+            ),
           ),
         ],
       ),

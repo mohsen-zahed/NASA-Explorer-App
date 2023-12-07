@@ -24,13 +24,13 @@ class NewsModel {
 
   factory NewsModel.fromJson(Map<String, dynamic> json) {
     return NewsModel.init(
-      copyRight: json['copyright'] ?? '',
-      date: json['date'] ?? '',
-      explanation: json['explanation'] ?? '',
+      copyRight: json['copyright'] ?? 'Unknown',
+      date: json['date'] ?? '2002-1-17',
+      explanation: json['explanation'] ?? '...',
       hdurl: json['hdurl'] ?? demoImagePlaceHolder,
-      serviceVersion: json['service_version'] ?? '',
-      mediaType: json['media_type'] ?? '',
-      title: json['title'] ?? '',
+      serviceVersion: json['service_version'] ?? '1',
+      mediaType: json['media_type'] ?? 'Not specified',
+      title: json['title'] ?? 'a title from NASA',
       url: json['url'] ?? demoImagePlaceHolder,
     );
   }
@@ -49,12 +49,12 @@ class NewsModel {
   //   return data;
   // }
 
-  String getCopyRight() => copyRight ?? 'Unknown';
-  String getDate() => date ?? '2002-1-17';
-  String getexplanation() => explanation ?? '...';
-  String getHdurl() => hdurl ?? demoImagePlaceHolder;
-  String getserviceVersion() => serviceVersion ?? '';
-  String getMediaType() => mediaType ?? '';
-  String getTitle() => title ?? '';
-  String getUrl() => url ?? demoImagePlaceHolder;
+  String getCopyRight() => copyRight!;
+  String getDate() => date!;
+  String getexplanation() => explanation!;
+  String getHdurl() => hdurl!;
+  String getserviceVersion() => serviceVersion!;
+  String getMediaType() => mediaType!;
+  String getTitle() => title!;
+  String getUrl() => url!;
 }

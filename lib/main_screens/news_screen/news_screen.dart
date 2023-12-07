@@ -24,7 +24,9 @@ class _NewsScreenState extends State<NewsScreen> {
   @override
   void initState() {
     super.initState();
-    fetchNewsPosts();
+    if (!enteredFirstTime) {
+      fetchNewsPosts();
+    }
   }
 
   Future<List<NewsModel>> fetchNewsPosts() async {
@@ -35,9 +37,13 @@ class _NewsScreenState extends State<NewsScreen> {
         fetchedNewsPostsList = jsonDecode(newsResponse.body);
         for (var x in fetchedNewsPostsList) {
           newsPostList.add(NewsModel.fromJson(x));
+          for (var i = 0; i < newsPostList.length; i++) {
+            print(newsPostList[i].getCopyRight());
+          }
         }
         setState(() {
           isNewsLoading = false;
+          enteredFirstTime = true;
         });
         return newsPostList;
       } catch (e) {

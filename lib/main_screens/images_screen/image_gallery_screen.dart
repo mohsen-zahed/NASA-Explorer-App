@@ -15,7 +15,6 @@ class ImageGalleryScreen extends StatefulWidget {
 }
 
 class _ImageGalleryScreenState extends State<ImageGalleryScreen> {
-  // List<int> list = List.generate(20, (index) => index);
   final _controller = ScrollController();
   bool _isMoreData = false;
   @override
