@@ -142,3 +142,11 @@ List<NewsPostModel> demoPostList = [
 ];
 
 List<NewsModel> newsPostList = [];
+
+List<String> emptyImagesList = [
+  'assets/images/loading_image.json',
+  'assets/images/loading_image.json',
+  'assets/images/loading_image.json',
+  'assets/images/loading_image.json',
+  'assets/images/loading_image.json',
+];

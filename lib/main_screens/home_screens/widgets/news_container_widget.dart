@@ -1,12 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
+import 'package:nasa_explorer_app_project/constants/variables.dart';
 
 class NewsContainerWidget extends StatelessWidget {
   const NewsContainerWidget({
     super.key,
     required this.onTap,
+    required this.newsContainerBackgroundImage,
   });
   final VoidCallback onTap;
+  final String newsContainerBackgroundImage;
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +19,12 @@ class NewsContainerWidget extends StatelessWidget {
       child: Container(
         width: double.infinity,
         height: 180,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(
             Radius.circular(15),
           ),
           image: DecorationImage(
-            image: AssetImage('assets/images/milky-way.jpg'),
+            image: CachedNetworkImageProvider(newsContainerBackgroundImage),
             fit: BoxFit.cover,
           ),
         ),

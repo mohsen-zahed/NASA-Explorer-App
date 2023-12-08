@@ -18,8 +18,8 @@ var demoProfileImageHolder =
 // APIs
 // APIs
 // APIs
-var imagesUrl = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=10';
-List<ImageModel> fetchedList = [];
+var imagesUrl = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=15';
+List<ImageModel> fetchedImagesList = [];
 // APIs
 // APIs
 // APIs
@@ -85,15 +85,21 @@ String? cityName;
 
 // home screen variables
 int currentScreen = 0;
-String newsContainerImageLink = '';
-Future<Response>? newsContainerImageResponse;
+var newsContainerImageList = [];
+List<ImageModel> fetchedNewsContainerImageList = [];
+var newsContainerImageResponse;
 var newsImageUrl =
     'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=1';
-// home screen variable
+var demoNewsImageHolder =
+    'https://th.bing.com/th/id/OIP.o77g1Q7GoA_ozXdDCwoABwHaEo?w=263&h=180&c=7&r=0&o=5&pid=1.7';
+var imagesModelList = [];
+
+
+// home screen variables
 
 // news screen
 var newsResponse;
-var newsUrl = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=5';
+var newsUrl = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=10';
 bool isNewsLoading = true;
 bool enteredFirstTime = false;
 // news screen

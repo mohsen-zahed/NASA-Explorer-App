@@ -1,14 +1,63 @@
-import 'package:flutter/material.dart';
-import 'package:nasa_explorer_app_project/constants/colors.dart';
-import 'package:nasa_explorer_app_project/widgets/carousel/carousel_slider.dart';
+import 'dart:convert';
 
-class HorizontalImagesCarouselSlider extends StatelessWidget {
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+import 'package:nasa_explorer_app_project/constants/colors.dart';
+import 'package:nasa_explorer_app_project/constants/variables.dart';
+import 'package:nasa_explorer_app_project/models/image_model.dart';
+import 'package:nasa_explorer_app_project/widgets/carousel/carousel_slider.dart';
+import 'package:http/http.dart' as http;
+
+class HorizontalImagesCarouselSlider extends StatefulWidget {
   const HorizontalImagesCarouselSlider({
     super.key,
   });
 
   @override
+  State<HorizontalImagesCarouselSlider> createState() =>
+      _HorizontalImagesCarouselSliderState();
+}
+
+class _HorizontalImagesCarouselSliderState
+    extends State<HorizontalImagesCarouselSlider> {
+  List<String>? homeImagesList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchImages();
+  }
+
+  void fetchImages() async {
+    // try {
+    var imagesResponse = await http.get(Uri.parse(imagesUrl));
+    if (imagesResponse.statusCode == 200) {
+      var imagesList = jsonDecode(imagesResponse.body);
+      for (var x in imagesList) {
+        if (x['media_type'] == 'image') {
+          print(x['media_type']);
+          fetchedImagesList.add(ImageModel.fromJson(x));
+        } else {
+          print(x['media_type']);
+          continue;
+        }
+      }
+      List<String> demoHomeImagesList = [];
+      for (var i = 0; i < 5; i++) {
+        demoHomeImagesList.add(fetchedImagesList[i].getUrl());
+      }
+      if (mounted) {
+        setState(() {
+          homeImagesList = demoHomeImagesList;
+        });
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print(homeImagesList);
     return Column(
       children: [
         Row(
@@ -47,9 +96,10 @@ class HorizontalImagesCarouselSlider extends StatelessWidget {
         ),
         const SizedBox(height: 15),
         CarouselSlider.builder(
-          itemCount: 5,
+          itemCount: homeImagesList!.length,
           itemBuilder: (context, index, realIndex) {
             return Container(
+              width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.fromLTRB(
                 index != 0 ? 20 : 0,
                 0,
@@ -57,11 +107,22 @@ class HorizontalImagesCarouselSlider extends StatelessWidget {
                 0,
               ),
               decoration: BoxDecoration(
-                color: kWhiteColor,
+                color: kBackgroundColor,
                 borderRadius: BorderRadius.circular(15),
-                image: const DecorationImage(
-                  image: AssetImage('assets/images/mars_city.jpeg'),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: CachedNetworkImage(
+                  imageUrl: homeImagesList![index],
                   fit: BoxFit.cover,
+                  filterQuality: FilterQuality.medium,
+                  errorListener: (p0) => const Icon(Icons.error),
+                  placeholder: (context, url) => Center(
+                    child: Lottie.asset(
+                      'assets/images/loading_image.json',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
             );
@@ -69,10 +130,10 @@ class HorizontalImagesCarouselSlider extends StatelessWidget {
           options: CarouselOptions(
             scrollPhysics: const BouncingScrollPhysics(),
             aspectRatio: 1.9,
-            viewportFraction: 0.7,
+            viewportFraction: 0.6,
             initialPage: 0,
             enlargeCenterPage: true,
-            enlargeFactor: .5,
+            enlargeFactor: .4,
             enlargeStrategy: CenterPageEnlargeStrategy.height,
             scrollDirection: Axis.horizontal,
             enableInfiniteScroll: false,

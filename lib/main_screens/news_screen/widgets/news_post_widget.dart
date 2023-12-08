@@ -60,6 +60,7 @@ class _NewsPostWidgetState extends State<NewsPostWidget> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: CachedNetworkImage(
+                      errorWidget: (context, url, error) => Icon(Icons.error),
                       imageUrl: widget.itemList[widget.index].getUrl(),
                       fit: BoxFit.cover,
                       placeholder: (context, url) =>
@@ -189,14 +190,12 @@ class _NewsPostWidgetState extends State<NewsPostWidget> {
                         ),
                         Text(
                           widget.itemList[widget.index].getDate(),
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall!
-                              .copyWith(
-                                letterSpacing: -0.5,
-                                fontSize: 12,
-                                color: kWhiteColor,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleSmall!.copyWith(
+                                    letterSpacing: -0.5,
+                                    fontSize: 12,
+                                    color: kWhiteColor,
+                                  ),
                         ),
                       ],
                     )

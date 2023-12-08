@@ -1,10 +1,8 @@
 import 'package:nasa_explorer_app_project/constants/variables.dart';
 
 class ImageModel {
-  String? hdurl;
-  String? url;
-
-  ImageModel();
+  String hdurl;
+  String url;
   ImageModel.init({
     required this.hdurl,
     required this.url,
@@ -17,13 +15,6 @@ class ImageModel {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['hdurl'] = hdurl;
-    data['url'] = url;
-    return data;
-  }
-
-  String getHdurl() => hdurl ?? demoImagePlaceHolder;
-  String getUrl() => url ?? demoImagePlaceHolder;
+  String getHdurl() => hdurl;
+  String getUrl() => url;
 }

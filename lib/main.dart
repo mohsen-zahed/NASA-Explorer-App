@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
         NewsScreen.id: (context) => const NewsScreen(),
         SharedPostsScreen.id: (context) => const SharedPostsScreen(),
       },
-      home: const SplashScreen(),
+      home: const MainHomeScreen(),
     );
   }
 }

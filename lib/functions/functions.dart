@@ -82,46 +82,6 @@ String getWeatherAnimations(String? mainCondition) {
   }
 }
 
-Future<List<ImageModel>> fetchImages() async {
-  // try {
-  var response = await http.get(Uri.parse(imagesUrl));
-  if (response.statusCode == 200) {
-    var fetchedImagesList = jsonDecode(response.body);
-    for (var x in fetchedImagesList) {
-      fetchedList.add(ImageModel.fromJson(x));
-    }
-
-    // if (fetchedList.length != 50) {
-    //   var additionalResponse = await http.get(Uri.parse(url));
-    //   if (additionalResponse.statusCode == 200) {
-    //     var additionalImagesList = jsonDecode(additionalResponse.body);
-    //     for (var x in additionalImagesList) {
-    //       fetchedList.add(ImageModel.fromJson(x));
-    //     }
-    //   }
-
-    //   setState(() {
-    //     _isMoreData = false;
-    //   });
-    // } else {
-    //   setState(() {
-    //     _isMoreData = true;
-    //   });
-    // }
-  }
-  //   print('successful');
-  //   print(fetchedList.length);
-  //   return fetchedList;
-  // } catch (e) {
-  //   print(e);
-  //   ScaffoldMessenger.of(context).showSnackBar(
-  //     SnackBar(
-  //       content: Text('${e.toString}'),
-  //     ),
-  //   );
-  // }
-  return fetchedList;
-}
 
 
 // Future<List<ImageModel>> fetchImages() async {
@@ -215,3 +175,15 @@ void call({required String phoneNumber}) async {
     throw "Something went wrong, please try again later!";
   }
 }
+
+//? home screen functions -----
+//? home screen functions -----
+
+//* news container fetch image function ...
+// ---> refer to homescreen init() method
+
+//* dicover perfect images fetch function ...
+
+
+//? home screen functions -----
+//? home screen functions -----
