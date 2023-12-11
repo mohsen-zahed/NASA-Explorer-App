@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
@@ -7,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/models/image_model.dart';
 import 'package:nasa_explorer_app_project/models/news_model.dart';
+import 'package:nasa_explorer_app_project/models/planet_model.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -81,8 +83,6 @@ String getWeatherAnimations(String? mainCondition) {
       return 'assets/images/weather_icons/sunny.json';
   }
 }
-
-
 
 // Future<List<ImageModel>> fetchImages() async {
 //   var url = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=5';
@@ -181,6 +181,8 @@ void call({required String phoneNumber}) async {
 
 //* news container fetch image function ...
 // ---> refer to homescreen init() method
+
+// get planets from firebase
 
 //* dicover perfect images fetch function ...
 

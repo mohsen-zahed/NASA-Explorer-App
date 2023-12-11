@@ -1,7 +1,11 @@
+import 'dart:ffi';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/solar_system_single_card_widget.dart';
+import 'package:nasa_explorer_app_project/models/planet_model.dart';
 import 'package:nasa_explorer_app_project/widgets/carousel/carousel_slider.dart';
 
 class HorizontalSolarSystemCarouselSlider extends StatefulWidget {
@@ -16,6 +20,35 @@ class HorizontalSolarSystemCarouselSlider extends StatefulWidget {
 
 class _HorizontalSolarSystemCarouselSliderState
     extends State<HorizontalSolarSystemCarouselSlider> {
+  @override
+  void initState() {
+    super.initState();
+    getPlanetsFromFirebase();
+  }
+
+  Future getPlanetsFromFirebase() async {
+    final planetsRef = FirebaseFirestore.instance
+        .collection("PlanetsData")
+        .orderBy(descending: false, 'id');
+    await planetsRef.get().then(
+          (value) => value.docs.forEach(
+            (element) {
+              fetchedPlanets.add(
+                PlanetModel.create(
+                  element.data()['id'],
+                  element.data()['planet_name'],
+                  element.data()['planet_sub_title'],
+                  element.data()['planet_intro'],
+                  element.data()['planet_history'],
+                  element.data()['planet_climate'],
+                ),
+              );
+            },
+          ),
+        );
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -57,11 +90,11 @@ class _HorizontalSolarSystemCarouselSliderState
         ),
         const SizedBox(height: 70),
         CarouselSlider.builder(
-          itemCount: solarSystemList.length,
+          itemCount: fetchedPlanets.length,
           itemBuilder: (context, index, realIndex) {
             return SolarSystemSinglCardWidget(
-              index: index,
-              solarList: solarSystemList,
+              index: realIndex,
+              solarList: fetchedPlanets,
               onTap: () => showSolarBottomSheet(context, index),
             );
           },
@@ -92,7 +125,7 @@ class _HorizontalSolarSystemCarouselSliderState
       context: context,
       builder: (context) {
         return BottomSheetWidget(
-          itemList: solarSystemList,
+          itemList: fetchedPlanets,
           index: index,
         );
       },
@@ -106,7 +139,7 @@ class BottomSheetWidget extends StatefulWidget {
     required this.itemList,
     required this.index,
   });
-  final List<Map<String, dynamic>> itemList;
+  final List<dynamic> itemList;
   final int index;
 
   @override
@@ -188,7 +221,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.itemList[widget.index]['planet_name'],
+                      widget.itemList[widget.index].getPlanetName(),
                       style: Theme.of(context).textTheme.titleLarge!.copyWith(
                             color: kWhiteColor,
                             fontSize: 33,
@@ -196,7 +229,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                           ),
                     ),
                     Text(
-                      widget.itemList[widget.index]['planet_description'],
+                      widget.itemList[widget.index].getPlanetIntro(),
                       style: Theme.of(context).textTheme.titleMedium!.copyWith(
                             color: kWhiteColor,
                             fontSize: 14,
@@ -222,7 +255,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                           ),
                     ),
                     Text(
-                      'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio rem nostrum aliquam voluptatem tempora numquam dolorum dignissimos explicabo ullam alias quae, a nihil eligendi in perferendis atque quisquam. Impedit, praesentium.',
+                      widget.itemList[widget.index].getPlanetHistory(),
                       style: Theme.of(context).textTheme.titleMedium!.copyWith(
                             color: kWhiteColor,
                             fontSize: 14,
@@ -248,7 +281,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                           ),
                     ),
                     Text(
-                      'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio rem nostrum aliquam voluptatem tempora numquam dolorum dignissimos explicabo ullam alias quae, a nihil eligendi in perferendis atque quisquam. Impedit, praesentium.',
+                      widget.itemList[widget.index].getPlanetClimate(),
                       style: Theme.of(context).textTheme.titleMedium!.copyWith(
                             color: kWhiteColor,
                             fontSize: 14,

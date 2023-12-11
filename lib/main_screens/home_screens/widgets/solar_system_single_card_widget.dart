@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
+import 'package:nasa_explorer_app_project/constants/list.dart';
 
 class SolarSystemSinglCardWidget extends StatelessWidget {
   const SolarSystemSinglCardWidget({
@@ -9,7 +10,7 @@ class SolarSystemSinglCardWidget extends StatelessWidget {
     required this.onTap,
   });
   final int index;
-  final List<Map<String, dynamic>> solarList;
+  final List<dynamic> solarList;
   final VoidCallback onTap;
 
   @override
@@ -37,13 +38,13 @@ class SolarSystemSinglCardWidget extends StatelessWidget {
               child: Container(
                 width: 120,
                 height: 120,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(
-                      solarList[index]['planet_image'],
-                    ),
-                  ),
-                ),
+                // decoration: BoxDecoration(
+                //   image: DecorationImage(
+                //     image: AssetImage(
+                //       solarSystemList[index]['planet_image'],
+                //     ),
+                //   ),
+                // ),
               ),
             ),
             Positioned(
@@ -54,7 +55,7 @@ class SolarSystemSinglCardWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    solarList[index]['planet_name'],
+                    fetchedPlanets[index].getPlanetName(),
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
                           color: kWhiteColor,
                           fontSize: 28,
@@ -62,7 +63,7 @@ class SolarSystemSinglCardWidget extends StatelessWidget {
                         ),
                   ),
                   Text(
-                    solarList[index]['planet_subTitle'],
+                    solarList[index].getPlanetSubTitle(),
                     style: Theme.of(context).textTheme.titleMedium!.copyWith(
                           color: kWhiteColor,
                           fontSize: 14,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/models/news_model.dart';
 import 'package:nasa_explorer_app_project/models/news_post_model.dart';
+import 'package:nasa_explorer_app_project/models/planet_model.dart';
 
 List errorList = [];
 
@@ -150,3 +151,5 @@ List<String> emptyImagesList = [
   'assets/images/loading_image.json',
   'assets/images/loading_image.json',
 ];
+
+List<dynamic> fetchedPlanets = [];
