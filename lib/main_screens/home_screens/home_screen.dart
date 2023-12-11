@@ -31,17 +31,25 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> fetchNewsContainerImage() async {
-    newsContainerImageResponse = await http.get(Uri.parse(newsImageUrl));
-    if (newsContainerImageResponse.statusCode == 200) {
-      newsContainerImageList = jsonDecode(newsContainerImageResponse.body);
-      for (var x in newsContainerImageList) {
-        fetchedNewsContainerImageList.add(ImageModel.fromJson(x));
+    try {
+      newsContainerImageResponse = await http.get(Uri.parse(newsImageUrl));
+      if (newsContainerImageResponse.statusCode == 200) {
+        newsContainerImageList = jsonDecode(newsContainerImageResponse.body);
+        for (var x in newsContainerImageList) {
+          fetchedNewsContainerImageList.add(ImageModel.fromJson(x));
+        }
+        if (mounted) {
+          setState(() {
+            imageUrl = fetchedNewsContainerImageList[0].getUrl();
+          });
+        }
       }
-      if (mounted) {
-        setState(() {
-          imageUrl = fetchedNewsContainerImageList[0].getUrl();
-        });
-      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Something went wrong, try again!'),
+        ),
+      );
     }
   }
 
@@ -72,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {},
                   ),
                   const SizedBox(height: 25),
-                  HorizontalImagesCarouselSlider(),
+                  const HorizontalImagesCarouselSlider(),
                   const SizedBox(height: 35),
                   const HorizontalSolarSystemCarouselSlider(),
                   const SizedBox(height: 35),

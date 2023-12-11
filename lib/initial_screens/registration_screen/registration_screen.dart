@@ -2,9 +2,13 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
+import 'package:nasa_explorer_app_project/constants/variables.dart';
+import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/initial_screens/registration_screen/widgets/login_account_and_guest_account_texts.dart';
 import 'package:nasa_explorer_app_project/initial_screens/registration_screen/widgets/privacy_policy_text_acceptance.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/main_home_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/profile_screen/profile_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/profile_screen/widgets/about_me_dialog_widget.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_elevated_button.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_text_field.dart';
 
@@ -181,19 +185,35 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             const Spacer(),
                             CustomElevatedButton(
                               textButton: isUserLoging ? 'Sign in' : 'Sign up',
-                              onPressed: () {
+                              onPressed: () async {
+                                isUserConnected =
+                                    await checkInternetConnectivity();
                                 setState(() {
                                   // emailValidator(textEditingController2.text);
                                   // debugPrint(
                                   //   errorList.toString(),
                                   // );
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
+                                  if (isUserConnected) {
+                                    Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const MainHomeScreen(),
+                                        ),
+                                        (route) => false);
+                                  } else {
+                                    showAdaptiveDialog(
+                                      context: context,
                                       builder: (context) =>
-                                          const MainHomeScreen(),
-                                    ),
-                                  );
+                                          const AboutMeDialogWidget(
+                                        title: 'Oops, something went wrong!',
+                                        isAboutMe: false,
+                                        text:
+                                            'We apologize, but it seems that there was a problem connecting to the server.\nPlease check your internet connection and try again.',
+                                        buttonText: 'Got it!',
+                                      ),
+                                    );
+                                  }
                                 });
                               },
                             ),

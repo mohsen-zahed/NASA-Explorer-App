@@ -20,7 +20,7 @@ class _ImageGalleryScreenState extends State<ImageGalleryScreen> {
       body: BackgroundImageWidget(
         child: SafeArea(
             child: ListView.builder(
-          itemCount: fetchedImagesList.length,
+          itemCount: 1,
           itemBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),

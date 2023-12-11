@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "155956794000",
+    "project_id": "nasa-explorer-app",
+    "storage_bucket": "nasa-explorer-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:155956794000:android:fe384f4f42e4d0dd7a7e15",
+        "android_client_info": {
+          "package_name": "com.example.nasa_explorer_app_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWlxbP0qAbyy58dcn19Q7QEwIDcgztPgo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

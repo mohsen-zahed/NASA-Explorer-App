@@ -4,6 +4,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:lottie/lottie.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 // import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
@@ -56,15 +57,27 @@ class VerticalImagesGridView extends StatelessWidget {
                                   fit: BoxFit.fill,
                                   placeholder:
                                       (BuildContext context, String url) =>
-                                          const Center(
-                                    child: CircularProgressIndicator(),
+                                          Center(
+                                    child: Lottie.asset(
+                                      'assets/images/loading_image.json',
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                  errorWidget: (BuildContext context, String url,
-                                          dynamic error) =>
-                                      Container(
-                                    color: Colors
-                                        .grey, // Display a placeholder or error UI
-                                  ),
+                                  errorWidget: (BuildContext context,
+                                          String url, dynamic error) =>
+                                      const Icon(Icons.error),
+                                  imageBuilder: (context, imageProvider) {
+                                    return Container(
+                                      width: 300,
+                                      height: 300,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
                             ),

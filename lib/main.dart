@@ -1,12 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
+import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/initial_screens/splash_screen.dart';
-import 'package:nasa_explorer_app_project/main_screens/home_screens/main_home_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/news_screen/news_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/sub_screens/shared_posts_screen.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  runApp(
+    const MyApp(),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -42,7 +45,7 @@ class MyApp extends StatelessWidget {
         NewsScreen.id: (context) => const NewsScreen(),
         SharedPostsScreen.id: (context) => const SharedPostsScreen(),
       },
-      home: const MainHomeScreen(),
+      home: const SplashScreen(),
     );
   }
 }

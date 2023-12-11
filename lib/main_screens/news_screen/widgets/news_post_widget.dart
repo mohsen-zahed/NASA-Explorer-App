@@ -51,21 +51,27 @@ class _NewsPostWidgetState extends State<NewsPostWidget> {
                 });
               },
               itemBuilder: (context, index) {
-                return Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: CachedNetworkImage(
-                      errorWidget: (context, url, error) => Icon(Icons.error),
-                      imageUrl: widget.itemList[widget.index].getUrl(),
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) =>
-                          Lottie.asset('assets/images/loading_image.json'),
-                    ),
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: CachedNetworkImage(
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                    imageUrl: widget.itemList[widget.index].getUrl(),
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) =>
+                        Lottie.asset('assets/images/loading_image.json'),
+                    imageBuilder: (context, imageProvider) {
+                      return Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 );
               },

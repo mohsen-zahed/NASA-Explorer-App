@@ -21,43 +21,14 @@ class HorizontalImagesCarouselSlider extends StatefulWidget {
 
 class _HorizontalImagesCarouselSliderState
     extends State<HorizontalImagesCarouselSlider> {
-  List<String>? homeImagesList = [];
 
   @override
   void initState() {
     super.initState();
-    fetchImages();
-  }
-
-  void fetchImages() async {
-    // try {
-    var imagesResponse = await http.get(Uri.parse(imagesUrl));
-    if (imagesResponse.statusCode == 200) {
-      var imagesList = jsonDecode(imagesResponse.body);
-      for (var x in imagesList) {
-        if (x['media_type'] == 'image') {
-          print(x['media_type']);
-          fetchedImagesList.add(ImageModel.fromJson(x));
-        } else {
-          print(x['media_type']);
-          continue;
-        }
-      }
-      List<String> demoHomeImagesList = [];
-      for (var i = 0; i < 5; i++) {
-        demoHomeImagesList.add(fetchedImagesList[i].getUrl());
-      }
-      if (mounted) {
-        setState(() {
-          homeImagesList = demoHomeImagesList;
-        });
-      }
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    print(homeImagesList);
     return Column(
       children: [
         Row(
@@ -98,32 +69,37 @@ class _HorizontalImagesCarouselSliderState
         CarouselSlider.builder(
           itemCount: homeImagesList!.length,
           itemBuilder: (context, index, realIndex) {
-            return Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.fromLTRB(
-                index != 0 ? 20 : 0,
-                0,
-                index == 5 ? 20 : 0,
-                0,
-              ),
-              decoration: BoxDecoration(
-                color: kBackgroundColor,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: CachedNetworkImage(
-                  imageUrl: homeImagesList![index],
-                  fit: BoxFit.cover,
-                  filterQuality: FilterQuality.medium,
-                  errorListener: (p0) => const Icon(Icons.error),
-                  placeholder: (context, url) => Center(
-                    child: Lottie.asset(
-                      'assets/images/loading_image.json',
-                      fit: BoxFit.cover,
-                    ),
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: CachedNetworkImage(
+                imageUrl: homeImagesList![index],
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.medium,
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+                placeholder: (context, url) => Center(
+                  child: Lottie.asset(
+                    'assets/images/loading_image.json',
+                    fit: BoxFit.cover,
                   ),
                 ),
+                imageBuilder: (context, imageProvider) {
+                  return Container(
+                    margin: EdgeInsets.fromLTRB(
+                      index != 0 ? 20 : 0,
+                      0,
+                      index == 5 ? 20 : 0,
+                      0,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: kWhiteColor,
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                },
               ),
             );
           },

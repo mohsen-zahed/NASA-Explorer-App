@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/sub_screens/shared_posts_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/profile_screen/widgets/about_me_dialog_widget.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/widgets/edit_image_profile_change_profile_widgets.dart';
 import 'package:nasa_explorer_app_project/widgets/background_image_widget.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_elevated_button.dart';
@@ -98,7 +99,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onListTileTap: () => showAdaptiveDialog(
                       context: context,
                       builder: (context) {
-                        return const AboutMeDialogWidget();
+                        return const AboutMeDialogWidget(
+                          title: 'About Me',
+                          buttonText: 'Close',
+                          isAboutMe: true,
+                        );
                       },
                     ),
                     trailingIcon: Icons.arrow_forward_ios_rounded,
@@ -170,62 +175,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class AboutMeDialogWidget extends StatelessWidget {
-  const AboutMeDialogWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: kBackgroundColor,
-      title: const Text('About Me'),
-      content: Text.rich(
-        TextSpan(
-          text: '$developerIntro\n\n',
-          children: [
-            TextSpan(
-              text: 'Developed by: $developerName\n',
-              children: [
-                TextSpan(
-                  text: 'Email: $developerEmail\n',
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () => mail(email: developerEmail),
-                  children: [
-                    TextSpan(
-                      text: 'Phone: $developerPhone',
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () => call(phoneNumber: developerPhone),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-        style: Theme.of(context)
-            .textTheme
-            .bodyMedium!
-            .copyWith(color: kWhiteColor),
-      ),
-      actions: [
-        TextButton(
-          child: Text(
-            'Close',
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .copyWith(color: kWhiteColor),
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
     );
   }
 }

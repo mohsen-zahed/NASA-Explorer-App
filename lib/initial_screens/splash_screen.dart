@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/initial_screens/onboarding_screen.dart';
+import 'package:nasa_explorer_app_project/models/image_model.dart';
+import 'package:http/http.dart' as http;
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,6 +17,30 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  void fetchImages() async {
+    // try {
+    var imagesResponse = await http.get(Uri.parse(imagesUrl));
+    if (imagesResponse.statusCode == 200) {
+      var imagesList = jsonDecode(imagesResponse.body);
+      for (var x in imagesList) {
+        if (x['media_type'] == 'image') {
+          fetchedImagesList.add(ImageModel.fromJson(x));
+        } else {
+          continue;
+        }
+      }
+      List<String> demoHomeImagesList = [];
+      for (var i = 0; i < 5; i++) {
+        demoHomeImagesList.add(fetchedImagesList[i].getUrl());
+      }
+      if (mounted) {
+        setState(() {
+          homeImagesList = demoHomeImagesList;
+        });
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -22,8 +49,8 @@ class _SplashScreenState extends State<SplashScreen> {
       const Duration(seconds: 3),
       () async {
         isUserConnected = await checkInternetConnectivity();
-        print(isUserConnected);
-        // ignore: use_build_context_synchronously
+        fetchImages();
+        if (isUserConnected) print('connection available');
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
