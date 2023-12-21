@@ -8,10 +8,12 @@ class SolarSystemSinglCardWidget extends StatelessWidget {
     required this.index,
     required this.solarList,
     required this.onTap,
+    required this.planetsList,
   });
   final int index;
   final List<dynamic> solarList;
   final VoidCallback onTap;
+  final List planetsList;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +57,7 @@ class SolarSystemSinglCardWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    fetchedPlanets[index].getPlanetName(),
+                    planetsList[index].getPlanetName(),
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
                           color: kWhiteColor,
                           fontSize: 28,
@@ -66,6 +68,7 @@ class SolarSystemSinglCardWidget extends StatelessWidget {
                     solarList[index].getPlanetSubTitle(),
                     style: Theme.of(context).textTheme.titleMedium!.copyWith(
                           color: kWhiteColor,
+                          overflow: TextOverflow.ellipsis,
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                         ),

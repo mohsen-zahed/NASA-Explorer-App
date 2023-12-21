@@ -10,7 +10,7 @@ import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/models/image_model.dart';
 
-class VerticalImagesGridView extends StatelessWidget {
+class VerticalImagesGridView extends StatefulWidget {
   const VerticalImagesGridView({
     super.key,
     required this.imagesList,
@@ -20,18 +20,25 @@ class VerticalImagesGridView extends StatelessWidget {
   final VoidCallback onImageTap;
 
   @override
+  State<VerticalImagesGridView> createState() => _VerticalImagesGridViewState();
+}
+
+class _VerticalImagesGridViewState extends State<VerticalImagesGridView> {
+  bool isLoadingImages = false;
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       child: StaggeredGridView.count(
         crossAxisCount: 4,
         staggeredTiles: List.generate(
-          imagesList.length,
+          widget.imagesList.length,
           (index) => const StaggeredTile.fit(2),
         ),
         children: [
           ...List.generate(
-            imagesList.length,
+            widget.imagesList.length,
             (index) => isLoadingImages
                 ? Container(
                     width: MediaQuery.of(context).size.width * 0.4,
@@ -48,12 +55,12 @@ class VerticalImagesGridView extends StatelessWidget {
                       child: Stack(
                         children: [
                           GestureDetector(
-                            onTap: onImageTap,
+                            onTap: widget.onImageTap,
                             child: Center(
                               child: Hero(
                                 tag: 'max-image',
                                 child: CachedNetworkImage(
-                                  imageUrl: imagesList[index].getUrl(),
+                                  imageUrl: widget.imagesList[index].getUrl(),
                                   fit: BoxFit.fill,
                                   placeholder:
                                       (BuildContext context, String url) =>

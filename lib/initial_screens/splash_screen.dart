@@ -1,13 +1,11 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
-import 'package:nasa_explorer_app_project/initial_screens/onboarding_screen.dart';
-import 'package:nasa_explorer_app_project/models/image_model.dart';
-import 'package:http/http.dart' as http;
+import 'package:nasa_explorer_app_project/initial_screens/onboarding_screen/onboarding_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/main_home_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -17,48 +15,39 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  void fetchImages() async {
-    // try {
-    var imagesResponse = await http.get(Uri.parse(imagesUrl));
-    if (imagesResponse.statusCode == 200) {
-      var imagesList = jsonDecode(imagesResponse.body);
-      for (var x in imagesList) {
-        if (x['media_type'] == 'image') {
-          fetchedImagesList.add(ImageModel.fromJson(x));
-        } else {
-          continue;
-        }
-      }
-      List<String> demoHomeImagesList = [];
-      for (var i = 0; i < 5; i++) {
-        demoHomeImagesList.add(fetchedImagesList[i].getUrl());
-      }
-      if (mounted) {
-        setState(() {
-          homeImagesList = demoHomeImagesList;
-        });
-      }
-    }
-  }
-
+  bool isFirstTime = true;
   @override
   void initState() {
     super.initState();
 
     Timer(
-      const Duration(seconds: 3),
+      Duration(seconds: isFirstTime ? 3 : 1),
       () async {
         isUserConnected = await checkInternetConnectivity();
-        fetchImages();
-        if (isUserConnected) print('connection available');
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const OnboardingScreen(),
-            ),
-            (route) => false);
+        checkOnboardingScreen();
       },
     );
+  }
+
+  checkOnboardingScreen() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    if (sharedPreferences.getBool('checked_onboarding') == null ||
+        sharedPreferences.getBool('checked_onboarding') == false) {
+      isFirstTime = true;
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const OnboardingScreen(),
+          ),
+          (route) => false);
+    } else {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MainHomeScreen(),
+          ),
+          (route) => false);
+    }
   }
 
   @override

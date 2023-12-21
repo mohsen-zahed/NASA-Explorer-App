@@ -13,6 +13,9 @@ class ImageGalleryScreen extends StatefulWidget {
 }
 
 class _ImageGalleryScreenState extends State<ImageGalleryScreen> {
+  bool isScreenLoading = true;
+  bool isFetchingDataFailed = false;
+
 
   @override
   Widget build(BuildContext context) {

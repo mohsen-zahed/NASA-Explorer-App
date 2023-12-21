@@ -12,6 +12,14 @@ import 'package:nasa_explorer_app_project/models/planet_model.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+double getMaxWidthMediaQuery(BuildContext context, [double? number]) {
+  return MediaQuery.of(context).size.width * (number ?? 1);
+}
+
+double getMaxHieghtMediaQuery(BuildContext context, [double? number]) {
+  return MediaQuery.of(context).size.height * (number ?? 1);
+}
+
 void emailValidator(String email) {
   if (email.isEmpty) {
     if (!errorList.contains('Please enter an email!')) {
@@ -84,40 +92,6 @@ String getWeatherAnimations(String? mainCondition) {
   }
 }
 
-// Future<List<ImageModel>> fetchImages() async {
-//   var url = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=5';
-//   // try {
-//   var response = await http.get(Uri.parse(url));
-//   if (response.statusCode == 200) {
-//     // '[{},{},{}]'
-//     var fetchedImagesList = jsonDecode(response.body);
-//     // [{},{},{}]
-//     for (var x in fetchedImagesList) {
-//       // {} = x ==> {x}
-//       fetched.add(ImageModel.fromJson(x));
-//       print(fetched[0].getHdurl());
-//     }
-//     await Future.delayed(Duration(seconds: 3));
-//     if (fetched.length != 50) {
-//       List<int> _int = List.generate(5, (i) => list.length + i + 1);
-//       //API Calls
-//       setState(() {
-//         list.addAll(_int);
-//         _isMoreData = false;
-//       });
-//     } else {
-//       setState(() {
-//         _isMoreData = true;
-//       });
-//     }
-//   }
-//   print('successfull');
-//   return fetched;
-//   // } catch (e) {
-//   //   print(e);
-//   // }
-// }
-
 Future<bool> checkInternetConnectivity() async {
   var connectivityResult = await (Connectivity().checkConnectivity());
 
@@ -130,6 +104,7 @@ Future<bool> checkInternetConnectivity() async {
 }
 
 void shareAppWithFriends(BuildContext context) {
+  String shareText = '';
   shareText = 'Explore SPACE and NASA with this amazing app!!';
   Share.share(
     shareText,
@@ -142,10 +117,12 @@ void shareAppWithFriends(BuildContext context) {
 // for redirecting to any social media account
 void redirectToSocialMedia(
     {required String link, required BuildContext context}) async {
+  Uri? socialMediaLink;
+
   socialMediaLink = Uri.parse(link);
   try {
-    if (await canLaunchUrl(socialMediaLink!)) {
-      launchUrl(socialMediaLink!);
+    if (await canLaunchUrl(socialMediaLink)) {
+      launchUrl(socialMediaLink);
     }
   } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -189,3 +166,41 @@ void call({required String phoneNumber}) async {
 
 //? home screen functions -----
 //? home screen functions -----
+
+
+
+
+
+// Future<List<ImageModel>> fetchImages(BuildContext context) async {
+//   var url = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=5';
+//   // try {
+//   var response = await http.get(Uri.parse(url));
+//   if (response.statusCode == 200) {
+//     // '[{},{},{}]'
+//     var fetchedImagesList = jsonDecode(response.body);
+//     // [{},{},{}]
+//     for (var x in fetchedImagesList) {
+//       // {} = x ==> {x}
+//       fetched.add(ImageModel.fromJson(x));
+//       print(fetched[0].getHdurl());
+//     }
+//     await Future.delayed(Duration(seconds: 3));
+//     if (fetched.length != 50) {
+//       List<int> _int = List.generate(5, (i) => list.length + i + 1);
+//       //API Calls
+//       setState(() {
+//         list.addAll(_int);
+//         _isMoreData = false;
+//       });
+//     } else {
+//       setState(() {
+//         _isMoreData = true;
+//       });
+//     }
+//   }
+//   print('successfull');
+//   return fetched;
+//   // } catch (e) {
+//   //   print(e);
+//   // }
+// }

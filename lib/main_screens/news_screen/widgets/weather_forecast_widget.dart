@@ -5,6 +5,8 @@ import 'package:lottie/lottie.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
+import 'package:nasa_explorer_app_project/models/weather_model.dart';
+import 'package:nasa_explorer_app_project/services/weather_service.dart';
 
 class WeatherForecastWidget extends StatefulWidget {
   const WeatherForecastWidget({
@@ -15,6 +17,10 @@ class WeatherForecastWidget extends StatefulWidget {
 }
 
 class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
+  final weatherService = WeatherService('fa88c4230ebb702c6e7b5572e44a7095');
+  WeatherModel? weatherModel;
+  String? cityName;
+
   @override
   void initState() {
     super.initState();

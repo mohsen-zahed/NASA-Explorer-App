@@ -16,6 +16,7 @@ class AddScreen extends StatefulWidget {
 class _AddScreenState extends State<AddScreen> {
   void postImageUpload() async {
     try {
+      var postImage;
       postImage = await picker.pickImage(source: ImageSource.gallery);
       final postImageTemp = File(postImage.path);
       setState(() {

@@ -153,3 +153,16 @@ List<String> emptyImagesList = [
 ];
 
 List<dynamic> fetchedPlanets = [];
+
+List solarImages = [
+  'earth.png',
+  'jupiter.png',
+  'mars.png',
+  'mercury.png',
+  'moon.png',
+  'neptune.png',
+  'pluto.png',
+  'saturn.png',
+  'uranus.png',
+  'venus.png',
+];

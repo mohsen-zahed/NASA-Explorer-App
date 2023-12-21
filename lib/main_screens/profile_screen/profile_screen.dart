@@ -22,8 +22,11 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final TextEditingController profileTextEditingController =
+      TextEditingController();
   void changeProfileImage() async {
     try {
+      var editPickedProfileImage;
       editPickedProfileImage =
           await picker.pickImage(source: ImageSource.gallery);
       final imageTemp = File(editPickedProfileImage.path);

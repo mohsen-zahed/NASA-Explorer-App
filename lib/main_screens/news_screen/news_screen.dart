@@ -20,6 +20,9 @@ class NewsScreen extends StatefulWidget {
 }
 
 class _NewsScreenState extends State<NewsScreen> {
+  var newsResponse;
+  bool isNewsLoading = true;
+  bool enteredFirstTime = false;
   @override
   void initState() {
     super.initState();

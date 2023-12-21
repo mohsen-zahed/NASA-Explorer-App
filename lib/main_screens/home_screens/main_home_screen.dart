@@ -13,12 +13,13 @@ class MainHomeScreen extends StatefulWidget {
     super.key,
   });
 
-
   @override
   State<MainHomeScreen> createState() => _MainHomeScreenState();
 }
 
 class _MainHomeScreenState extends State<MainHomeScreen> {
+  int currentScreen = 0;
+
   List<Widget> scaffoldScreens = const [
     HomeScreen(),
     NewsScreen(),

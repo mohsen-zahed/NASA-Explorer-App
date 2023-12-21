@@ -14,5 +14,5 @@ class PlanetModel {
   String getPlanetSubTitle() => planetSubTitle;
   String getPlanetIntro() => planetIntro;
   String getPlanetHistory() => planetHistory;
-  String getPlanetClimate() => planetHistory;
+  String getPlanetClimate() => planetClimate;
 }

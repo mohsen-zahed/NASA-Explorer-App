@@ -1,9 +1,8 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
+import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/solar_system_single_card_widget.dart';
 import 'package:nasa_explorer_app_project/models/planet_model.dart';
 import 'package:nasa_explorer_app_project/widgets/carousel/carousel_slider.dart';
@@ -11,7 +10,10 @@ import 'package:nasa_explorer_app_project/widgets/carousel/carousel_slider.dart'
 class HorizontalSolarSystemCarouselSlider extends StatefulWidget {
   const HorizontalSolarSystemCarouselSlider({
     super.key,
+    required this.planetsList,
   });
+
+  final List planetsList;
 
   @override
   State<HorizontalSolarSystemCarouselSlider> createState() =>
@@ -20,35 +22,6 @@ class HorizontalSolarSystemCarouselSlider extends StatefulWidget {
 
 class _HorizontalSolarSystemCarouselSliderState
     extends State<HorizontalSolarSystemCarouselSlider> {
-  @override
-  void initState() {
-    super.initState();
-    getPlanetsFromFirebase();
-  }
-
-  Future getPlanetsFromFirebase() async {
-    final planetsRef = FirebaseFirestore.instance
-        .collection("PlanetsData")
-        .orderBy(descending: false, 'id');
-    await planetsRef.get().then(
-          (value) => value.docs.forEach(
-            (element) {
-              fetchedPlanets.add(
-                PlanetModel.create(
-                  element.data()['id'],
-                  element.data()['planet_name'],
-                  element.data()['planet_sub_title'],
-                  element.data()['planet_intro'],
-                  element.data()['planet_history'],
-                  element.data()['planet_climate'],
-                ),
-              );
-            },
-          ),
-        );
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -90,12 +63,13 @@ class _HorizontalSolarSystemCarouselSliderState
         ),
         const SizedBox(height: 70),
         CarouselSlider.builder(
-          itemCount: fetchedPlanets.length,
+          itemCount: widget.planetsList.length,
           itemBuilder: (context, index, realIndex) {
             return SolarSystemSinglCardWidget(
               index: realIndex,
-              solarList: fetchedPlanets,
+              solarList: widget.planetsList,
               onTap: () => showSolarBottomSheet(context, index),
+              planetsList: fetchedPlanets,
             );
           },
           options: CarouselOptions(
@@ -125,7 +99,7 @@ class _HorizontalSolarSystemCarouselSliderState
       context: context,
       builder: (context) {
         return BottomSheetWidget(
-          itemList: fetchedPlanets,
+          itemList: widget.planetsList,
           index: index,
         );
       },
@@ -229,6 +203,15 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                           ),
                     ),
                     Text(
+                      '- ${widget.itemList[widget.index].getPlanetSubTitle()} -',
+                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                            color: kWhiteColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w300,
+                          ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
                       widget.itemList[widget.index].getPlanetIntro(),
                       style: Theme.of(context).textTheme.titleMedium!.copyWith(
                             color: kWhiteColor,
@@ -290,6 +273,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                   ],
                 ),
               ),
+              const SizedBox(height: 10),
             ],
           ),
         ),
