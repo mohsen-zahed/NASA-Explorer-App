@@ -75,15 +75,15 @@ class CustomTextField extends StatelessWidget {
             ),
           ),
         ),
-        ...List.generate(
-          errorList.length,
-          (index) => Text(
-            errorList[index],
-            style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                  color: Colors.red,
-                ),
-          ),
-        ),
+        // ...List.generate(
+        //   errorList.length,
+        //   (index) => Text(
+        //     errorList[index],
+        //     style: Theme.of(context).textTheme.bodySmall!.copyWith(
+        //           color: Colors.red,
+        //         ),
+        //   ),
+        // ),
       ],
     );
   }

@@ -11,21 +11,12 @@ void showSnackBar({
       showCloseIcon: true,
       closeIconColor: kWhiteColor,
       duration: Duration(seconds: duration),
-      content: Row(
-        textDirection: TextDirection.rtl,
-        children: [
-          const Icon(
-            Icons.check,
-            size: 20,
-            color: kWhiteColor,
-          ),
-          const SizedBox(width: 20),
-          Text(
-            text,
-            style: const TextStyle(fontSize: 20),
-            textDirection: TextDirection.rtl,
-          ),
-        ],
+      content: Text(
+        text,
+        style: Theme.of(context)
+            .textTheme
+            .bodyMedium!
+            .copyWith(color: kWhiteColor),
       ),
     ),
   );

@@ -4,6 +4,7 @@ import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/initial_screens/onboarding_screen/onboarding_screen.dart';
+import 'package:nasa_explorer_app_project/initial_screens/registration_screen/registration_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/main_home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -44,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (context) => const MainHomeScreen(),
+            builder: (context) => const RegistrationScreen(),
           ),
           (route) => false);
     }

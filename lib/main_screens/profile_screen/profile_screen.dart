@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/gestures.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
@@ -24,6 +24,24 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController profileTextEditingController =
       TextEditingController();
+  @override
+  void initState() {
+    getUserInfo();
+    super.initState();
+  }
+
+  var userName;
+  var userEmail;
+  var userImage;
+  void getUserInfo() {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+    if (user != null) {
+      userName = user.displayName ?? '--';
+      userEmail = user.email ?? 'user@gmail.com';
+    }
+  }
+
   void changeProfileImage() async {
     try {
       var editPickedProfileImage;
@@ -42,7 +60,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  var userName = 'Sarah F. Kennedy';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,6 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: 100),
                   EditImageProfileChangeImageWidgets(
                     name: userName,
+                    email: userEmail,
                     onEditTap: () => editProfileName(context),
                     onImageTap: () => changeProfileImage(),
                   ),

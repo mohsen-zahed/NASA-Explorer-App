@@ -2,10 +2,13 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:http/http.dart' as http;
 import 'package:nasa_explorer_app_project/constants/variables.dart';
+import 'package:nasa_explorer_app_project/firebase/firebase_functions.dart';
+import 'package:nasa_explorer_app_project/functions/show_snackbar.dart';
 import 'package:nasa_explorer_app_project/models/image_model.dart';
 import 'package:nasa_explorer_app_project/models/news_model.dart';
 import 'package:nasa_explorer_app_project/models/planet_model.dart';
@@ -22,46 +25,78 @@ double getMaxHieghtMediaQuery(BuildContext context, [double? number]) {
 
 void emailValidator(String email) {
   if (email.isEmpty) {
+    if (!userRegFormErrors.contains('Please enter an email!')) {
+      userRegFormErrors.add('Please enter an email!');
+    }
     if (!errorList.contains('Please enter an email!')) {
       errorList.add('Please enter an email!');
-    } else if (errorList.contains('Please enter an email!')) {}
+    }
   } else {
-    errorList.remove('Please enter an email!');
+    userRegFormErrors.remove('Please enter an email!');
     if (!email.contains('@gmail.com')) {
-      if (!errorList.contains('Please check your email address!')) {
-        errorList.add('Please check your email address!');
-      } else if (errorList.contains('Please check your email address!')) {}
+      if (!userRegFormErrors.contains('Please check your email address!')) {
+        userRegFormErrors.add('Please check your email address!');
+      }
     } else if (email.contains('@gmail.com')) {
-      errorList.remove('Please check your email address!');
+      userRegFormErrors.remove('Please check your email address!');
+    }
+    if (!errorList.contains('Please check your email address!')) {
+      errorList.add('Please check your email address!');
     }
   }
 }
 
 void passwordValidator(String password) {
   if (password.isEmpty) {
-    errorList.add('Please enter your password!');
+    if (!userRegFormErrors.contains('Please enter your password!')) {
+      userRegFormErrors.add('Please enter your password!');
+    }
+    if (!errorList.contains('Please enter your password!')) {
+      errorList.add('Please enter your password!');
+    }
   } else {
-    errorList.remove('Please enter your password!');
+    userRegFormErrors.remove('Please enter your password!');
     if (password.length < 6) {
-      errorList.add('Password must be more than 6 characters!');
+      if (!userRegFormErrors
+          .contains('Password must be more than 6 characters!')) {
+        userRegFormErrors.add('Password must be more than 6 characters!');
+      }
     } else if (password.length == 6 || password.length > 6) {
-      errorList.remove('Password must be more than 6 characters!');
+      userRegFormErrors.remove('Password must be more than 6 characters!');
     }
-    if (!password.contains('%') ||
-        !password.contains('&') ||
-        !password.contains('#') ||
-        !password.contains('@') ||
-        !password.contains('!')) {
-      errorList
-          .add('Password must contain at least one of \'!,@,#,%,&\' symbols!');
-    } else if (password.contains('%') ||
-        password.contains('&') ||
-        password.contains('#') ||
-        password.contains('@') ||
-        password.contains('!')) {
-      errorList.remove(
-          'Password must contain at least one of \'!,@,#,%,&\' symbols!');
+    if (!errorList.contains('Password must be more than 6 characters!')) {
+      errorList.add('Password must be more than 6 characters!');
     }
+  }
+}
+
+Future<bool> checkEmailAvailability(
+  String email,
+  BuildContext context,
+) async {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  try {
+    final List<String> providers =
+        await _auth.fetchSignInMethodsForEmail(email);
+        print(providers);
+
+    if (providers.isNotEmpty) {
+      // Email already exists
+      showSnackBar(
+        context: context,
+        text: 'Email already exists!',
+        duration: 3,
+      );
+      return false;
+    }
+    return true;
+  } catch (error) {
+    showSnackBar(
+        context: context,
+        text: 'Error checking email availability: $error',
+        duration: 4);
+
+    return false;
   }
 }
 

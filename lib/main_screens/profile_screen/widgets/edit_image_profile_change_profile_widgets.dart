@@ -8,8 +8,10 @@ class EditImageProfileChangeImageWidgets extends StatefulWidget {
     required this.onEditTap,
     required this.name,
     required this.onImageTap,
+    required this.email,
   });
   final String name;
+  final String email;
   final VoidCallback onEditTap;
   final VoidCallback onImageTap;
 
@@ -105,7 +107,7 @@ class _EditImageProfileChangeImageWidgetsState
               ),
         ),
         Text(
-          'sarahkennedy1990@gmail.com',
+          widget.email,
           style: Theme.of(context).textTheme.titleSmall!.copyWith(
                 color: kGreyColor,
                 fontSize: 11,
