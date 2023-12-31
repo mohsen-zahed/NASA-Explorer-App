@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -36,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final storage = FirebaseStorage.instance;
   Future<String>? solarImagesUrl;
   String? imageUrll = '';
+  List<String>? imageUrls;
 
   @override
   void initState() {
@@ -99,7 +101,6 @@ class _HomeScreenState extends State<HomeScreen> {
             (element) {
               fetchedPlanets.add(
                 PlanetModel.create(
-                  
                   element.data()['id'],
                   element.data()['planet_name'],
                   element.data()['planet_sub_title'],

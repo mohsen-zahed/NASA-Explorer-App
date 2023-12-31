@@ -1,17 +1,13 @@
-import 'dart:convert';
+// ignore_for_file: use_build_context_synchronously, no_leading_underscores_for_local_identifiers
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
-import 'package:http/http.dart' as http;
-import 'package:nasa_explorer_app_project/constants/variables.dart';
-import 'package:nasa_explorer_app_project/firebase/firebase_functions.dart';
 import 'package:nasa_explorer_app_project/functions/show_snackbar.dart';
-import 'package:nasa_explorer_app_project/models/image_model.dart';
-import 'package:nasa_explorer_app_project/models/news_model.dart';
-import 'package:nasa_explorer_app_project/models/planet_model.dart';
+import 'package:nasa_explorer_app_project/initial_screens/registration_screen/registration_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/main_home_screen.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -33,20 +29,25 @@ void emailValidator(String email) {
     }
   } else {
     userRegFormErrors.remove('Please enter an email!');
+    errorList.remove('Please enter an email!');
     if (!email.contains('@gmail.com')) {
       if (!userRegFormErrors.contains('Please check your email address!')) {
         userRegFormErrors.add('Please check your email address!');
       }
-    } else if (email.contains('@gmail.com')) {
+      if (!errorList.contains('Please check your email address!')) {
+        errorList.add('Please check your email address!');
+      }
+    } else {
       userRegFormErrors.remove('Please check your email address!');
-    }
-    if (!errorList.contains('Please check your email address!')) {
-      errorList.add('Please check your email address!');
+      errorList.remove('Please check your email address!');
     }
   }
 }
 
-void passwordValidator(String password) {
+void passwordValidator(
+    {required String password,
+    required bool confirmPassword,
+    String? password2}) {
   if (password.isEmpty) {
     if (!userRegFormErrors.contains('Please enter your password!')) {
       userRegFormErrors.add('Please enter your password!');
@@ -56,17 +57,50 @@ void passwordValidator(String password) {
     }
   } else {
     userRegFormErrors.remove('Please enter your password!');
+    errorList.remove('Please enter your password!');
     if (password.length < 6) {
       if (!userRegFormErrors
           .contains('Password must be more than 6 characters!')) {
         userRegFormErrors.add('Password must be more than 6 characters!');
       }
+      if (!errorList.contains('Password must be more than 6 characters!')) {
+        errorList.add('Password must be more than 6 characters!');
+      }
     } else if (password.length == 6 || password.length > 6) {
-      userRegFormErrors.remove('Password must be more than 6 characters!');
+      if (userRegFormErrors
+          .contains('Password must be more than 6 characters!')) {
+        userRegFormErrors.remove('Password must be more than 6 characters!');
+      }
+      if (errorList.contains('Password must be more than 6 characters!')) {
+        errorList.add('Password must be more than 6 characters!');
+      }
     }
-    if (!errorList.contains('Password must be more than 6 characters!')) {
-      errorList.add('Password must be more than 6 characters!');
+    if (confirmPassword) {
+      if (password != password2) {
+        if (!userRegFormErrors.contains('Please confirm your password!')) {
+          userRegFormErrors.add('Please confirm your password!');
+        }
+        if (!errorList.contains('Please confirm your password!')) {
+          errorList.add('Please confirm your password!');
+        }
+      } else {
+        if (userRegFormErrors.contains('Please confirm your password!')) {
+          userRegFormErrors.remove('Please confirm your password!');
+        }
+        if (errorList.contains('Please confirm your password!')) {
+          errorList.remove('Please confirm your password!');
+        }
+      }
     }
+  }
+}
+
+Future<bool> confirmPasswordShowStatus(
+    String password, String confirmPassword) async {
+  if (password == confirmPassword) {
+    return true;
+  } else {
+    return false;
   }
 }
 
@@ -78,7 +112,6 @@ Future<bool> checkEmailAvailability(
   try {
     final List<String> providers =
         await _auth.fetchSignInMethodsForEmail(email);
-        print(providers);
 
     if (providers.isNotEmpty) {
       // Email already exists
@@ -127,7 +160,7 @@ String getWeatherAnimations(String? mainCondition) {
   }
 }
 
-Future<bool> checkInternetConnectivity() async {
+Future<bool> checkInternetConnectivity(BuildContext context) async {
   var connectivityResult = await (Connectivity().checkConnectivity());
 
   if (connectivityResult == ConnectivityResult.mobile ||
@@ -187,6 +220,46 @@ void call({required String phoneNumber}) async {
     throw "Something went wrong, please try again later!";
   }
 }
+
+Future<void> checkRegistrationStatus(BuildContext context) async {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  User? user = auth.currentUser;
+
+  if (user != null) {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .set({'isRegistered': false});
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
+    bool isRegistered = userDoc.get('isRegistered');
+
+    if (isRegistered) {
+      // User is registered, navigate to home screen
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MainHomeScreen(),
+        ),
+        (route) => false,
+      );
+    } else {
+      // User is not registered, navigate to registration screen
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => RegistrationScreen(),
+        ),
+        (route) => false,
+      );
+    }
+  } else {
+    showSnackBar(context: context, text: 'user not found', duration: 3);
+  }
+}
+
 
 //? home screen functions -----
 //? home screen functions -----

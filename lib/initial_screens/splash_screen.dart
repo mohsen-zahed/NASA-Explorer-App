@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
@@ -6,6 +8,7 @@ import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/initial_screens/onboarding_screen/onboarding_screen.dart';
 import 'package:nasa_explorer_app_project/initial_screens/registration_screen/registration_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/main_home_screen.dart';
+import 'package:nasa_explorer_app_project/services/shared_preferences_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -20,20 +23,27 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
-    Timer(
-      Duration(seconds: isFirstTime ? 3 : 1),
-      () async {
-        isUserConnected = await checkInternetConnectivity();
-        checkOnboardingScreen();
-      },
+    Future.delayed(
+      const Duration(seconds: 3),
+      () => redirectToNextScreen(),
     );
   }
 
+  Future<void> redirectToNextScreen() async {
+    isUserConnected = await checkInternetConnectivity(context);
+
+    // await checkRegistrationStatus(context);
+
+    checkOnboardingScreen();
+  }
+
   checkOnboardingScreen() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    if (sharedPreferences.getBool('checked_onboarding') == null ||
-        sharedPreferences.getBool('checked_onboarding') == false) {
+    if (await SharedPreferencesClass()
+                .getOnboardingStatusFromSharedPreferences() ==
+            null ||
+        await SharedPreferencesClass()
+                .getOnboardingStatusFromSharedPreferences() ==
+            false) {
       isFirstTime = true;
       Navigator.pushAndRemoveUntil(
           context,
@@ -41,11 +51,22 @@ class _SplashScreenState extends State<SplashScreen> {
             builder: (context) => const OnboardingScreen(),
           ),
           (route) => false);
-    } else {
+    }
+    if (await SharedPreferencesClass().getLoginStatusFromSharedPreferences() ==
+            null ||
+        await SharedPreferencesClass().getLoginStatusFromSharedPreferences() ==
+            false) {
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
             builder: (context) => const RegistrationScreen(),
+          ),
+          (route) => false);
+    } else {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MainHomeScreen(),
           ),
           (route) => false);
     }

@@ -29,7 +29,7 @@ class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
 
   // fetch weather
   _fetchWeather() async {
-    await checkInternetConnectivity();
+    await checkInternetConnectivity(context);
     if (isUserConnected == false) {
       Timer(const Duration(seconds: 4), () {
         ScaffoldMessenger.of(context).showSnackBar(

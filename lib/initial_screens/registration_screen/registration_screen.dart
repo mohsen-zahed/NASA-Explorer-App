@@ -9,7 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
-import 'package:nasa_explorer_app_project/firebase/firebase_functions.dart';
+import 'package:nasa_explorer_app_project/functions/firebase_functions/firebase_functions.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/functions/show_snackbar.dart';
 import 'package:nasa_explorer_app_project/initial_screens/registration_screen/widgets/login_account_and_guest_account_texts.dart';
@@ -17,6 +17,7 @@ import 'package:nasa_explorer_app_project/initial_screens/registration_screen/wi
 import 'package:nasa_explorer_app_project/main_screens/home_screens/main_home_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/profile_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/widgets/about_me_dialog_widget.dart';
+import 'package:nasa_explorer_app_project/services/shared_preferences_service.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_elevated_button.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_text_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -143,7 +144,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                           ),
                                           const SizedBox(height: 10),
                                           CustomTextField(
-                                            hintText: 'Email',
+                                            textInputType:
+                                                TextInputType.emailAddress,
+                                            hintText: 'Email address',
                                             prefixIcon: Icons.email,
                                             errorText: '',
                                             focusNode: focusNode2,
@@ -192,6 +195,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                           const SizedBox(height: 50),
                                           CustomTextField(
                                             hintText: 'Email',
+                                            textInputType:
+                                                TextInputType.emailAddress,
                                             prefixIcon: Icons.email,
                                             errorText: '',
                                             focusNode: focusNode5,
@@ -227,31 +232,51 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                       isUserLoging ? 'Sign in' : 'Sign up',
                                   onPressed: () async {
                                     isUserConnected =
-                                        await checkInternetConnectivity();
+                                        await checkInternetConnectivity(
+                                            context);
                                     if (isUserConnected) {
                                       if (!isUserLoging) {
                                         emailValidator(
                                             textEditingController2.text);
                                         passwordValidator(
-                                            textEditingController3.text);
+                                          password: textEditingController3.text,
+                                          password2:
+                                              textEditingController4.text,
+                                          confirmPassword: true,
+                                        );
+
                                         removeErrors();
                                         setState(() {
                                           isSubmitingUser = true;
                                         });
                                         if (userRegFormErrors.isEmpty) {
                                           await FirebaseFunctions(
-                                            FirebaseAuth.instance,
-                                          ).signUpWithEmail(
+                                                  FirebaseAuth.instance)
+                                              .signUpWithEmail(
+                                            name: textEditingController1.text,
                                             email: textEditingController2.text,
                                             password:
                                                 textEditingController3.text,
                                             context: context,
                                           );
-                                          SharedPreferences _sharedPreferences =
-                                              await SharedPreferences
-                                                  .getInstance();
-                                          _sharedPreferences.setBool(
-                                              'userIsLoggedIn', true);
+                                          var isSaved =
+                                              await SharedPreferencesClass()
+                                                  .saveLoginStatusToSharedPreferences(
+                                                      isLoggedIn: true);
+                                          isSaved == true
+                                              ? Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const MainHomeScreen(),
+                                                  ),
+                                                  (route) => false,
+                                                )
+                                              : showSnackBar(
+                                                  context: context,
+                                                  text:
+                                                      'Something went wrong, try again!',
+                                                  duration: 3);
                                         }
                                         setState(() {
                                           isSubmitingUser = false;
@@ -260,27 +285,40 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                         emailValidator(
                                             textEditingController5.text);
                                         passwordValidator(
-                                            textEditingController6.text);
+                                          password: textEditingController6.text,
+                                          confirmPassword: false,
+                                        );
                                         removeErrors();
                                         setState(() {
                                           isSubmitingUser = true;
                                         });
                                         if (userRegFormErrors.isEmpty) {
                                           await FirebaseFunctions(
-                                            FirebaseAuth.instance,
-                                          ).signInWithEmail(
-                                            email: textEditingController2.text,
+                                                  FirebaseAuth.instance)
+                                              .signInWithEmail(
+                                            email: textEditingController5.text,
                                             password:
-                                                textEditingController3.text,
+                                                textEditingController6.text,
                                             context: context,
                                           );
-                                          Navigator.pushAndRemoveUntil(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const MainHomeScreen(),
-                                              ),
-                                              (route) => false);
+                                          var isSaved =
+                                              await SharedPreferencesClass()
+                                                  .saveLoginStatusToSharedPreferences(
+                                                      isLoggedIn: true);
+                                          isSaved == true
+                                              ? Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const MainHomeScreen(),
+                                                  ),
+                                                  (route) => false,
+                                                )
+                                              : showSnackBar(
+                                                  context: context,
+                                                  text:
+                                                      'Something went wrong, try again!',
+                                                  duration: 3);
                                         }
                                         setState(() {
                                           isSubmitingUser = false;
@@ -318,7 +356,28 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                       userRegFormErrors.clear();
                                     });
                                   },
-                                  onGuestAccountTap: () {},
+                                  onGuestAccountTap: () async {
+                                    await FirebaseFunctions(
+                                            FirebaseAuth.instance)
+                                        .signInAnonymously(context);
+                                    var isSaved = await SharedPreferencesClass()
+                                        .saveLoginStatusToSharedPreferences(
+                                            isLoggedIn: true);
+                                    isSaved == true
+                                        ? Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const MainHomeScreen(),
+                                            ),
+                                            (route) => false,
+                                          )
+                                        : showSnackBar(
+                                            context: context,
+                                            text:
+                                                'Something went wrong, try again!',
+                                            duration: 3);
+                                  },
                                 ),
                               ],
                             ),
@@ -349,7 +408,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         margin: const EdgeInsets.only(bottom: 4),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
-                          color: kBackgroundColor,
+                          color: kScaffoldBackgroundColor,
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

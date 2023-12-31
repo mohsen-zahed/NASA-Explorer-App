@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
-import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
 
 class AboutMeDialogWidget extends StatefulWidget {
@@ -11,12 +10,14 @@ class AboutMeDialogWidget extends StatefulWidget {
     this.text,
     required this.isAboutMe,
     required this.buttonText,
+    this.onTap,
   });
 
   final String title;
   final text;
   final bool isAboutMe;
   final String buttonText;
+  final onTap;
 
   @override
   State<AboutMeDialogWidget> createState() => _AboutMeDialogWidgetState();
@@ -31,7 +32,8 @@ class _AboutMeDialogWidgetState extends State<AboutMeDialogWidget> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: kBackgroundColor,
+      surfaceTintColor: kScaffoldBackgroundColor,
+      backgroundColor: kScaffoldBackgroundColor,
       title: Text(
         widget.title,
         style: Theme.of(context).textTheme.titleLarge!.copyWith(
@@ -77,6 +79,10 @@ class _AboutMeDialogWidgetState extends State<AboutMeDialogWidget> {
             ),
       actions: [
         TextButton(
+          onPressed: widget.onTap ??
+              () {
+                Navigator.of(context).pop();
+              },
           child: Text(
             widget.buttonText,
             style: Theme.of(context)
@@ -84,9 +90,6 @@ class _AboutMeDialogWidgetState extends State<AboutMeDialogWidget> {
                 .bodyMedium!
                 .copyWith(color: kWhiteColor),
           ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
         ),
       ],
     );

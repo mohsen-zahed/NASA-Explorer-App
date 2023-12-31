@@ -43,7 +43,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
               margin: const EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
-                color: kBackgroundColor.withOpacity(0.8),
+                color: kScaffoldBackgroundColor.withOpacity(0.8),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,

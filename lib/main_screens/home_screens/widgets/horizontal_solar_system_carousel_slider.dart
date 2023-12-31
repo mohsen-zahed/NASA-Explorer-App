@@ -93,7 +93,7 @@ class _HorizontalSolarSystemCarouselSliderState
     return showModalBottomSheet(
       isDismissible: true,
       isScrollControlled: true,
-      backgroundColor: kBackgroundColor,
+      backgroundColor: kScaffoldBackgroundColor,
       enableDrag: true,
       showDragHandle: true,
       context: context,

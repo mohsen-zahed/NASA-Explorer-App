@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
-import 'package:nasa_explorer_app_project/constants/list.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
     super.key,
     required this.hintText,
-     this.prefixIcon,
-     this.errorText,
+    this.prefixIcon,
+    this.errorText,
     this.obsecuredField,
     this.suffixIcon,
     this.onSuffixIconTap,
     this.isPasswordField,
     this.focusNode,
     this.textEditingController,
+    this.textInputType,
   });
   final String hintText;
   final IconData? prefixIcon;
@@ -24,6 +24,7 @@ class CustomTextField extends StatelessWidget {
   final VoidCallback? onSuffixIconTap;
   final FocusNode? focusNode;
   final TextEditingController? textEditingController;
+  final TextInputType? textInputType;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +38,7 @@ class CustomTextField extends StatelessWidget {
           ),
           child: Center(
             child: TextFormField(
+              keyboardType: textInputType ?? TextInputType.text,
               style: TextStyle(
                 color: kWhiteColor70.withOpacity(0.6),
               ),

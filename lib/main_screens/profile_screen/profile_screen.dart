@@ -1,10 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
+import 'package:nasa_explorer_app_project/functions/firebase_functions/firebase_functions.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
+import 'package:nasa_explorer_app_project/functions/show_snackbar.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/sub_screens/shared_posts_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/widgets/about_me_dialog_widget.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/widgets/edit_image_profile_change_profile_widgets.dart';
@@ -37,8 +41,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user = auth.currentUser;
     if (user != null) {
-      userName = user.displayName ?? '--';
-      userEmail = user.email ?? 'user@gmail.com';
+      userName = user.displayName;
+      userEmail = user.email;
     }
   }
 
@@ -52,11 +56,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         pickedImageForProf = imageTemp;
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to change profile image!'),
-        ),
-      );
+      showSnackBar(
+          context: context,
+          text: 'Failed to change profile image!',
+          duration: 3);
     }
   }
 
@@ -69,14 +72,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const SizedBox(height: 100),
+                  const SizedBox(height: 60),
                   EditImageProfileChangeImageWidgets(
-                    name: userName,
-                    email: userEmail,
+                    name: userName ?? 'name',
+                    email: userEmail ?? 'example@gmail.com',
                     onEditTap: () => editProfileName(context),
                     onImageTap: () => changeProfileImage(),
                   ),
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 30),
                   CustomListTileWidget(
                     text: 'Saved Posts',
                     leadingIcon: Icons.bookmark,
@@ -129,7 +132,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     trailingIcon: Icons.arrow_forward_ios_rounded,
                   ),
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 30),
+                  CustomListTileWidget(
+                    text: 'Sign Out',
+                    leadingIcon: Icons.logout,
+                    onListTileTap: () => showAdaptiveDialog(
+                      context: context,
+                      builder: (context) {
+                        return AboutMeDialogWidget(
+                          title: 'Signing Out',
+                          isAboutMe: false,
+                          text: 'Are you sure?\nYou\'ll have to login again!',
+                          buttonText: 'Continue',
+                          onTap: () async {
+                            await FirebaseFunctions(FirebaseAuth.instance)
+                                .signOutUser(context: context);
+                          },
+                        );
+                      },
+                    ),
+                    trailingIcon: Icons.arrow_forward_ios_rounded,
+                  ),
+                  const SizedBox(height: 20),
                   Text(
                     'App ver. 1.0.0',
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
@@ -153,7 +177,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: kBackgroundColor,
+        backgroundColor: kScaffoldBackgroundColor,
         title: const Text('About Me'),
         content: ConstrainedBox(
           constraints: BoxConstraints(
