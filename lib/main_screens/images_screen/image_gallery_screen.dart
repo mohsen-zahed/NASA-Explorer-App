@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
-import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/main_screens/images_screen/widgets/vertical_images_grid_view.dart';
 import 'package:nasa_explorer_app_project/widgets/background_image_widget.dart';
 
 class ImageGalleryScreen extends StatefulWidget {
   const ImageGalleryScreen({super.key});
+  static const String id = '/gallery_screen';
 
   @override
   State<ImageGalleryScreen> createState() => _ImageGalleryScreenState();
@@ -15,7 +15,6 @@ class ImageGalleryScreen extends StatefulWidget {
 class _ImageGalleryScreenState extends State<ImageGalleryScreen> {
   bool isScreenLoading = true;
   bool isFetchingDataFailed = false;
-
 
   @override
   Widget build(BuildContext context) {

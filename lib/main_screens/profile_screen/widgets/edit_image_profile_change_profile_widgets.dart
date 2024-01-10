@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
@@ -9,7 +10,9 @@ class EditImageProfileChangeImageWidgets extends StatefulWidget {
     required this.name,
     required this.onImageTap,
     required this.email,
+    required this.urlImage,
   });
+  final String? urlImage;
   final String name;
   final String email;
   final VoidCallback onEditTap;
@@ -45,8 +48,7 @@ class _EditImageProfileChangeImageWidgetsState
             ),
             GestureDetector(
               onTap: widget.onImageTap,
-              child: pickedImageForProf == null
-                  ? Container(
+              child: Container(
                       width: 130,
                       height: 130,
                       margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -58,29 +60,22 @@ class _EditImageProfileChangeImageWidgetsState
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(100),
-                          image: const DecorationImage(
-                            image: AssetImage('assets/images/profile_pic.jpeg'),
-                          ),
                         ),
+                        child: widget.urlImage != null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: CachedNetworkImage(
+                                  imageUrl: widget.urlImage!,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: const CircularProgressIndicator(),
+                              ),
                       ),
                     )
-                  : Container(
-                      width: 130,
-                      height: 130,
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      padding: const EdgeInsets.all(3),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        border: Border.all(color: kWhiteColor),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: Image.file(
-                          pickedImageForProf!,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
+                 
             ),
             GestureDetector(
               onTap: widget.onImageTap,

@@ -1,19 +1,20 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
+import 'package:nasa_explorer_app_project/models/planet_model.dart';
+import 'package:nasa_explorer_app_project/widgets/shimmer_effect.dart';
 
 class SolarSystemSinglCardWidget extends StatelessWidget {
   const SolarSystemSinglCardWidget({
     super.key,
     required this.index,
-    required this.solarList,
     required this.onTap,
     required this.planetsList,
   });
   final int index;
-  final List<dynamic> solarList;
   final VoidCallback onTap;
-  final List planetsList;
+  final List<PlanetModel>? planetsList;
 
   @override
   Widget build(BuildContext context) {
@@ -37,17 +38,19 @@ class SolarSystemSinglCardWidget extends StatelessWidget {
               top: -50,
               left: 0,
               right: 0,
-              child: Container(
-                width: 120,
-                height: 120,
-                // decoration: BoxDecoration(
-                //   image: DecorationImage(
-                //     image: AssetImage(
-                //       solarSystemList[index]['planet_image'],
-                //     ),
-                //   ),
-                // ),
-              ),
+              child: planetsList![index].getPlanetImageUrl() == ''
+                  ? ShimmerEffect(useMargin: false)
+                  : Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: CachedNetworkImageProvider(
+                            planetsList![index].getPlanetImageUrl(),
+                          ),
+                        ),
+                      ),
+                    ),
             ),
             Positioned(
               left: 20,
@@ -57,7 +60,7 @@ class SolarSystemSinglCardWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    planetsList[index].getPlanetName(),
+                    planetsList![index].getPlanetName(),
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
                           color: kWhiteColor,
                           fontSize: 28,
@@ -65,7 +68,7 @@ class SolarSystemSinglCardWidget extends StatelessWidget {
                         ),
                   ),
                   Text(
-                    solarList[index].getPlanetSubTitle(),
+                    planetsList![index].getPlanetSubTitle(),
                     style: Theme.of(context).textTheme.titleMedium!.copyWith(
                           color: kWhiteColor,
                           overflow: TextOverflow.ellipsis,

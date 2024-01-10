@@ -1,5 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
@@ -8,8 +8,8 @@ import 'package:nasa_explorer_app_project/initial_screens/registration_screen/re
 import 'package:nasa_explorer_app_project/services/shared_preferences_service.dart';
 
 class FirebaseFunctions {
-  late FirebaseAuth _auth;
-  FirebaseFunctions(this._auth);
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseFunctions();
   Future<void> signUpWithEmail({
     required String name,
     required String email,
@@ -17,18 +17,37 @@ class FirebaseFunctions {
     required BuildContext context,
   }) async {
     try {
-      UserCredential userCredential =
-          await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
+      await _auth.createUserWithEmailAndPassword(
+        email: email.toLowerCase().trim(),
+        password: password.trim(),
       );
-
-      User? user = userCredential.user;
-      if (user != null) {
-        await user.updateDisplayName(name);
-      }
+      var date = DateTime.now().toString();
+      var dateStamp = DateTime.parse(date);
+      var formattedDate =
+          '${dateStamp.day}-${dateStamp.month}-${dateStamp.year}-${dateStamp.hour}-${dateStamp.minute}';
+      final User? user = _auth.currentUser;
+      final uid = user?.uid;
+      await FirebaseFirestore.instance.collection('users').doc(uid).set({
+        'id': uid,
+        'name': name,
+        'emailAddress': email,
+        'password': password,
+        'imageUrl': '',
+        'joinedAt': formattedDate,
+        'createdAt': Timestamp.now(),
+      });
+      userRegFormErrors.clear();
+      errorList.clear();
     } on FirebaseAuthException catch (e) {
-      showSnackBar(context: context, text: e.message.toString(), duration: 2);
+      if (email.isNotEmpty) {
+        if (!userRegFormErrors.contains(e.message.toString())) {
+          userRegFormErrors.add(e.message.toString());
+        }
+        if (!errorList.contains(e.message.toString())) {
+          errorList.add(e.message.toString());
+        }
+      }
+      // showSnackBar(context: context, text: e.message.toString(), duration: 4);
     }
   }
 
@@ -37,7 +56,8 @@ class FirebaseFunctions {
       required String password,
       required BuildContext context}) async {
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      await _auth.signInWithEmailAndPassword(
+          email: email.toLowerCase().trim(), password: password.trim());
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
         // The email address is not properly formatted.

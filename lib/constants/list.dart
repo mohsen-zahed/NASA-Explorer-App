@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/models/news_model.dart';
 import 'package:nasa_explorer_app_project/models/news_post_model.dart';
+import 'package:nasa_explorer_app_project/models/planet_model.dart';
 
 List<String> errorList = [];
 
@@ -153,7 +154,27 @@ List<String> emptyImagesList = [
 
 List<String> userRegFormErrors = [];
 
-List<dynamic> fetchedPlanets = [];
+List<PlanetModel> demoFetchedPlanets = [];
+List<PlanetModel> fetchedPlanets = [
+  PlanetModel.create(
+    1,
+    'Mercury',
+    'https://firebasestorage.googleapis.com/v0/b/nasa-explorer-app-3be03.appspot.com/o/planetsImages%2Fvenus.png?alt=media&token=7d83325c-8e18-4a43-b3af-e81dbd1a4ffc',
+    'The Swift Messenger',
+    'Mercury is the smallest planet in the Solar System and is located closest to the Sun. It is named after the Roman messenger god and is known for its extreme temperature variations. Mercury has been known since ancient times and was first observed through telescopes in the 17th century. The Mariner 10 mission provided the first close-up images of Mercury in 1974.',
+    'Mercury has been observed for thousands of years, but it wasn\'t until the 1970s that a spacecraft, Mariner 10, provided close-up images of the planet. In 2011, NASA\'s MESSENGER mission provided even more detailed information about Mercury\'s surface and composition.planetHistory',
+    'Due to its proximity to the Sun, Mercury experiences extreme temperature variations, with temperatures reaching up to 800 degrees Fahrenheit during the day and dropping to -290 degrees Fahrenheit at night.',
+  ),
+  PlanetModel.create(
+    2,
+    'Venus',
+    'https://firebasestorage.googleapis.com/v0/b/nasa-explorer-app-3be03.appspot.com/o/planetsImages%2Fmercury.png?alt=media&token=bc1da8de-5037-483a-adb6-847beff48da8',
+    'The Earth\'s Twin',
+    'Venus is often referred to as Earth\'s "sister planet" due to its similar size and composition. It is known for its thick atmosphere and extremely high surface temperatures. Venus has been known since ancient times and was first visited by spacecraft in the early 1960s, with Mariner 2 being the first successful mission.',
+    'Venus has been observed for centuries, with early astronomers mistaking it for a star due to its brightness. The first spacecraft to visit Venus was NASA\'s Mariner 2 in 1962, providing valuable data about its atmosphere and surface.',
+    'Venus has a dense carbon dioxide atmosphere that traps heat, leading to surface temperatures that can reach up to 900 degrees Fahrenheit. It also experiences sulfuric acid rain and intense atmospheric pressure.',
+  ),
+];
 
 List solarImages = [
   'earth.png',

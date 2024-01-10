@@ -1,8 +1,10 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, prefer_typing_uninitialized_variables
 
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
@@ -13,13 +15,13 @@ import 'package:nasa_explorer_app_project/main_screens/profile_screen/sub_screen
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/widgets/about_me_dialog_widget.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/widgets/edit_image_profile_change_profile_widgets.dart';
 import 'package:nasa_explorer_app_project/widgets/background_image_widget.dart';
-import 'package:nasa_explorer_app_project/widgets/custom_elevated_button.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_list_tile_widget.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_text_field.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+  static const String id = '/profile_screen';
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -34,32 +36,66 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
   }
 
+  var uid;
   var userName;
   var userEmail;
   var userImage;
-  void getUserInfo() {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User? user = auth.currentUser;
-    if (user != null) {
-      userName = user.displayName;
-      userEmail = user.email;
+  var imageUrlAfterChange;
+  var downloadedImageUrl;
+  User? user;
+
+  void getUserInfo() async {
+    try {
+      FirebaseAuth auth = FirebaseAuth.instance;
+      user = auth.currentUser;
+      if (user != null) {
+        uid = user?.uid;
+        final DocumentSnapshot userDocSnapshot =
+            await FirebaseFirestore.instance.collection('users').doc(uid).get();
+        if (mounted) {
+          setState(() {
+            userName = userDocSnapshot.get('name');
+            userEmail = userDocSnapshot.get('emailAddress');
+            userImage = userDocSnapshot.get('imageUrl');
+          });
+        }
+      }
+    } on FirebaseException catch (e) {
+      showSnackBar(context: context, text: e.message.toString(), duration: 4);
     }
   }
 
   void changeProfileImage() async {
     try {
-      var editPickedProfileImage;
-      editPickedProfileImage =
+      var editPickedProfileImage =
           await picker.pickImage(source: ImageSource.gallery);
-      final imageTemp = File(editPickedProfileImage.path);
+      var pickedImageFile = File(editPickedProfileImage?.path ?? '');
+      if (editPickedProfileImage != null) {
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('usersImage')
+            .child('${userName.toString().trim()}.jpeg');
+        await ref.putFile(pickedImageFile);
+        showSnackBar(
+            context: context,
+            text: 'Profile image updated successfuly',
+            duration: 3);
+        downloadedImageUrl = await ref.getDownloadURL();
+      } else {
+        showSnackBar(
+            context: context,
+            text: 'Failed to upload image profile!',
+            duration: 4);
+      }
       setState(() {
-        pickedImageForProf = imageTemp;
+        imageUrlAfterChange = downloadedImageUrl;
+        FirebaseFirestore.instance.collection('users').doc(uid).update({
+          'imageUrl': imageUrlAfterChange,
+        });
+        user?.reload();
       });
-    } catch (e) {
-      showSnackBar(
-          context: context,
-          text: 'Failed to change profile image!',
-          duration: 3);
+    } on FirebaseStorage catch (e) {
+      showSnackBar(context: context, text: e.toString(), duration: 3);
     }
   }
 
@@ -74,6 +110,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   const SizedBox(height: 60),
                   EditImageProfileChangeImageWidgets(
+                    urlImage: userImage != null
+                        ? userImage
+                        : 'https://www.pngall.com/wp-content/uploads/5/Profile.png',
                     name: userName ?? 'name',
                     email: userEmail ?? 'example@gmail.com',
                     onEditTap: () => editProfileName(context),
@@ -145,7 +184,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           text: 'Are you sure?\nYou\'ll have to login again!',
                           buttonText: 'Continue',
                           onTap: () async {
-                            await FirebaseFunctions(FirebaseAuth.instance)
+                            await FirebaseFunctions()
                                 .signOutUser(context: context);
                           },
                         );
@@ -178,24 +217,63 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: kScaffoldBackgroundColor,
-        title: const Text('About Me'),
-        content: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.2,
-          ),
+        surfaceTintColor: kScaffoldBackgroundColor,
+        title: Text(
+          'Edit Profile',
+          style: Theme.of(context)
+              .textTheme
+              .titleLarge!
+              .copyWith(color: kWhiteColor),
+        ),
+        content: SizedBox(
+          height: getMaxHieghtMediaQuery(context, 0.1),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+              const SizedBox(height: 20),
               CustomTextField(
                 textEditingController: profileTextEditingController,
                 hintText: 'Enter your new name',
+                hintTextColor: kWhiteColor,
+                prefixIcon: Icons.person,
+                prefixIconColor: kWhiteColor,
               ),
-              CustomElevatedButton(
-                textButton: 'Submit',
+            ],
+          ),
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                child: Text(
+                  'Close',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: kWhiteColor),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text(
+                  'Save',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: kWhiteColor),
+                ),
                 onPressed: () {
                   if (profileTextEditingController.value.text.isNotEmpty) {
                     setState(() {
-                      userName = profileTextEditingController.value.text;
+                      FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(uid)
+                          .update({
+                        'name': profileTextEditingController.text,
+                      });
+                      getUserInfo();
                       Navigator.pop(context);
                       profileTextEditingController.clear();
                     });
@@ -203,20 +281,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
               ),
             ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            child: Text(
-              'Close',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: kWhiteColor),
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
           ),
         ],
       ),

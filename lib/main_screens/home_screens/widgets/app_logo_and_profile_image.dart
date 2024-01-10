@@ -7,9 +7,11 @@ class AppLogoAndProfileImage extends StatelessWidget {
     super.key,
     required this.imageUrl,
     required this.nasaLogoUrl,
+    required this.onProfileImageTap,
   });
   final String imageUrl;
   final String nasaLogoUrl;
+  final VoidCallback onProfileImageTap;
 
   @override
   Widget build(BuildContext context) {
@@ -17,23 +19,26 @@ class AppLogoAndProfileImage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Image.asset(nasaLogoUrl, scale: 50),
-        Container(
-          width: 50,
-          height: 50,
-          padding: const EdgeInsets.all(1),
-          decoration: BoxDecoration(
-            border: Border.all(color: kWhiteColor),
-            borderRadius: BorderRadius.circular(50),
-          ),
+        GestureDetector(
+          onTap: onProfileImageTap,
           child: Container(
+            width: 50,
+            height: 50,
+            padding: const EdgeInsets.all(1),
             decoration: BoxDecoration(
+              border: Border.all(color: kWhiteColor),
               borderRadius: BorderRadius.circular(50),
             ),
-            child: CachedNetworkImage(
-              imageUrl: imageUrl,
-              placeholder: (context, url) => Image.network(
-                imageUrl,
-                fit: BoxFit.cover,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: CachedNetworkImage(
+                imageUrl: imageUrl,
+                placeholder: (context, url) => Image.network(
+                  imageUrl,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),

@@ -2,7 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/initial_screens/splash_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/add_screen/add_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/images_screen/image_gallery_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/news_screen/news_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/profile_screen/profile_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/sub_screens/shared_posts_screen.dart';
 
 Future<void> main() async {
@@ -13,7 +16,8 @@ Future<void> main() async {
       appId: '1:259386221113:android:dcf07517642fb78548a3e8',
       projectId: 'nasa-explorer-app-3be03',
       messagingSenderId: '',
-      storageBucket: "myapp.appspot.com",
+      storageBucket: "nasa-explorer-app-3be03.appspot.com",
+      
     ),
   );
   runApp(
@@ -53,6 +57,9 @@ class MyApp extends StatelessWidget {
       routes: {
         NewsScreen.id: (context) => const NewsScreen(),
         SharedPostsScreen.id: (context) => const SharedPostsScreen(),
+        ImageGalleryScreen.id: (context) => const ImageGalleryScreen(),
+        ProfileScreen.id: (context) => const ProfileScreen(),
+        AddScreen.id: (context) => const AddScreen(),
       },
       home: const SplashScreen(),
     );

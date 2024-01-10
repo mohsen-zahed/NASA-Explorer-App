@@ -1,8 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
-import 'package:nasa_explorer_app_project/constants/list.dart';
-import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/solar_system_single_card_widget.dart';
 import 'package:nasa_explorer_app_project/models/planet_model.dart';
 import 'package:nasa_explorer_app_project/widgets/carousel/carousel_slider.dart';
@@ -11,9 +8,11 @@ class HorizontalSolarSystemCarouselSlider extends StatefulWidget {
   const HorizontalSolarSystemCarouselSlider({
     super.key,
     required this.planetsList,
+    required this.onSolarViewAllTap,
   });
 
-  final List planetsList;
+  final List<PlanetModel> planetsList;
+  final VoidCallback onSolarViewAllTap;
 
   @override
   State<HorizontalSolarSystemCarouselSlider> createState() =>
@@ -40,11 +39,11 @@ class _HorizontalSolarSystemCarouselSliderState
                   ),
             ),
             GestureDetector(
-              onTap: () {},
+              onTap: widget.onSolarViewAllTap,
               child: Row(
                 children: [
                   Text(
-                    'All',
+                    'view all',
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: kWhiteColor,
                           fontSize: 12,
@@ -66,18 +65,17 @@ class _HorizontalSolarSystemCarouselSliderState
           itemCount: widget.planetsList.length,
           itemBuilder: (context, index, realIndex) {
             return SolarSystemSinglCardWidget(
-              index: realIndex,
-              solarList: widget.planetsList,
+              index: index,
               onTap: () => showSolarBottomSheet(context, index),
-              planetsList: fetchedPlanets,
+              planetsList: widget.planetsList,
             );
           },
           options: CarouselOptions(
             aspectRatio: 2.4,
-            viewportFraction: 0.5,
+            viewportFraction: .5,
             scrollPhysics: const BouncingScrollPhysics(),
             enlargeCenterPage: true,
-            enlargeFactor: .4,
+            enlargeFactor: 0,
             enlargeStrategy: CenterPageEnlargeStrategy.height,
             clipBehavior: Clip.none,
             initialPage: 0,

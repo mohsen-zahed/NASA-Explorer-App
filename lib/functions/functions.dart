@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:nasa_explorer_app_project/functions/show_snackbar.dart';
 import 'package:nasa_explorer_app_project/initial_screens/registration_screen/registration_screen.dart';
-import 'package:nasa_explorer_app_project/main_screens/home_screens/main_home_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/home_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/suspended_main_home.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -21,25 +22,25 @@ double getMaxHieghtMediaQuery(BuildContext context, [double? number]) {
 
 void emailValidator(String email) {
   if (email.isEmpty) {
-    if (!userRegFormErrors.contains('Please enter an email!')) {
-      userRegFormErrors.add('Please enter an email!');
+    if (!userRegFormErrors.contains('Email field is required!')) {
+      userRegFormErrors.add('Email field is required!');
     }
-    if (!errorList.contains('Please enter an email!')) {
-      errorList.add('Please enter an email!');
+    if (!errorList.contains('Email field is required!')) {
+      errorList.add('Email field is required!');
     }
   } else {
-    userRegFormErrors.remove('Please enter an email!');
-    errorList.remove('Please enter an email!');
+    userRegFormErrors.remove('Email field is required!');
+    errorList.remove('Email field is required!');
     if (!email.contains('@gmail.com')) {
-      if (!userRegFormErrors.contains('Please check your email address!')) {
-        userRegFormErrors.add('Please check your email address!');
+      if (!userRegFormErrors.contains('Email address is badly formatted!')) {
+        userRegFormErrors.add('Email address is badly formatted!');
       }
-      if (!errorList.contains('Please check your email address!')) {
-        errorList.add('Please check your email address!');
+      if (!errorList.contains('Email address is badly formatted!')) {
+        errorList.add('Email address is badly formatted!');
       }
     } else {
-      userRegFormErrors.remove('Please check your email address!');
-      errorList.remove('Please check your email address!');
+      userRegFormErrors.remove('Email address is badly formatted!');
+      errorList.remove('Email address is badly formatted!');
     }
   }
 }
@@ -49,15 +50,15 @@ void passwordValidator(
     required bool confirmPassword,
     String? password2}) {
   if (password.isEmpty) {
-    if (!userRegFormErrors.contains('Please enter your password!')) {
-      userRegFormErrors.add('Please enter your password!');
+    if (!userRegFormErrors.contains('Password field is required!')) {
+      userRegFormErrors.add('Password field is required!');
     }
-    if (!errorList.contains('Please enter your password!')) {
-      errorList.add('Please enter your password!');
+    if (!errorList.contains('Password field is required!')) {
+      errorList.add('Password field is required!');
     }
   } else {
-    userRegFormErrors.remove('Please enter your password!');
-    errorList.remove('Please enter your password!');
+    userRegFormErrors.remove('Password field is required!');
+    errorList.remove('Password field is required!');
     if (password.length < 6) {
       if (!userRegFormErrors
           .contains('Password must be more than 6 characters!')) {
@@ -241,7 +242,7 @@ Future<void> checkRegistrationStatus(BuildContext context) async {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => MainHomeScreen(),
+          builder: (context) => const HomeScreen(),
         ),
         (route) => false,
       );
@@ -259,6 +260,8 @@ Future<void> checkRegistrationStatus(BuildContext context) async {
     showSnackBar(context: context, text: 'user not found', duration: 3);
   }
 }
+
+
 
 
 //? home screen functions -----

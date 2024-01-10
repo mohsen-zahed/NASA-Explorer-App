@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:lottie/lottie.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
-// import 'package:nasa_explorer_app_project/constants/list.dart';
-import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/models/image_model.dart';
 
 class VerticalImagesGridView extends StatefulWidget {

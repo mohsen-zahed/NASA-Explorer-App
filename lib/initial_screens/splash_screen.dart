@@ -7,9 +7,9 @@ import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/initial_screens/onboarding_screen/onboarding_screen.dart';
 import 'package:nasa_explorer_app_project/initial_screens/registration_screen/registration_screen.dart';
-import 'package:nasa_explorer_app_project/main_screens/home_screens/main_home_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/home_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/suspended_main_home.dart';
 import 'package:nasa_explorer_app_project/services/shared_preferences_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -35,6 +35,8 @@ class _SplashScreenState extends State<SplashScreen> {
     // await checkRegistrationStatus(context);
 
     checkOnboardingScreen();
+    await SharedPreferencesClass()
+        .saveUserVisitHomeStatus(alreadyVisited: false);
   }
 
   checkOnboardingScreen() async {
@@ -66,7 +68,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (context) => const MainHomeScreen(),
+            builder: (context) => const HomeScreen(),
           ),
           (route) => false);
     }

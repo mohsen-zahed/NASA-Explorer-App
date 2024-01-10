@@ -5,7 +5,6 @@ import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
@@ -14,13 +13,12 @@ import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/functions/show_snackbar.dart';
 import 'package:nasa_explorer_app_project/initial_screens/registration_screen/widgets/login_account_and_guest_account_texts.dart';
 import 'package:nasa_explorer_app_project/initial_screens/registration_screen/widgets/privacy_policy_text_acceptance.dart';
-import 'package:nasa_explorer_app_project/main_screens/home_screens/main_home_screen.dart';
-import 'package:nasa_explorer_app_project/main_screens/profile_screen/profile_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/home_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/suspended_main_home.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/widgets/about_me_dialog_widget.dart';
 import 'package:nasa_explorer_app_project/services/shared_preferences_service.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_elevated_button.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_text_field.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -230,6 +228,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 CustomElevatedButton(
                                   textButton:
                                       isUserLoging ? 'Sign in' : 'Sign up',
+                                  //? redirect to home screen...
                                   onPressed: () async {
                                     isUserConnected =
                                         await checkInternetConnectivity(
@@ -244,21 +243,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                               textEditingController4.text,
                                           confirmPassword: true,
                                         );
-
                                         removeErrors();
                                         setState(() {
                                           isSubmitingUser = true;
                                         });
+                                        await FirebaseFunctions()
+                                            .signUpWithEmail(
+                                          name: textEditingController1.text,
+                                          email: textEditingController2.text,
+                                          password: textEditingController3.text,
+                                          context: context,
+                                        );
+                                        print(userRegFormErrors);
                                         if (userRegFormErrors.isEmpty) {
-                                          await FirebaseFunctions(
-                                                  FirebaseAuth.instance)
-                                              .signUpWithEmail(
-                                            name: textEditingController1.text,
-                                            email: textEditingController2.text,
-                                            password:
-                                                textEditingController3.text,
-                                            context: context,
-                                          );
                                           var isSaved =
                                               await SharedPreferencesClass()
                                                   .saveLoginStatusToSharedPreferences(
@@ -268,7 +265,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        const MainHomeScreen(),
+                                                        const HomeScreen(),
                                                   ),
                                                   (route) => false,
                                                 )
@@ -282,6 +279,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                           isSubmitingUser = false;
                                         });
                                       } else {
+                                        //? login section...
                                         emailValidator(
                                             textEditingController5.text);
                                         passwordValidator(
@@ -292,15 +290,42 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                         setState(() {
                                           isSubmitingUser = true;
                                         });
-                                        if (userRegFormErrors.isEmpty) {
-                                          await FirebaseFunctions(
-                                                  FirebaseAuth.instance)
-                                              .signInWithEmail(
-                                            email: textEditingController5.text,
-                                            password:
-                                                textEditingController6.text,
-                                            context: context,
-                                          );
+                                        FirebaseAuth _auth =
+                                            FirebaseAuth.instance;
+                                        User? user = _auth.currentUser;
+                                        if (user == null) {
+                                          if (textEditingController5
+                                                  .text.isNotEmpty &&
+                                              textEditingController6
+                                                  .text.isNotEmpty) {
+                                            if (!userRegFormErrors.contains(
+                                                'User not found. Please sign up first!')) {
+                                              userRegFormErrors.add(
+                                                  'User not found. Please sign up first!');
+                                            }
+                                            if (!errorList.contains(
+                                                'User not found. Please sign up first!')) {
+                                              errorList.add(
+                                                  'User not found. Please sign up first!');
+                                            }
+                                            removeErrors();
+                                            Future.delayed(
+                                                const Duration(
+                                                    milliseconds: 500), () {
+                                              setState(() {
+                                                isUserLoging = false;
+                                              });
+                                            });
+                                          }
+                                        }
+                                        await FirebaseFunctions()
+                                            .signInWithEmail(
+                                          email: textEditingController5.text,
+                                          password: textEditingController6.text,
+                                          context: context,
+                                        );
+                                        if (userRegFormErrors.isEmpty &&
+                                            user != null) {
                                           var isSaved =
                                               await SharedPreferencesClass()
                                                   .saveLoginStatusToSharedPreferences(
@@ -310,7 +335,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        const MainHomeScreen(),
+                                                        const HomeScreen(),
                                                   ),
                                                   (route) => false,
                                                 )
@@ -324,6 +349,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                           isSubmitingUser = false;
                                         });
                                       }
+                                      await SharedPreferencesClass()
+                                          .saveUserVisitHomeStatus(
+                                              alreadyVisited: true);
                                     } else {
                                       showAdaptiveDialog(
                                         context: context,
@@ -357,8 +385,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                     });
                                   },
                                   onGuestAccountTap: () async {
-                                    await FirebaseFunctions(
-                                            FirebaseAuth.instance)
+                                    await FirebaseFunctions()
                                         .signInAnonymously(context);
                                     var isSaved = await SharedPreferencesClass()
                                         .saveLoginStatusToSharedPreferences(
@@ -368,7 +395,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  const MainHomeScreen(),
+                                                  const HomeScreen(),
                                             ),
                                             (route) => false,
                                           )
