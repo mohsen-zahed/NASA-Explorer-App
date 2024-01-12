@@ -76,6 +76,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             .child('usersImage')
             .child('${userName.toString().trim()}.jpeg');
         await ref.putFile(pickedImageFile);
+        getUserInfo();
         showSnackBar(
             context: context,
             text: 'Profile image updated successfuly',
