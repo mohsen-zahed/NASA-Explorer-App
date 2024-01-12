@@ -17,7 +17,6 @@ Future<void> main() async {
       projectId: 'nasa-explorer-app-3be03',
       messagingSenderId: '',
       storageBucket: "nasa-explorer-app-3be03.appspot.com",
-      
     ),
   );
   runApp(
@@ -37,9 +36,17 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: kScaffoldBackgroundColor,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
-        appBarTheme: const AppBarTheme(
+        appBarTheme: AppBarTheme(
+          foregroundColor: kTransparentColor,
           backgroundColor: kTransparentColor,
-          iconTheme: IconThemeData(color: kWhiteColor),
+          elevation: 0,
+          shadowColor: kTransparentColor,
+          surfaceTintColor: kTransparentColor,
+          iconTheme: const IconThemeData(color: kWhiteColor),
+          titleTextStyle: Theme.of(context)
+              .textTheme
+              .titleLarge!
+              .copyWith(color: kWhiteColor),
         ),
         listTileTheme: ListTileThemeData(
           contentPadding: const EdgeInsets.symmetric(horizontal: 23),

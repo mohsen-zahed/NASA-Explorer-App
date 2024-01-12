@@ -154,7 +154,7 @@ List<String> emptyImagesList = [
 
 List<String> userRegFormErrors = [];
 
-List<PlanetModel> demoFetchedPlanets = [];
+List<PlanetModel> demoSolarFetchedPlanets = [];
 List<PlanetModel> fetchedPlanets = [
   PlanetModel.create(
     1,

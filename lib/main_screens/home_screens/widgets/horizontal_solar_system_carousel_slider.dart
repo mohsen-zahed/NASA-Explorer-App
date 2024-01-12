@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
+import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/solar_system_single_card_widget.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/title_with_view_all_button.dart';
 import 'package:nasa_explorer_app_project/models/planet_model.dart';
 import 'package:nasa_explorer_app_project/widgets/carousel/carousel_slider.dart';
 
@@ -26,39 +28,9 @@ class _HorizontalSolarSystemCarouselSliderState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              'Solar System',
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: kWhiteColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-            ),
-            GestureDetector(
-              onTap: widget.onSolarViewAllTap,
-              child: Row(
-                children: [
-                  Text(
-                    'view all',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: kWhiteColor,
-                          fontSize: 12,
-                        ),
-                  ),
-                  const SizedBox(width: 5),
-                  const Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    color: kWhiteColor,
-                    size: 12,
-                  )
-                ],
-              ),
-            )
-          ],
+        TitleWithViewAllButton(
+          title: 'Solar System',
+          onViewAllTap: widget.onSolarViewAllTap,
         ),
         const SizedBox(height: 70),
         CarouselSlider.builder(
@@ -71,8 +43,8 @@ class _HorizontalSolarSystemCarouselSliderState
             );
           },
           options: CarouselOptions(
-            aspectRatio: 2.4,
-            viewportFraction: .5,
+            aspectRatio: 2.3,
+            viewportFraction: .6,
             scrollPhysics: const BouncingScrollPhysics(),
             enlargeCenterPage: true,
             enlargeFactor: 0,
@@ -92,7 +64,7 @@ class _HorizontalSolarSystemCarouselSliderState
       isDismissible: true,
       isScrollControlled: true,
       backgroundColor: kScaffoldBackgroundColor,
-      enableDrag: true,
+      enableDrag: false,
       showDragHandle: true,
       context: context,
       builder: (context) {
@@ -125,7 +97,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
   Widget build(BuildContext context) {
     return StatefulBuilder(
       builder: (context, setState) => SizedBox(
-        height: MediaQuery.of(context).size.height * 0.8,
+        height: getMaxHieghtMediaQuery(context, 0.9),
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(

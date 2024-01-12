@@ -1,13 +1,17 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
+import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/main_screens/news_screen/widgets/news_post_widget.dart';
 import 'package:nasa_explorer_app_project/main_screens/news_screen/widgets/weather_forecast_widget.dart';
 import 'package:nasa_explorer_app_project/models/news_model.dart';
 import 'package:nasa_explorer_app_project/widgets/background_image_widget.dart';
 import 'package:http/http.dart' as http;
+import 'package:nasa_explorer_app_project/widgets/shimmer_effect.dart';
+import 'package:shimmer/shimmer.dart';
 
 class NewsScreen extends StatefulWidget {
   const NewsScreen({
@@ -58,15 +62,16 @@ class _NewsScreenState extends State<NewsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: customAppWidget(text: 'Latest Updates From NASA+'),
       body: BackgroundImageWidget(
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 const WeatherForecastWidget(),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 isNewsLoading
                     ? const Center(
                         child: CircularProgressIndicator(),
@@ -75,7 +80,7 @@ class _NewsScreenState extends State<NewsScreen> {
                         onRefresh: () => fetchNewsPosts(),
                         child: SizedBox(
                           width: double.infinity,
-                          height: MediaQuery.of(context).size.height - 155,
+                          height: MediaQuery.of(context).size.height - 185,
                           child: SingleChildScrollView(
                             physics: const BouncingScrollPhysics(),
                             child: Column(

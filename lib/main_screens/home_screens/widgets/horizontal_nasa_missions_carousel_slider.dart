@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/title_with_view_all_button.dart';
 import 'package:nasa_explorer_app_project/widgets/carousel/carousel_options.dart';
 import 'package:nasa_explorer_app_project/widgets/carousel/carousel_slider.dart';
 
@@ -12,41 +13,11 @@ class HorizontalNASAMissionsCarouselSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              'NASA missions',
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: kWhiteColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-            ),
-            GestureDetector(
-              onTap: () {},
-              child: Row(
-                children: [
-                  Text(
-                    'All',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: kWhiteColor,
-                          fontSize: 12,
-                        ),
-                  ),
-                  const SizedBox(width: 5),
-                  const Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    color: kWhiteColor,
-                    size: 12,
-                  )
-                ],
-              ),
-            )
-          ],
+        TitleWithViewAllButton(
+          title: 'NASA Missions',
+          onViewAllTap: () {},
         ),
-        const SizedBox(height: 15),
+        const SizedBox(height: 10),
         CarouselSlider.builder(
           itemCount: 5,
           itemBuilder: (context, index, realIndex) {

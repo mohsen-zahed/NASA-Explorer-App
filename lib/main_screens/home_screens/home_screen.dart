@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
@@ -47,32 +48,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    checkUserVisitHomeScreen();
-    if (!userFirstTimeVisitHome) {
-      fetchNewsContainerImage();
-      fetchImages();
-      getPlanetsFromFirebase();
-      SharedPreferencesClass().saveUserVisitHomeStatus(alreadyVisited: true);
-    }
+    fetchNewsContainerImage();
+    fetchGalleryImages();
+    getPlanetsFromFirebase();
+    SharedPreferencesClass().saveUserVisitHomeStatus(alreadyVisited: true);
   }
-
-  void checkUserVisitHomeScreen() async {
-    if (await SharedPreferencesClass().getUserVisitHomeStatus() == false ||
-        await SharedPreferencesClass().getUserVisitHomeStatus() == null) {
-      setState(() {
-        userFirstTimeVisitHome = false;
-      });
-    } else {
-      setState(() {
-        userFirstTimeVisitHome = true;
-      });
-    }
-
-    print(
-        'user status: ${await SharedPreferencesClass().getUserVisitHomeStatus()}');
-  }
-
-  chechStatus() async {}
 
   Future<void> fetchNewsContainerImage() async {
     try {
@@ -88,17 +68,14 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         }
       }
-    } catch (e) {
+    } on HttpExceptionWithStatus catch (e) {
       if (mounted) {
-        showSnackBar(
-            context: context,
-            text: 'Something went wrong, try again!',
-            duration: 200);
+        showSnackBar(context: context, text: e.message.toString(), duration: 4);
       }
     }
   }
 
-  Future<void> fetchImages() async {
+  Future<void> fetchGalleryImages() async {
     try {
       var imagesResponse = await http.get(Uri.parse(imagesUrl));
       if (imagesResponse.statusCode == 200) {
@@ -114,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() {});
         }
       }
-    } catch (e) {
+    } on HttpExceptionWithStatus catch (e) {
       if (mounted) {
         showSnackBar(context: context, text: e.toString(), duration: 4);
       }
@@ -128,7 +105,8 @@ class _HomeScreenState extends State<HomeScreen> {
         .get()
         .then((value) {
       value.docs.forEach((element) {
-        if (fetchedPlanets.last.id < element.data()['id']) {
+        print(element.data()['id']);
+        if (fetchedPlanets.last.getId() < element.data()['id']) {
           fetchedPlanets.add(
             PlanetModel.create(
               element.data()['id'],
@@ -143,14 +121,11 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       });
     });
-    for (var i = 0; i < 2; i++) {
-      setState(() {
-        demoFetchedPlanets.add(fetchedPlanets[i]);
-      });
-    }
-    print(fetchedPlanets[0].getPlanetName());
-    print(fetchedPlanets[1].getPlanetName());
-    // print(fetchedPlanets[2].getPlanetName());
+    // for (var i = 0; i < 2; i++) {
+    //   setState(() {
+    //     demoSolarFetchedPlanets.add(fetchedPlanets[i]);
+    //   });
+    // }
 
     if (mounted) {
       setState(() {});
@@ -189,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: RefreshIndicator(
             onRefresh: () async {
               await fetchNewsContainerImage();
-              await fetchImages();
+              await fetchGalleryImages();
               await getPlanetsFromFirebase();
             },
             child: SingleChildScrollView(
@@ -226,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 35),
                     HorizontalSolarSystemCarouselSlider(
-                      planetsList: demoFetchedPlanets,
+                      planetsList: fetchedPlanets,
                       onSolarViewAllTap: () {},
                     ),
                     const SizedBox(height: 35),
@@ -248,14 +223,14 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         backgroundColor: kGreyColor.withOpacity(0.9),
         label: Text(
-          'Upload',
+          'Share',
           style: Theme.of(context)
               .textTheme
               .bodyLarge!
               .copyWith(color: kBlackColor),
         ),
         icon: const Icon(
-          Icons.upload,
+          Icons.add,
           color: kBlackColor,
         ),
         tooltip: 'Share your information!',

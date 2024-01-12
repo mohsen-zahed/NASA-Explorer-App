@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/title_with_view_all_button.dart';
 
 class HorizontalAstronautFiguresSlider extends StatelessWidget {
   const HorizontalAstronautFiguresSlider({
@@ -10,41 +11,11 @@ class HorizontalAstronautFiguresSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              'Astronaut figures',
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: kWhiteColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-            ),
-            GestureDetector(
-              onTap: () {},
-              child: Row(
-                children: [
-                  Text(
-                    'All',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: kWhiteColor,
-                          fontSize: 12,
-                        ),
-                  ),
-                  const SizedBox(width: 5),
-                  const Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    color: kWhiteColor,
-                    size: 12,
-                  )
-                ],
-              ),
-            )
-          ],
+        TitleWithViewAllButton(
+          title: 'Astronaut Figures',
+          onViewAllTap: () {},
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
         SizedBox(
           width: double.infinity,
           height: 120,

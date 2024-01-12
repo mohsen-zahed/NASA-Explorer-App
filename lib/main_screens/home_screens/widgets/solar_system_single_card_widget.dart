@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
-import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:nasa_explorer_app_project/models/planet_model.dart';
 import 'package:nasa_explorer_app_project/widgets/shimmer_effect.dart';
 
@@ -22,9 +21,9 @@ class SolarSystemSinglCardWidget extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: EdgeInsets.fromLTRB(
-          index != 0 ? 20 : 0,
           0,
-          index == 5 ? 20 : 0,
+          0,
+          index != planetsList!.length - 1 ? 20 : 0,
           0,
         ),
         decoration: BoxDecoration(
@@ -35,14 +34,14 @@ class SolarSystemSinglCardWidget extends StatelessWidget {
           clipBehavior: Clip.none,
           children: [
             Positioned(
-              top: -50,
+              top: -60,
               left: 0,
               right: 0,
               child: planetsList![index].getPlanetImageUrl() == ''
-                  ? ShimmerEffect(useMargin: false)
+                  ? const ShimmerEffect(useMargin: false)
                   : Container(
-                      width: 120,
-                      height: 120,
+                      width: 130,
+                      height: 130,
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           image: CachedNetworkImageProvider(

@@ -33,7 +33,6 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 55,
       decoration: BoxDecoration(
         color: kGreyColor.withOpacity(0.4),
         borderRadius: BorderRadius.circular(15),
@@ -41,6 +40,7 @@ class CustomTextField extends StatelessWidget {
       child: Center(
         child: TextFormField(
           keyboardType: textInputType ?? TextInputType.text,
+          maxLines: null,
           style: TextStyle(
             color: kWhiteColor70.withOpacity(0.6),
           ),
@@ -61,8 +61,7 @@ class CustomTextField extends StatelessWidget {
                   fontSize: 14,
                   color: hintTextColor ?? kBlackColor.withOpacity(0.4),
                 ),
-            prefixIconColor:
-                prefixIconColor ?? kBlackColor.withOpacity(0.4),
+            prefixIconColor: prefixIconColor ?? kBlackColor.withOpacity(0.4),
             prefixIcon: Padding(
               padding: const EdgeInsets.only(left: 10),
               child: Icon(

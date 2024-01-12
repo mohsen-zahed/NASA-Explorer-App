@@ -1,6 +1,7 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/title_with_view_all_button.dart';
 import 'package:nasa_explorer_app_project/widgets/carousel/carousel_slider.dart';
 import 'package:nasa_explorer_app_project/widgets/shimmer_effect.dart';
 
@@ -24,41 +25,11 @@ class _HorizontalImagesCarouselSliderState
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              'Dicover Perfect Images',
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: kWhiteColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-            ),
-            GestureDetector(
-              onTap: widget.onImagesSeeAllTap,
-              child: Row(
-                children: [
-                  Text(
-                    'view all',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: kWhiteColor,
-                          fontSize: 12,
-                        ),
-                  ),
-                  const SizedBox(width: 5),
-                  const Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    color: kWhiteColor,
-                    size: 12,
-                  )
-                ],
-              ),
-            )
-          ],
+        TitleWithViewAllButton(
+          title: 'Discover Perfect Images',
+          onViewAllTap: widget.onImagesSeeAllTap,
         ),
-        const SizedBox(height: 15),
+        const SizedBox(height: 10),
         CarouselSlider.builder(
           key: UniqueKey(),
           itemCount: widget.imagesList!.length,
@@ -106,7 +77,11 @@ class _HorizontalImagesCarouselSliderState
                               );
                             case LoadState.failed:
                               return const Center(
-                                child: Icon(Icons.error_outline),
+                                child: Icon(
+                                  Icons.error_outline,
+                                  size: 70,
+                                  color: kWhiteColor30,
+                                ),
                               );
                             default:
                               return null;

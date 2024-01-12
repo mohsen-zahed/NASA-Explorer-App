@@ -261,6 +261,12 @@ Future<void> checkRegistrationStatus(BuildContext context) async {
   }
 }
 
+AppBar customAppWidget({required String text}) {
+  return AppBar(
+    title: Text(text),
+  );
+}
+
 
 
 
