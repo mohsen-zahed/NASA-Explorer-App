@@ -7,7 +7,7 @@ import 'package:nasa_explorer_app_project/models/image_model.dart';
 var demoImagePlaceHolder =
     'https://th.bing.com/th/id/OIP.xjJQYPq-KlFeHuKk5BAP-AHaHa?rs=1&pid=ImgDetMain';
 var demoProfileImageHolder =
-    'https://th.bing.com/th/id/R.2fbf59259b8a109bda114b41c2d10a2d?rik=uyExTq15zo3Neg&pid=ImgRaw&r=0';
+    'https://www.pngall.com/wp-content/uploads/5/Profile.png';
 // general var
 
 // APIs
@@ -24,6 +24,11 @@ File? pickedImageForPost;
 // image picker
 
 // home screen variables
+
+var uid;
+var userName;
+var userEmail;
+var userImage;
 
 var newsImageUrl =
     'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=1';

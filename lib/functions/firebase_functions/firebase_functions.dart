@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
+import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/functions/show_snackbar.dart';
 import 'package:nasa_explorer_app_project/initial_screens/registration_screen/registration_screen.dart';
 import 'package:nasa_explorer_app_project/services/shared_preferences_service.dart';
@@ -32,7 +33,7 @@ class FirebaseFunctions {
         'name': name,
         'emailAddress': email,
         'password': password,
-        'imageUrl': '',
+        'imageUrl': demoProfileImageHolder,
         'joinedAt': formattedDate,
         'createdAt': Timestamp.now(),
       });

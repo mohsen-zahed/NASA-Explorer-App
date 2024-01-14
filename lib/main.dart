@@ -6,6 +6,7 @@ import 'package:nasa_explorer_app_project/main_screens/add_screen/add_screen.dar
 import 'package:nasa_explorer_app_project/main_screens/images_screen/image_gallery_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/news_screen/news_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/profile_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/profile_screen/sub_screens/profile_image_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/sub_screens/shared_posts_screen.dart';
 
 Future<void> main() async {
@@ -66,6 +67,7 @@ class MyApp extends StatelessWidget {
         SharedPostsScreen.id: (context) => const SharedPostsScreen(),
         ImageGalleryScreen.id: (context) => const ImageGalleryScreen(),
         ProfileScreen.id: (context) => const ProfileScreen(),
+        ProfileImageScreen.id: (context) => const ProfileImageScreen(),
         AddScreen.id: (context) => const AddScreen(),
       },
       home: const SplashScreen(),

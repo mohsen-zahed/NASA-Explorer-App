@@ -33,11 +33,14 @@ class AppLogoAndProfileImage extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
               ),
-              child: CachedNetworkImage(
-                imageUrl: imageUrl,
-                placeholder: (context, url) => Image.network(
-                  imageUrl,
-                  fit: BoxFit.cover,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(50),
+                child: CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  placeholder: (context, url) => Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),

@@ -8,15 +8,19 @@ class EditImageProfileChangeImageWidgets extends StatefulWidget {
     super.key,
     required this.onEditTap,
     required this.name,
-    required this.onImageTap,
+    required this.onCameraTap,
     required this.email,
     required this.urlImage,
+    required this.isImageUploading,
+    required this.onImageTap,
   });
   final String? urlImage;
   final String name;
   final String email;
   final VoidCallback onEditTap;
+  final VoidCallback onCameraTap;
   final VoidCallback onImageTap;
+  final bool isImageUploading;
 
   @override
   State<EditImageProfileChangeImageWidgets> createState() =>
@@ -47,50 +51,60 @@ class _EditImageProfileChangeImageWidgetsState
               ),
             ),
             GestureDetector(
-              onTap: widget.onImageTap,
-              child: Container(
-                      width: 130,
-                      height: 130,
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      padding: const EdgeInsets.all(3),
+                onTap: widget.onImageTap,
+                child: Container(
+                  width: 130,
+                  height: 130,
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    border: Border.all(color: kWhiteColor),
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: widget.urlImage != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: CachedNetworkImage(
+                              imageUrl: widget.urlImage!,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: const CircularProgressIndicator(),
+                          ),
+                  ),
+                )),
+            widget.isImageUploading
+                ? Container(
+                    width: 45,
+                    height: 45,
+                    decoration: BoxDecoration(
+                      color: kGreyColor,
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                : GestureDetector(
+                    onTap: widget.onCameraTap,
+                    child: Container(
+                      width: 45,
+                      height: 45,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        border: Border.all(color: kWhiteColor),
+                        color: kGreyColor,
+                        borderRadius: BorderRadius.circular(50),
                       ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        child: widget.urlImage != null
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: CachedNetworkImage(
-                                  imageUrl: widget.urlImage!,
-                                  fit: BoxFit.cover,
-                                ),
-                              )
-                            : ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: const CircularProgressIndicator(),
-                              ),
+                      child: const Center(
+                        child: Icon(Icons.camera_alt_rounded),
                       ),
-                    )
-                 
-            ),
-            GestureDetector(
-              onTap: widget.onImageTap,
-              child: Container(
-                width: 45,
-                height: 45,
-                decoration: BoxDecoration(
-                  color: kGreyColor,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: const Center(
-                  child: Icon(Icons.camera_alt_rounded),
-                ),
-              ),
-            ),
+                    ),
+                  ),
           ],
         ),
         const SizedBox(height: 15),

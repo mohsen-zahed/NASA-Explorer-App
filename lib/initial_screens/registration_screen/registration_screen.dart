@@ -18,6 +18,7 @@ import 'package:nasa_explorer_app_project/main_screens/home_screens/suspended_ma
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/widgets/about_me_dialog_widget.dart';
 import 'package:nasa_explorer_app_project/services/shared_preferences_service.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_elevated_button.dart';
+import 'package:nasa_explorer_app_project/widgets/custom_registration_text_field.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_text_field.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -131,7 +132,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                     ? Column(
                                         children: [
                                           const SizedBox(height: 50),
-                                          CustomTextField(
+                                          CustomRegistrationTextField(
                                             hintText: 'Username',
                                             prefixIcon:
                                                 Icons.person_add_alt_1_rounded,
@@ -141,7 +142,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                                 textEditingController1,
                                           ),
                                           const SizedBox(height: 10),
-                                          CustomTextField(
+                                          CustomRegistrationTextField(
                                             textInputType:
                                                 TextInputType.emailAddress,
                                             hintText: 'Email address',
@@ -152,7 +153,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                                 textEditingController2,
                                           ),
                                           const SizedBox(height: 10),
-                                          CustomTextField(
+                                          CustomRegistrationTextField(
                                             hintText: 'Password',
                                             prefixIcon: Icons.lock,
                                             errorText: '',
@@ -169,7 +170,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                             focusNode: focusNode3,
                                           ),
                                           const SizedBox(height: 10),
-                                          CustomTextField(
+                                          CustomRegistrationTextField(
                                             hintText: 'Confirm password',
                                             prefixIcon: Icons.lock,
                                             errorText: '',
@@ -191,7 +192,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                     : Column(
                                         children: [
                                           const SizedBox(height: 50),
-                                          CustomTextField(
+                                          CustomRegistrationTextField(
                                             hintText: 'Email',
                                             textInputType:
                                                 TextInputType.emailAddress,
@@ -202,7 +203,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                                 textEditingController5,
                                           ),
                                           const SizedBox(height: 10),
-                                          CustomTextField(
+                                          CustomRegistrationTextField(
                                             hintText: 'Password',
                                             prefixIcon: Icons.lock,
                                             errorText: '',

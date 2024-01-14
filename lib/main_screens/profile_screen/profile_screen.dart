@@ -1,7 +1,9 @@
 // ignore_for_file: use_build_context_synchronously, prefer_typing_uninitialized_variables
 
 import 'dart:io';
+import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -11,6 +13,7 @@ import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/functions/firebase_functions/firebase_functions.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/functions/show_snackbar.dart';
+import 'package:nasa_explorer_app_project/main_screens/profile_screen/sub_screens/profile_image_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/sub_screens/shared_posts_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/widgets/about_me_dialog_widget.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/widgets/edit_image_profile_change_profile_widgets.dart';
@@ -32,17 +35,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       TextEditingController();
   @override
   void initState() {
-    getUserInfo();
     super.initState();
   }
 
-  var uid;
-  var userName;
-  var userEmail;
-  var userImage;
   var imageUrlAfterChange;
   var downloadedImageUrl;
   User? user;
+  bool isProfileImageUploading = false;
 
   void getUserInfo() async {
     try {
@@ -67,6 +66,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void changeProfileImage() async {
     try {
+      setState(() {
+        isProfileImageUploading = true;
+      });
       var editPickedProfileImage =
           await picker.pickImage(source: ImageSource.gallery);
       var pickedImageFile = File(editPickedProfileImage?.path ?? '');
@@ -87,13 +89,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
             context: context,
             text: 'Failed to upload image profile!',
             duration: 4);
+        getUserInfo();
+        setState(() {});
       }
       setState(() {
-        imageUrlAfterChange = downloadedImageUrl;
-        FirebaseFirestore.instance.collection('users').doc(uid).update({
-          'imageUrl': imageUrlAfterChange,
+        if (downloadedImageUrl != null) {
+          imageUrlAfterChange = downloadedImageUrl;
+          FirebaseFirestore.instance.collection('users').doc(uid).update({
+            'imageUrl': imageUrlAfterChange,
+          });
+        }
+        getUserInfo();
+
+        setState(() {
+          isProfileImageUploading = false;
         });
-        user?.reload();
       });
     } on FirebaseStorage catch (e) {
       showSnackBar(context: context, text: e.toString(), duration: 3);
@@ -103,108 +113,123 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: BackgroundImageWidget(
-          child: SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const SizedBox(height: 60),
-                  EditImageProfileChangeImageWidgets(
-                    urlImage: userImage != null
-                        ? userImage
-                        : 'https://www.pngall.com/wp-content/uploads/5/Profile.png',
-                    name: userName ?? 'name',
-                    email: userEmail ?? 'example@gmail.com',
-                    onEditTap: () => editProfileName(context),
-                    onImageTap: () => changeProfileImage(),
-                  ),
-                  const SizedBox(height: 30),
-                  CustomListTileWidget(
-                    text: 'Saved Posts',
-                    leadingIcon: Icons.bookmark,
-                    onListTileTap: () {},
-                    trailingIcon: Icons.arrow_forward_ios_rounded,
-                  ),
-                  const SizedBox(height: 10),
-                  CustomListTileWidget(
-                    text: 'Shared Posts',
-                    leadingIcon: Icons.content_paste_go_outlined,
-                    onListTileTap: () {
-                      Navigator.pushNamed(
+      body: WillPopScope(
+        onWillPop: () {
+          setState(() {
+            userImage = userImage;
+          });
+          Navigator.pop(context);
+          return Future.value(false);
+        },
+        child: SingleChildScrollView(
+          child: BackgroundImageWidget(
+            child: SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 60),
+                    EditImageProfileChangeImageWidgets(
+                      isImageUploading: isProfileImageUploading,
+                      urlImage: userImage ?? demoProfileImageHolder,
+                      name: userName ?? 'name',
+                      email: userEmail ?? 'example@gmail.com',
+                      onEditTap: () => editProfileName(context),
+                      onCameraTap: () => changeProfileImage(),
+                      onImageTap: () => Navigator.pushNamed(
                         context,
-                        SharedPostsScreen.id,
-                      );
-                    },
-                    trailingIcon: Icons.arrow_forward_ios_rounded,
-                  ),
-                  const SizedBox(height: 10),
-                  CustomListTileWidget(
-                    text: 'Share app with friends',
-                    leadingIcon: Icons.share,
-                    onListTileTap: () => shareAppWithFriends(context),
-                    trailingIcon: Icons.arrow_forward_ios_rounded,
-                  ),
-                  const SizedBox(height: 10),
-                  CustomListTileWidget(
-                    text: 'Like Me',
-                    leadingIcon: Icons.thumb_up_alt_rounded,
-                    onListTileTap: () => redirectToSocialMedia(
-                      link:
-                          'https://instagram.com/mohsen_zahed80?igshid=OGQ5ZDc2ODk2ZA==',
-                      context: context,
+                        ProfileImageScreen.id,
+                        arguments: {
+                          'url': userImage ?? demoProfileImageHolder,
+                        },
+                      ),
                     ),
-                    trailingIcon: Icons.arrow_forward_ios_rounded,
-                  ),
-                  const SizedBox(height: 10),
-                  CustomListTileWidget(
-                    text: 'About Me',
-                    leadingIcon: Icons.warning_amber_rounded,
-                    onListTileTap: () => showAdaptiveDialog(
-                      context: context,
-                      builder: (context) {
-                        return const AboutMeDialogWidget(
-                          title: 'About Me',
-                          buttonText: 'Close',
-                          isAboutMe: true,
+                    const SizedBox(height: 30),
+                    CustomListTileWidget(
+                      text: 'Saved Posts',
+                      leadingIcon: Icons.bookmark,
+                      onListTileTap: () {},
+                      trailingIcon: Icons.arrow_forward_ios_rounded,
+                    ),
+                    const SizedBox(height: 10),
+                    CustomListTileWidget(
+                      text: 'Shared Posts',
+                      leadingIcon: Icons.content_paste_go_outlined,
+                      onListTileTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          SharedPostsScreen.id,
                         );
                       },
+                      trailingIcon: Icons.arrow_forward_ios_rounded,
                     ),
-                    trailingIcon: Icons.arrow_forward_ios_rounded,
-                  ),
-                  const SizedBox(height: 30),
-                  CustomListTileWidget(
-                    text: 'Sign Out',
-                    leadingIcon: Icons.logout,
-                    onListTileTap: () => showAdaptiveDialog(
-                      context: context,
-                      builder: (context) {
-                        return AboutMeDialogWidget(
-                          title: 'Signing Out',
-                          isAboutMe: false,
-                          text: 'Are you sure?\nYou\'ll have to login again!',
-                          buttonText: 'Continue',
-                          onTap: () async {
-                            await FirebaseFunctions()
-                                .signOutUser(context: context);
-                          },
-                        );
-                      },
+                    const SizedBox(height: 10),
+                    CustomListTileWidget(
+                      text: 'Share app with friends',
+                      leadingIcon: Icons.share,
+                      onListTileTap: () => shareAppWithFriends(context),
+                      trailingIcon: Icons.arrow_forward_ios_rounded,
                     ),
-                    trailingIcon: Icons.arrow_forward_ios_rounded,
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'App ver. 1.0.0',
-                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: kGreyColor,
-                          decoration: TextDecoration.underline,
-                          wordSpacing: .1,
-                          fontWeight: FontWeight.bold,
-                          decorationColor: kGreyColor,
-                        ),
-                  )
-                ],
+                    const SizedBox(height: 10),
+                    CustomListTileWidget(
+                      text: 'Like Me',
+                      leadingIcon: Icons.thumb_up_alt_rounded,
+                      onListTileTap: () => redirectToSocialMedia(
+                        link:
+                            'https://instagram.com/mohsen_zahed80?igshid=OGQ5ZDc2ODk2ZA==',
+                        context: context,
+                      ),
+                      trailingIcon: Icons.arrow_forward_ios_rounded,
+                    ),
+                    const SizedBox(height: 10),
+                    CustomListTileWidget(
+                      text: 'About Me',
+                      leadingIcon: Icons.warning_amber_rounded,
+                      onListTileTap: () => showAdaptiveDialog(
+                        context: context,
+                        builder: (context) {
+                          return const AboutMeDialogWidget(
+                            title: 'About Me',
+                            buttonText: 'Close',
+                            isAboutMe: true,
+                          );
+                        },
+                      ),
+                      trailingIcon: Icons.arrow_forward_ios_rounded,
+                    ),
+                    const SizedBox(height: 30),
+                    CustomListTileWidget(
+                      text: 'Sign Out',
+                      leadingIcon: Icons.logout,
+                      onListTileTap: () => showAdaptiveDialog(
+                        context: context,
+                        builder: (context) {
+                          return AboutMeDialogWidget(
+                            title: 'Signing Out',
+                            isAboutMe: false,
+                            text: 'Are you sure?\nYou\'ll have to login again!',
+                            buttonText: 'Continue',
+                            onTap: () async {
+                              await FirebaseFunctions()
+                                  .signOutUser(context: context);
+                            },
+                          );
+                        },
+                      ),
+                      trailingIcon: Icons.arrow_forward_ios_rounded,
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      'App ver. 1.0.0',
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                            color: kGreyColor,
+                            decoration: TextDecoration.underline,
+                            wordSpacing: .1,
+                            fontWeight: FontWeight.bold,
+                            decorationColor: kGreyColor,
+                          ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

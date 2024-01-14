@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -48,10 +49,35 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    fetchNewsContainerImage();
-    fetchGalleryImages();
+    // fetchNewsContainerImage();
+    // fetchGalleryImages();
     getPlanetsFromFirebase();
+    getUserInfo();
     SharedPreferencesClass().saveUserVisitHomeStatus(alreadyVisited: true);
+  }
+
+  User? user;
+  void getUserInfo() async {
+    try {
+      FirebaseAuth auth = FirebaseAuth.instance;
+      user = auth.currentUser;
+      if (user != null) {
+        uid = user?.uid;
+        final DocumentSnapshot userDocSnapshot =
+            await FirebaseFirestore.instance.collection('users').doc(uid).get();
+        if (mounted) {
+          setState(() {
+            userName = userDocSnapshot.get('name');
+            userEmail = userDocSnapshot.get('emailAddress');
+            userImage = userDocSnapshot.get('imageUrl');
+          });
+        }
+      }
+    } on FirebaseException catch (e) {
+      if (mounted) {
+        showSnackBar(context: context, text: e.message.toString(), duration: 4);
+      }
+    }
   }
 
   Future<void> fetchNewsContainerImage() async {
@@ -163,12 +189,12 @@ class _HomeScreenState extends State<HomeScreen> {
         child: BackgroundImageWidget(
           child: RefreshIndicator(
             onRefresh: () async {
-              await fetchNewsContainerImage();
-              await fetchGalleryImages();
+              // await fetchNewsContainerImage();
+              // await fetchGalleryImages();
               await getPlanetsFromFirebase();
+              getUserInfo();
             },
             child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
@@ -177,7 +203,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     const SizedBox(height: 50),
                     AppLogoAndProfileImage(
-                      imageUrl: demoProfileImageHolder,
+                      imageUrl: userImage != null
+                          ? userImage
+                          : demoProfileImageHolder,
                       nasaLogoUrl: 'assets/images/nasa_text_logo.png',
                       onProfileImageTap: () {
                         Navigator.pushNamed(context, ProfileScreen.id);
