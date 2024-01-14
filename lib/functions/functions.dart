@@ -267,10 +267,13 @@ AppBar customAppWidget({required String text}) {
   );
 }
 
-
-
-
 //? home screen functions -----
+String joinWords({required String text}) {
+  List<String> _words = text.split(' ');
+  String _extractedWord =
+      _words.sublist(0, _words.length == 1 ? 1 : 2).join(' ');
+  return _extractedWord;
+}
 //? home screen functions -----
 
 //* news container fetch image function ...

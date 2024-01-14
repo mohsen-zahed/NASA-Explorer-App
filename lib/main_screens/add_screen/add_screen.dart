@@ -1,5 +1,6 @@
 // ignore_for_file: unused_field, prefer_typing_uninitialized_variables, no_leading_underscores_for_local_identifiers, prefer_interpolation_to_compose_strings
 
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -51,15 +52,43 @@ class _AddScreenState extends State<AddScreen>
   final TextEditingController _astronautTextEditingController3 =
       TextEditingController();
 
+  final TextEditingController _newsTextEditingController =
+      TextEditingController();
+
+  final TextEditingController _galleryTextEditingController =
+      TextEditingController();
+
+  final TextEditingController _bannerTextEditingController1 =
+      TextEditingController();
+  final TextEditingController _bannerTextEditingController2 =
+      TextEditingController();
+  final TextEditingController _bannerTextEditingController3 =
+      TextEditingController();
+
   late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 6, vsync: this);
   }
 
-  String _pickedPlanetImage = '';
+  //* home screen news container widget vars
+  String _urlDownloadNewsImage = '';
+  String _newsDescription = '';
+  var _newsPickedImageFile;
+  var _newsPickedImage;
+  bool newsUploading = false;
+
+  //* home screen horizontal carousel images widget vars
+  String _urlDownloadGalleryImage = '';
+  var _galleryPickedImage;
+  var _galleryPickedImageFile;
+  var _galleryImageDesc;
+  bool galleryUploading = false;
+
+  //* home screen solar system vars
+  String _urlDownloadPlanetImage = '';
   var _planetName;
   var _planetSubtitle;
   var _planetIntro;
@@ -68,20 +97,34 @@ class _AddScreenState extends State<AddScreen>
   var _planetPickedImageFile;
   var _planetPickedImage;
   bool planetUplaoding = false;
-  String _pickedMissionImage = '';
+
+  //* home screen nasa missions vars
+  String _urlDownloadMissionImage = '';
   var _missionName;
   var _missionSubtitle;
   var _missionIntro;
   var _missionPickedImageFile;
   var _missionPickedImage;
   bool missionUplaoding = false;
-  String _pickedAstronautImage = '';
+
+  //* home screen astronauts vars
+  String _urlDownloadAstronautImage = '';
   var _astronautName;
   var _astronautSubtitle;
   var _astronautIntro;
   var _astronautPickedImageFile;
   var _astronautPickedImage;
   bool astronautUplaoding = false;
+
+  //* home screen advertisment banner vars
+  String _urlDownloadBannerImage = '';
+  var _bannerMessage;
+  var _bannerName;
+  var _bannerImageUrl;
+  var _bannerDesc;
+  var _bannerPickedImage;
+  var _bannerPickedImageFile;
+  bool bannerUploading = false;
 
   void postImageUpload() async {
     try {
@@ -99,10 +142,40 @@ class _AddScreenState extends State<AddScreen>
     }
   }
 
+  void selectNewsImage() async {
+    try {
+      _newsPickedImage = await picker.pickImage(source: ImageSource.gallery);
+      if (_newsPickedImage != null) {
+        _newsPickedImageFile = File(_newsPickedImage?.path ?? '');
+      }
+      setState(() {});
+    } on FirebaseStorage catch (e) {
+      if (mounted) {
+        showSnackBar(context: context, text: e.toString(), duration: 3);
+      }
+    }
+  }
+
+  void selectGalleryImage() async {
+    try {
+      _galleryPickedImage = await picker.pickImage(source: ImageSource.gallery);
+      if (_galleryPickedImage != null) {
+        _galleryPickedImageFile = File(_galleryPickedImage?.path ?? '');
+      }
+      setState(() {});
+    } on FirebaseStorage catch (e) {
+      if (mounted) {
+        showSnackBar(context: context, text: e.toString(), duration: 3);
+      }
+    }
+  }
+
   void selectPlanetImage() async {
     try {
       _planetPickedImage = await picker.pickImage(source: ImageSource.gallery);
-      _planetPickedImageFile = File(_planetPickedImage?.path ?? '');
+      if (_planetPickedImage != null) {
+        _planetPickedImageFile = File(_planetPickedImage?.path ?? '');
+      }
       setState(() {});
     } on FirebaseStorage catch (e) {
       if (mounted) {
@@ -114,7 +187,9 @@ class _AddScreenState extends State<AddScreen>
   void selectMissionImage() async {
     try {
       _missionPickedImage = await picker.pickImage(source: ImageSource.gallery);
-      _missionPickedImageFile = File(_missionPickedImage?.path ?? '');
+      if (_missionPickedImage != null) {
+        _missionPickedImageFile = File(_missionPickedImage?.path ?? '');
+      }
       setState(() {});
     } on FirebaseStorage catch (e) {
       if (mounted) {
@@ -127,11 +202,115 @@ class _AddScreenState extends State<AddScreen>
     try {
       _astronautPickedImage =
           await picker.pickImage(source: ImageSource.gallery);
-      _astronautPickedImageFile = File(_astronautPickedImage?.path ?? '');
+      if (_astronautPickedImage != null) {
+        _astronautPickedImageFile = File(_astronautPickedImage?.path ?? '');
+      }
       setState(() {});
     } on FirebaseStorage catch (e) {
       if (mounted) {
         showSnackBar(context: context, text: e.toString(), duration: 3);
+      }
+    }
+  }
+
+  void selectBannerImage() async {
+    try {
+      _bannerPickedImage = await picker.pickImage(source: ImageSource.gallery);
+      if (_bannerPickedImage != null) {
+        _bannerPickedImageFile = File(_bannerPickedImage?.path ?? '');
+      }
+      setState(() {});
+    } on FirebaseStorage catch (e) {
+      if (mounted) {
+        showSnackBar(context: context, text: e.toString(), duration: 3);
+      }
+    }
+  }
+
+  Future<void> uploadNews() async {
+    try {
+      setState(() {
+        newsUploading = true;
+      });
+      var _id = NumberGenerator.generateNumber();
+      FirebaseFirestore _news = FirebaseFirestore.instance;
+      var _docIDs = _news.collection('newsBannerData').doc().id;
+      if (_newsPickedImage != null) {
+        var imageName = joinWords(text: _newsDescription);
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('newsBannerImages')
+            .child(imageName.toString().trim() + '.png');
+        await ref.putFile(_newsPickedImageFile);
+        if (mounted) {
+          showSnackBar(
+              context: context,
+              text: 'News uploaded successfuly!',
+              duration: 3);
+        }
+        _urlDownloadNewsImage = await ref.getDownloadURL();
+        setState(() {
+          _urlDownloadNewsImage = _urlDownloadNewsImage;
+        });
+      } else {
+        showSnackBar(
+            context: context, text: 'Failed to upload news!', duration: 4);
+      }
+      await _news.collection('newsBannerData').doc(_docIDs).set({
+        'id': _id,
+        'newsImageUrl': _urlDownloadNewsImage,
+        'newsDescription': _newsDescription,
+      });
+      setState(() {
+        newsUploading = false;
+      });
+    } on FirebaseFirestore catch (e) {
+      if (mounted) {
+        showSnackBar(context: context, text: e.toString(), duration: 4);
+      }
+    }
+  }
+
+  Future<void> uploadGallery() async {
+    try {
+      setState(() {
+        galleryUploading = true;
+      });
+      var _id = NumberGenerator.generateNumber();
+      FirebaseFirestore _gallery = FirebaseFirestore.instance;
+      var _docIDs = _gallery.collection('galleryImages').doc().id;
+      if (_galleryPickedImage != null) {
+        var imageName = joinWords(text: _galleryImageDesc);
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('galleryImages')
+            .child(imageName.toString().trim() + '.png');
+        await ref.putFile(_galleryPickedImageFile);
+        if (mounted) {
+          showSnackBar(
+              context: context,
+              text: 'Gallery uploaded successfuly!',
+              duration: 3);
+        }
+        _urlDownloadGalleryImage = await ref.getDownloadURL();
+        setState(() {
+          _urlDownloadGalleryImage = _urlDownloadGalleryImage;
+        });
+      } else {
+        showSnackBar(
+            context: context, text: 'Failed to upload gallery!', duration: 4);
+      }
+      await _gallery.collection('galleryImagesData').doc(_docIDs).set({
+        'id': _id,
+        'galleryImageUrl': _urlDownloadGalleryImage,
+        'galleryDescription': _galleryImageDesc,
+      });
+      setState(() {
+        galleryUploading = false;
+      });
+    } on FirebaseFirestore catch (e) {
+      if (mounted) {
+        showSnackBar(context: context, text: e.toString(), duration: 4);
       }
     }
   }
@@ -157,7 +336,7 @@ class _AddScreenState extends State<AddScreen>
         }
         var _downloadedPlanetUrl = await ref.getDownloadURL();
         setState(() {
-          _pickedPlanetImage = _downloadedPlanetUrl;
+          _urlDownloadPlanetImage = _downloadedPlanetUrl;
         });
       } else {
         showSnackBar(
@@ -165,7 +344,7 @@ class _AddScreenState extends State<AddScreen>
       }
       await _planet.collection('planetsData').doc(_docIDs).set({
         'id': NumberGenerator.generateNumber(),
-        'imageUrl': _pickedPlanetImage,
+        'imageUrl': _urlDownloadPlanetImage,
         'planetName': _planetName,
         'planetSubtitle': _planetSubtitle,
         'planetIntro': _planetIntro,
@@ -203,7 +382,7 @@ class _AddScreenState extends State<AddScreen>
         }
         var _downloadedMissionUrl = await ref.getDownloadURL();
         setState(() {
-          _pickedMissionImage = _downloadedMissionUrl;
+          _urlDownloadMissionImage = _downloadedMissionUrl;
         });
       } else {
         showSnackBar(
@@ -211,7 +390,7 @@ class _AddScreenState extends State<AddScreen>
       }
       await _mission.collection('NasaMissionsData').doc(_docIDs).set({
         'id': NumberGenerator.generateNumber(),
-        'imageUrl': _pickedMissionImage,
+        'imageUrl': _urlDownloadMissionImage,
         'missionName': _missionName,
         'missionSubtitle': _missionSubtitle,
         'missionIntro': _missionIntro,
@@ -247,7 +426,7 @@ class _AddScreenState extends State<AddScreen>
         }
         var _downloadedAstronautUrl = await ref.getDownloadURL();
         setState(() {
-          _pickedAstronautImage = _downloadedAstronautUrl;
+          _urlDownloadAstronautImage = _downloadedAstronautUrl;
         });
       } else {
         showSnackBar(
@@ -255,13 +434,57 @@ class _AddScreenState extends State<AddScreen>
       }
       await _astro.collection('NasaAstronautsData').doc(_docIDs).set({
         'id': NumberGenerator.generateNumber(),
-        'imageUrl': _pickedAstronautImage,
+        'imageUrl': _urlDownloadAstronautImage,
         'astronautName': _astronautName,
         'astronautSubtitle': _astronautSubtitle,
         'astronautIntro': _astronautIntro,
       });
       setState(() {
         astronautUplaoding = false;
+      });
+    } on FirebaseFirestore catch (e) {
+      if (mounted) {
+        showSnackBar(context: context, text: e.toString(), duration: 4);
+      }
+    }
+  }
+
+  Future<void> uploadAdBanner() async {
+    try {
+      setState(() {
+        bannerUploading = true;
+      });
+      FirebaseFirestore _banner = FirebaseFirestore.instance;
+      var _docIDs = _banner.collection('AdBannerData').doc().id;
+      if (_bannerPickedImage != null) {
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('adBannerImages')
+            .child(_bannerName.toString().trim() + '.png');
+        await ref.putFile(_bannerPickedImageFile);
+        if (mounted) {
+          showSnackBar(
+              context: context,
+              text: 'ADBanner uploaded successfuly!',
+              duration: 3);
+        }
+        var _downloadedBannerUrl = await ref.getDownloadURL();
+        setState(() {
+          _urlDownloadBannerImage = _downloadedBannerUrl;
+        });
+      } else {
+        showSnackBar(
+            context: context, text: 'Failed to upload ADBanner!', duration: 4);
+      }
+      await _banner.collection('AdBannerData').doc(_docIDs).set({
+        'id': NumberGenerator.generateNumber(),
+        'imageUrl': _urlDownloadBannerImage,
+        'bannerName': _bannerName,
+        'bannerDescription': _bannerDesc,
+        'bannerMessage': _bannerMessage,
+      });
+      setState(() {
+        bannerUploading = false;
       });
     } on FirebaseFirestore catch (e) {
       if (mounted) {
@@ -284,6 +507,8 @@ class _AddScreenState extends State<AddScreen>
     _astronautTextEditingController1.dispose();
     _astronautTextEditingController2.dispose();
     _astronautTextEditingController3.dispose();
+    _newsTextEditingController.dispose();
+    _galleryTextEditingController.dispose();
     _tabController.dispose();
   }
 
@@ -305,19 +530,22 @@ class _AddScreenState extends State<AddScreen>
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
-                    // give the tab bar a height [can change hheight to preferred height]
                     SizedBox(
                       width: getMaxWidthMediaQuery(context),
                       height: 50,
                       child: TabBar(
+                        isScrollable: true,
                         controller: _tabController,
                         indicatorColor: kWhiteColor,
                         labelColor: kWhiteColor,
                         unselectedLabelColor: kWhiteColor30,
                         tabs: const [
+                          Tab(text: 'News Container'),
+                          Tab(text: 'GalleryImages'),
                           Tab(text: 'Planets'),
                           Tab(text: 'NASA Missions'),
                           Tab(text: 'Astronauts'),
+                          Tab(text: 'ADBanner'),
                         ],
                       ),
                     ),
@@ -329,27 +557,205 @@ class _AddScreenState extends State<AddScreen>
                           SingleChildScrollView(
                             child: Column(
                               children: [
-                                GestureDetector(
-                                  onTap: () => selectPlanetImage(),
-                                  child: Container(
-                                    width: 100,
-                                    height: 100,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: kGreyColor),
-                                      color: kTransparentColor,
-                                      borderRadius: BorderRadius.circular(10),
+                                Stack(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () => selectNewsImage(),
+                                      child: Container(
+                                        width: getMaxWidthMediaQuery(context),
+                                        height: getMaxHieghtMediaQuery(
+                                            context, 0.25),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: kGreyColor),
+                                          color: kTransparentColor,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: _newsPickedImageFile != null
+                                            ? Image.file(_newsPickedImageFile)
+                                            : const Icon(
+                                                Icons.camera_alt_outlined,
+                                                color: kWhiteColor30,
+                                                size: 100,
+                                              ),
+                                      ),
                                     ),
-                                    child: _pickedPlanetImage != ''
-                                        ? CachedNetworkImage(
-                                            imageUrl: _pickedPlanetImage,
+                                    _newsPickedImageFile != null
+                                        ? Positioned(
+                                            right: 0,
+                                            child: IconButton(
+                                              icon: const Icon(Icons.cancel),
+                                              onPressed: () {
+                                                setState(() {
+                                                  _newsPickedImageFile = null;
+                                                });
+                                              },
+                                            ),
                                           )
-                                        : _planetPickedImageFile != null
+                                        : const SizedBox(),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                CustomTextField(
+                                  hintText: 'News Description',
+                                  textEditingController:
+                                      _newsTextEditingController,
+                                ),
+                                const SizedBox(height: 10),
+                                CustomElevatedButton(
+                                  textButton: newsUploading
+                                      ? 'Uplaoding...'
+                                      : 'Upload News',
+                                  onPressed: () async {
+                                    setState(() {
+                                      _newsDescription =
+                                          _newsTextEditingController.text;
+                                    });
+                                    if (_newsTextEditingController
+                                            .text.isNotEmpty &&
+                                        _newsPickedImageFile != null) {
+                                      await uploadNews();
+                                      setState(() {
+                                        _newsTextEditingController.clear();
+                                        _newsPickedImageFile = null;
+                                        _urlDownloadNewsImage = '';
+                                      });
+                                    } else {
+                                      showSnackBar(
+                                          context: context,
+                                          text: 'No empty field or image is allowed!',
+                                          duration: 4);
+                                    }
+                                    setState(() {
+                                      newsUploading = false;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Stack(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () => selectGalleryImage(),
+                                      child: Container(
+                                        width: getMaxWidthMediaQuery(context),
+                                        height: getMaxHieghtMediaQuery(
+                                            context, 0.25),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: kGreyColor),
+                                          color: kTransparentColor,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: _galleryPickedImageFile != null
+                                            ? Image.file(
+                                                _galleryPickedImageFile)
+                                            : const Icon(
+                                                Icons.camera_alt_outlined,
+                                                color: kWhiteColor30,
+                                                size: 100,
+                                              ),
+                                      ),
+                                    ),
+                                    _galleryPickedImageFile != null
+                                        ? Positioned(
+                                            right: 0,
+                                            child: IconButton(
+                                              icon: const Icon(Icons.cancel),
+                                              onPressed: () {
+                                                setState(() {
+                                                  _galleryPickedImageFile =
+                                                      null;
+                                                });
+                                              },
+                                            ),
+                                          )
+                                        : const SizedBox(),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                CustomTextField(
+                                  hintText: 'Image Description',
+                                  textEditingController:
+                                      _galleryTextEditingController,
+                                ),
+                                const SizedBox(height: 10),
+                                CustomElevatedButton(
+                                  textButton: galleryUploading
+                                      ? 'Uplaoding...'
+                                      : 'Upload Gallery',
+                                  onPressed: () async {
+                                    setState(() {
+                                      _galleryImageDesc =
+                                          _galleryTextEditingController.text;
+                                    });
+                                    if (_galleryTextEditingController
+                                            .text.isNotEmpty &&
+                                        _galleryPickedImageFile != null) {
+                                      await uploadGallery();
+                                      setState(() {
+                                        _galleryTextEditingController.clear();
+                                        _galleryPickedImage = '';
+                                        _galleryPickedImageFile = null;
+                                      });
+                                    } else {
+                                      showSnackBar(
+                                          context: context,
+                                          text: 'No empty field or image is allowed!',
+                                          duration: 4);
+                                    }
+                                    setState(() {
+                                      galleryUploading = false;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Stack(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () => selectPlanetImage(),
+                                      child: Container(
+                                        width: getMaxWidthMediaQuery(context),
+                                        height: getMaxHieghtMediaQuery(
+                                            context, 0.25),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: kGreyColor),
+                                          color: kTransparentColor,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: _planetPickedImageFile != null
                                             ? Image.file(_planetPickedImageFile)
                                             : const Icon(
-                                                Icons.camera,
+                                                Icons.camera_alt_outlined,
                                                 color: kWhiteColor30,
+                                                size: 100,
                                               ),
-                                  ),
+                                      ),
+                                    ),
+                                    _planetPickedImageFile != null
+                                        ? Positioned(
+                                            right: 0,
+                                            child: IconButton(
+                                              icon: const Icon(Icons.cancel),
+                                              onPressed: () {
+                                                setState(() {
+                                                  _planetPickedImageFile = null;
+                                                });
+                                              },
+                                            ),
+                                          )
+                                        : const SizedBox(),
+                                  ],
                                 ),
                                 const SizedBox(height: 10),
                                 CustomTextField(
@@ -407,12 +813,13 @@ class _AddScreenState extends State<AddScreen>
                                         _planetTextEditingController4
                                             .text.isNotEmpty &&
                                         _planetTextEditingController5
-                                            .text.isNotEmpty) {
+                                            .text.isNotEmpty &&
+                                        _planetPickedImageFile != null) {
                                       await uploadPlanet();
                                     } else {
                                       showSnackBar(
                                           context: context,
-                                          text: 'No empty field is allowed!',
+                                          text: 'No empty field or image is allowed!',
                                           duration: 4);
                                     }
                                     setState(() {
@@ -423,156 +830,298 @@ class _AddScreenState extends State<AddScreen>
                               ],
                             ),
                           ),
-                          Column(
-                            children: [
-                              GestureDetector(
-                                onTap: () => selectMissionImage(),
-                                child: Container(
-                                  width: 100,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: kGreyColor),
-                                    color: kTransparentColor,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: _pickedMissionImage != ''
-                                      ? CachedNetworkImage(
-                                          imageUrl: _pickedMissionImage,
-                                        )
-                                      : _missionPickedImageFile != null
-                                          ? Image.file(_missionPickedImageFile)
-                                          : const Icon(
-                                              Icons.camera,
-                                              color: kWhiteColor30,
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Stack(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () => selectMissionImage(),
+                                      child: Container(
+                                        width: getMaxWidthMediaQuery(context),
+                                        height: getMaxHieghtMediaQuery(
+                                            context, 0.25),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: kGreyColor),
+                                          color: kTransparentColor,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: _missionPickedImageFile != null
+                                            ? Image.file(
+                                                _missionPickedImageFile)
+                                            : const Icon(
+                                                Icons.camera_alt_outlined,
+                                                color: kWhiteColor30,
+                                                size: 100,
+                                              ),
+                                      ),
+                                    ),
+                                    _missionPickedImageFile != null
+                                        ? Positioned(
+                                            right: 0,
+                                            child: IconButton(
+                                              icon: const Icon(Icons.cancel),
+                                              onPressed: () {
+                                                setState(() {
+                                                  _missionPickedImageFile =
+                                                      null;
+                                                });
+                                              },
                                             ),
+                                          )
+                                        : const SizedBox(),
+                                  ],
                                 ),
-                              ),
-                              const SizedBox(height: 10),
-                              CustomTextField(
-                                hintText: 'Mission Name',
-                                textEditingController:
-                                    _missionTextEditingController1,
-                              ),
-                              const SizedBox(height: 10),
-                              CustomTextField(
-                                hintText: 'Mission Subtitle',
-                                textEditingController:
-                                    _missionTextEditingController2,
-                              ),
-                              const SizedBox(height: 10),
-                              CustomTextField(
-                                hintText: 'Mission Intro',
-                                textEditingController:
-                                    _missionTextEditingController3,
-                              ),
-                              const SizedBox(height: 10),
-                              CustomElevatedButton(
-                                textButton: missionUplaoding
-                                    ? 'Uplaoding...'
-                                    : 'Upload Mission',
-                                onPressed: () async {
-                                  setState(() {
-                                    _missionName =
-                                        _missionTextEditingController1.text;
-                                    _missionSubtitle =
-                                        _missionTextEditingController2.text;
-                                    _missionIntro =
-                                        _missionTextEditingController3.text;
-                                  });
-                                  if (_missionTextEditingController1.text.isNotEmpty &&
-                                      _missionTextEditingController2
-                                          .text.isNotEmpty &&
-                                      _missionTextEditingController3
-                                          .text.isNotEmpty) {
-                                    await uploadMission();
-                                  } else {
-                                    showSnackBar(
-                                        context: context,
-                                        text: 'No empty field is allowed!',
-                                        duration: 4);
-                                  }
-                                  setState(() {
-                                    missionUplaoding = false;
-                                  });
-                                },
-                              ),
-                            ],
+                                const SizedBox(height: 10),
+                                CustomTextField(
+                                  hintText: 'Mission Name',
+                                  textEditingController:
+                                      _missionTextEditingController1,
+                                ),
+                                const SizedBox(height: 10),
+                                CustomTextField(
+                                  hintText: 'Mission Subtitle',
+                                  textEditingController:
+                                      _missionTextEditingController2,
+                                ),
+                                const SizedBox(height: 10),
+                                CustomTextField(
+                                  hintText: 'Mission Intro',
+                                  textEditingController:
+                                      _missionTextEditingController3,
+                                ),
+                                const SizedBox(height: 10),
+                                CustomElevatedButton(
+                                  textButton: missionUplaoding
+                                      ? 'Uplaoding...'
+                                      : 'Upload Mission',
+                                  onPressed: () async {
+                                    setState(() {
+                                      _missionName =
+                                          _missionTextEditingController1.text;
+                                      _missionSubtitle =
+                                          _missionTextEditingController2.text;
+                                      _missionIntro =
+                                          _missionTextEditingController3.text;
+                                    });
+                                    if (_missionTextEditingController1.text.isNotEmpty &&
+                                        _missionTextEditingController2
+                                            .text.isNotEmpty &&
+                                        _missionTextEditingController3
+                                            .text.isNotEmpty &&
+                                        _missionPickedImageFile != null) {
+                                      await uploadMission();
+                                    } else {
+                                      showSnackBar(
+                                          context: context,
+                                          text: 'No empty field or image is allowed!',
+                                          duration: 4);
+                                    }
+                                    setState(() {
+                                      missionUplaoding = false;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
-                          Column(
-                            children: [
-                              GestureDetector(
-                                onTap: () => selectAstroImage(),
-                                child: Container(
-                                  width: 100,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: kGreyColor),
-                                    color: kTransparentColor,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: _pickedAstronautImage != ''
-                                      ? CachedNetworkImage(
-                                          imageUrl: _pickedAstronautImage,
-                                        )
-                                      : _astronautPickedImageFile != null
-                                          ? Image.file(
-                                              _astronautPickedImageFile)
-                                          : const Icon(
-                                              Icons.camera,
-                                              color: kWhiteColor30,
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Stack(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () => selectAstroImage(),
+                                      child: Container(
+                                        width: getMaxWidthMediaQuery(context),
+                                        height: getMaxHieghtMediaQuery(
+                                            context, 0.25),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: kGreyColor),
+                                          color: kTransparentColor,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: _astronautPickedImageFile != null
+                                            ? Image.file(
+                                                _astronautPickedImageFile)
+                                            : const Icon(
+                                                Icons.camera_alt_outlined,
+                                                color: kWhiteColor30,
+                                                size: 100,
+                                              ),
+                                      ),
+                                    ),
+                                    _astronautPickedImageFile != null
+                                        ? Positioned(
+                                            right: 0,
+                                            child: IconButton(
+                                              icon: const Icon(Icons.cancel),
+                                              onPressed: () {
+                                                setState(() {
+                                                  _astronautPickedImageFile =
+                                                      null;
+                                                });
+                                              },
                                             ),
+                                          )
+                                        : const SizedBox(),
+                                  ],
                                 ),
-                              ),
-                              const SizedBox(height: 10),
-                              CustomTextField(
-                                hintText: 'Astronaut Name',
-                                textEditingController:
-                                    _astronautTextEditingController1,
-                              ),
-                              const SizedBox(height: 10),
-                              CustomTextField(
-                                hintText: 'Astronaut Subtitle',
-                                textEditingController:
-                                    _astronautTextEditingController2,
-                              ),
-                              const SizedBox(height: 10),
-                              CustomTextField(
-                                hintText: 'Astronaut Intro',
-                                textEditingController:
-                                    _astronautTextEditingController3,
-                              ),
-                              const SizedBox(height: 10),
-                              CustomElevatedButton(
-                                textButton: astronautUplaoding
-                                    ? 'Uplaoding...'
-                                    : 'Upload Astronaut',
-                                onPressed: () async {
-                                  setState(() {
-                                    _astronautName =
-                                        _astronautTextEditingController1.text;
-                                    _astronautSubtitle =
-                                        _astronautTextEditingController2.text;
-                                    _astronautIntro =
-                                        _astronautTextEditingController3.text;
-                                  });
-                                  if (_astronautTextEditingController1.text.isNotEmpty &&
-                                      _astronautTextEditingController2
-                                          .text.isNotEmpty &&
-                                      _astronautTextEditingController3
-                                          .text.isNotEmpty) {
-                                    await uploadAstronaut();
-                                  } else {
-                                    showSnackBar(
-                                        context: context,
-                                        text: 'No empty field is allowed!',
-                                        duration: 4);
-                                  }
-                                  setState(() {
-                                    astronautUplaoding = false;
-                                  });
-                                },
-                              ),
-                            ],
+                                const SizedBox(height: 10),
+                                CustomTextField(
+                                  hintText: 'Astronaut Name',
+                                  textEditingController:
+                                      _astronautTextEditingController1,
+                                ),
+                                const SizedBox(height: 10),
+                                CustomTextField(
+                                  hintText: 'Astronaut Subtitle',
+                                  textEditingController:
+                                      _astronautTextEditingController2,
+                                ),
+                                const SizedBox(height: 10),
+                                CustomTextField(
+                                  hintText: 'Astronaut Intro',
+                                  textEditingController:
+                                      _astronautTextEditingController3,
+                                ),
+                                const SizedBox(height: 10),
+                                CustomElevatedButton(
+                                  textButton: astronautUplaoding
+                                      ? 'Uplaoding...'
+                                      : 'Upload Astronaut',
+                                  onPressed: () async {
+                                    setState(() {
+                                      _astronautName =
+                                          _astronautTextEditingController1.text;
+                                      _astronautSubtitle =
+                                          _astronautTextEditingController2.text;
+                                      _astronautIntro =
+                                          _astronautTextEditingController3.text;
+                                    });
+                                    if (_astronautTextEditingController1.text.isNotEmpty &&
+                                        _astronautTextEditingController2
+                                            .text.isNotEmpty &&
+                                        _astronautTextEditingController3
+                                            .text.isNotEmpty &&
+                                        _astronautPickedImageFile != null) {
+                                      await uploadAstronaut();
+                                    } else {
+                                      showSnackBar(
+                                          context: context,
+                                          text: 'No empty field or image is allowed!',
+                                          duration: 4);
+                                    }
+                                    setState(() {
+                                      astronautUplaoding = false;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Stack(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () => selectBannerImage(),
+                                      child: Container(
+                                        width: getMaxWidthMediaQuery(context),
+                                        height: getMaxHieghtMediaQuery(
+                                            context, 0.25),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: kGreyColor),
+                                          color: kTransparentColor,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: _bannerPickedImageFile != null
+                                            ? Image.file(_bannerPickedImageFile)
+                                            : const Icon(
+                                                Icons.camera_alt_outlined,
+                                                color: kWhiteColor30,
+                                                size: 100,
+                                              ),
+                                      ),
+                                    ),
+                                    _bannerPickedImageFile != null
+                                        ? Positioned(
+                                            right: 0,
+                                            child: IconButton(
+                                              icon: const Icon(Icons.cancel),
+                                              onPressed: () {
+                                                setState(() {
+                                                  _bannerPickedImageFile = null;
+                                                });
+                                              },
+                                            ),
+                                          )
+                                        : const SizedBox(),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                CustomTextField(
+                                  hintText: 'Banner Name',
+                                  textEditingController:
+                                      _bannerTextEditingController1,
+                                ),
+                                const SizedBox(height: 10),
+                                CustomTextField(
+                                  hintText: 'Banner Message',
+                                  textEditingController:
+                                      _bannerTextEditingController2,
+                                ),
+                                const SizedBox(height: 10),
+                                CustomTextField(
+                                  hintText: 'Banner Description',
+                                  textEditingController:
+                                      _bannerTextEditingController3,
+                                ),
+                                const SizedBox(height: 10),
+                                CustomElevatedButton(
+                                  textButton: bannerUploading
+                                      ? 'Uplaoding...'
+                                      : 'Upload ADBanner',
+                                  onPressed: () async {
+                                    setState(() {
+                                      _bannerName =
+                                          _bannerTextEditingController1.text;
+                                      _bannerMessage =
+                                          _bannerTextEditingController2.text;
+                                      _bannerDesc =
+                                          _bannerTextEditingController3.text;
+                                    });
+                                    if (_bannerTextEditingController1.text.isNotEmpty &&
+                                        _bannerTextEditingController2
+                                            .text.isNotEmpty &&
+                                        _bannerTextEditingController3
+                                            .text.isNotEmpty &&
+                                        _bannerPickedImageFile != null) {
+                                      await uploadAdBanner();
+                                      setState(() {
+                                        _bannerTextEditingController1.clear();
+                                        _bannerTextEditingController2.clear();
+                                        _bannerTextEditingController3.clear();
+                                        _bannerPickedImage = '';
+                                        _bannerPickedImageFile = null;
+                                      });
+                                    } else {
+                                      showSnackBar(
+                                          context: context,
+                                          text: 'No empty field or image is allowed!',
+                                          duration: 4);
+                                    }
+                                    setState(() {
+                                      bannerUploading = false;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 
-class CustomTextField extends StatelessWidget {
+class CustomTextField extends StatefulWidget {
   const CustomTextField({
     super.key,
     required this.hintText,
@@ -31,6 +31,11 @@ class CustomTextField extends StatelessWidget {
   final Color? prefixIconColor;
 
   @override
+  State<CustomTextField> createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+  @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
@@ -39,19 +44,19 @@ class CustomTextField extends StatelessWidget {
       ),
       child: Center(
         child: TextFormField(
-          keyboardType: textInputType ?? TextInputType.text,
+          keyboardType: widget.textInputType ?? TextInputType.text,
           maxLines: null,
           style: TextStyle(
             color: kWhiteColor70.withOpacity(0.6),
           ),
-          controller: textEditingController,
-          focusNode: focusNode,
-          obscureText: obsecuredField ?? false,
+          controller: widget.textEditingController,
+          focusNode: widget.focusNode,
+          obscureText: widget.obsecuredField ?? false,
           cursorColor: kWhiteColor,
           cursorOpacityAnimates: true,
           cursorRadius: const Radius.circular(10),
           decoration: InputDecoration(
-            hintText: hintText,
+            hintText: widget.hintText,
             border: InputBorder.none,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 30,
@@ -59,21 +64,22 @@ class CustomTextField extends StatelessWidget {
             ),
             hintStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
                   fontSize: 14,
-                  color: hintTextColor ?? kBlackColor.withOpacity(0.4),
+                  color: widget.hintTextColor ?? kBlackColor.withOpacity(0.4),
                 ),
-            prefixIconColor: prefixIconColor ?? kBlackColor.withOpacity(0.4),
+            prefixIconColor:
+                widget.prefixIconColor ?? kBlackColor.withOpacity(0.4),
             prefixIcon: Padding(
               padding: const EdgeInsets.only(left: 10),
               child: Icon(
-                prefixIcon,
+                widget.prefixIcon,
                 size: 23,
               ),
             ),
-            suffixIcon: isPasswordField == true
+            suffixIcon: widget.isPasswordField == true
                 ? GestureDetector(
-                    onTap: onSuffixIconTap,
+                    onTap: widget.onSuffixIconTap,
                     child: Icon(
-                      suffixIcon,
+                      widget.suffixIcon,
                       size: 23,
                     ),
                   )

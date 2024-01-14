@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
+import 'package:nasa_explorer_app_project/widgets/custom_circular_progress_indicator.dart';
 
 class EditImageProfileChangeImageWidgets extends StatefulWidget {
   const EditImageProfileChangeImageWidgets({
@@ -75,7 +76,7 @@ class _EditImageProfileChangeImageWidgetsState
                           )
                         : ClipRRect(
                             borderRadius: BorderRadius.circular(100),
-                            child: const CircularProgressIndicator(),
+                            child: const CustomCircularProgressIndicator(),
                           ),
                   ),
                 )),
@@ -88,7 +89,11 @@ class _EditImageProfileChangeImageWidgetsState
                       borderRadius: BorderRadius.circular(50),
                     ),
                     child: const Center(
-                      child: CircularProgressIndicator(),
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CustomCircularProgressIndicator(),
+                      ),
                     ),
                   )
                 : GestureDetector(
