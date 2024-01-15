@@ -19,7 +19,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  bool isFirstTime = true;
   @override
   void initState() {
     super.initState();
@@ -31,8 +30,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> redirectToNextScreen() async {
     isUserConnected = await checkInternetConnectivity(context);
-
-    // await checkRegistrationStatus(context);
 
     checkOnboardingScreen();
     await SharedPreferencesClass()
@@ -46,7 +43,6 @@ class _SplashScreenState extends State<SplashScreen> {
         await SharedPreferencesClass()
                 .getOnboardingStatusFromSharedPreferences() ==
             false) {
-      isFirstTime = true;
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(

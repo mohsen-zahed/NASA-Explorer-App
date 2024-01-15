@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,7 +24,6 @@ import 'package:nasa_explorer_app_project/models/image_model.dart';
 import 'package:nasa_explorer_app_project/models/news_model.dart';
 import 'package:nasa_explorer_app_project/models/planet_model.dart';
 import 'package:nasa_explorer_app_project/widgets/background_image_widget.dart';
-import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -50,7 +48,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // fetchGalleryImages();
     getPlanetsFromFirebase();
     fetchTopNewsContainerData();
     getUserInfo();
@@ -86,11 +83,11 @@ class _HomeScreenState extends State<HomeScreen> {
         .orderBy('id', descending: false)
         .get()
         .then((value) {
-      int count = value.docs.length < 2
-          ? value.docs.length == 1
-              ? 1
-              : 0
-          : 2;
+      int count = value.docs.length < 3
+          ? value.docs.length == 2
+              ? 2
+              : 1
+          : 3;
       for (var i = 0; i < count; i++) {
         fetchedNewsList.add(
           NewsModel.createPost(
@@ -109,37 +106,13 @@ class _HomeScreenState extends State<HomeScreen> {
     // print(fetchedNewsList[0].getDescription());
   }
 
-  Future<void> fetchGalleryImages() async {
-    try {
-      var imagesResponse = await http.get(Uri.parse(imagesUrl));
-      if (imagesResponse.statusCode == 200) {
-        var imagesList = jsonDecode(imagesResponse.body);
-        for (var x in imagesList) {
-          fetchedImagesList.add(ImageModel.fromJson(x));
-        }
-
-        for (var i = 0; i < 5; i++) {
-          demoHomeImagesList.add(fetchedImagesList[i].getUrl());
-        }
-        if (mounted) {
-          setState(() {});
-        }
-      }
-    } on HttpExceptionWithStatus catch (e) {
-      if (mounted) {
-        showSnackBar(context: context, text: e.toString(), duration: 4);
-      }
-    }
-  }
-
   Future getPlanetsFromFirebase() async {
     await FirebaseFirestore.instance
         .collection("planetsData")
         .orderBy('id', descending: false)
         .get()
         .then((value) {
-      value.docs.forEach((element) {
-        print(element.data()['id']);
+      for (var element in value.docs) {
         if (fetchedPlanets.last.getId() < element.data()['id']) {
           fetchedPlanets.add(
             PlanetModel.create(
@@ -153,35 +126,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         }
-      });
+      }
     });
     if (mounted) {
       setState(() {});
     }
-  }
-
-  // Future<void> getSolarImages() async {
-  //   try {
-  //     // for (var i = 0; i < solarImages.length; i++) {
-
-  //     final ref = storage.ref().child('planetsImages/cjf.jpeg');
-  //     final url = await ref.getDownloadURL();
-  //     // }
-  //     setState(() {
-  //       solarImagesUrl = url;
-  //     });
-  //     print('asdfsadf ${url}');
-  //   } on FirebaseException catch (e) {
-  //     if (mounted) {
-  //       showSnackBar(
-  //           context: context, text: e.message.toString(), duration: 10);
-  //     }
-  //   }
-  // }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override

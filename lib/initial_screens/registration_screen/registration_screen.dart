@@ -62,7 +62,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         }
       }
     } finally {
-      print('error List cleared');
       errorList.clear();
       if (mounted) {
         setState(() {});

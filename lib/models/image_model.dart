@@ -1,20 +1,30 @@
-import 'package:nasa_explorer_app_project/constants/variables.dart';
-
 class ImageModel {
-  String hdurl;
-  String url;
+  late int id;
+  late String url;
+  late String imageDescription;
+  late String date;
+  late String authorImage;
+  late String authorName;
+  late int likesCount;
+  late bool isLiked;
+
   ImageModel.init({
-    required this.hdurl,
+    required this.id,
     required this.url,
+    required this.imageDescription,
+    required this.date,
+    required this.authorName,
+    required this.likesCount,
+    required this.isLiked,
+    required this.authorImage,
   });
 
-  factory ImageModel.fromJson(Map<String, dynamic> json) {
-    return ImageModel.init(
-      hdurl: json['hdurl'] ?? demoImagePlaceHolder,
-      url: json['url'] ?? demoImagePlaceHolder,
-    );
-  }
-
-  String getHdurl() => hdurl;
+  int getId() => id;
   String getUrl() => url;
+  String getImageDescription() => imageDescription;
+  String getDate() => date;
+  String getAuthorImage() => authorImage;
+  String getAuthorName() => authorName;
+  int getLikesCount() => likesCount;
+  bool getIsLiked() => isLiked;
 }

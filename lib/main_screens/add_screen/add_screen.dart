@@ -1,12 +1,9 @@
 // ignore_for_file: unused_field, prefer_typing_uninitialized_variables, no_leading_underscores_for_local_identifiers, prefer_interpolation_to_compose_strings
-
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
@@ -14,7 +11,6 @@ import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/functions/show_snackbar.dart';
 import 'package:nasa_explorer_app_project/main_screens/add_screen/widgets/custom_post_text_field.dart';
-import 'package:nasa_explorer_app_project/main_screens/home_screens/home_screen.dart';
 import 'package:nasa_explorer_app_project/services/rand_number_generator.dart';
 import 'package:nasa_explorer_app_project/widgets/background_image_widget.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_elevated_button.dart';
@@ -385,6 +381,10 @@ class _AddScreenState extends State<AddScreen>
         'galleryImageUrl': _urlDownloadGalleryImage,
         'galleryDescription': _galleryImageDesc,
         'postedDate': date,
+        'authorName': userName,
+        'authorImageUrl': userImage,
+        'isLiked': false,
+        'likesCount': 0,
       });
       setState(() {
         galleryUploading = false;
@@ -454,7 +454,7 @@ class _AddScreenState extends State<AddScreen>
       if (_missionPickedImage != null) {
         final ref = FirebaseStorage.instance
             .ref()
-            .child('planetsImages')
+            .child('missionsImages')
             .child(_missionName.toString().trim() + '.png');
         await ref.putFile(_missionPickedImageFile);
         if (mounted) {
@@ -500,7 +500,7 @@ class _AddScreenState extends State<AddScreen>
       if (_astronautPickedImage != null) {
         final ref = FirebaseStorage.instance
             .ref()
-            .child('planetsImages')
+            .child('astronautsImages')
             .child(_astronautName.toString().trim() + '.png');
         await ref.putFile(_astronautPickedImageFile);
         if (mounted) {
@@ -972,6 +972,7 @@ class _AddScreenState extends State<AddScreen>
                                           ),
                                           const SizedBox(height: 10),
                                           CustomTextField(
+                                            maxLength: 60,
                                             hintText: 'Image Description',
                                             textEditingController:
                                                 _galleryTextEditingController,

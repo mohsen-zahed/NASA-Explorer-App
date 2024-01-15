@@ -16,6 +16,7 @@ class CustomTextField extends StatefulWidget {
     this.textInputType,
     this.hintTextColor,
     this.prefixIconColor,
+    this.maxLength,
   });
   final String hintText;
   final IconData? prefixIcon;
@@ -29,6 +30,7 @@ class CustomTextField extends StatefulWidget {
   final TextInputType? textInputType;
   final Color? hintTextColor;
   final Color? prefixIconColor;
+  final int? maxLength;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -45,6 +47,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       child: Center(
         child: TextFormField(
           keyboardType: widget.textInputType ?? TextInputType.text,
+          maxLength: widget.maxLength,
           maxLines: null,
           style: TextStyle(
             color: kWhiteColor70.withOpacity(0.6),
@@ -56,6 +59,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
           cursorOpacityAnimates: true,
           cursorRadius: const Radius.circular(10),
           decoration: InputDecoration(
+            semanticCounterText: widget.maxLength == 40 ? '' : null,
+            counterStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: kWhiteColor,
+                ),
             hintText: widget.hintText,
             border: InputBorder.none,
             contentPadding: const EdgeInsets.symmetric(

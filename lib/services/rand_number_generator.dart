@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
-
 class NumberGenerator {
-  static int _lastNumber = 2;
-  static int _numberForOthers = 1;
+  static int _lastNumber = 0;
+  static int _numberForOthers = 0;
   static List<int> _generatedNumbersForOthers = [];
   static List<int> _generatedNumbers = [];
 

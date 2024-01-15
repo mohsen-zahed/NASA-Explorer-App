@@ -1,10 +1,9 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/models/news_model.dart';
-import 'package:nasa_explorer_app_project/models/post_model.dart';
 import 'package:nasa_explorer_app_project/widgets/shimmer_effect.dart';
 
 class NewsContainerWidget extends StatefulWidget {
@@ -21,6 +20,8 @@ class NewsContainerWidget extends StatefulWidget {
 }
 
 class _NewsContainerWidgetState extends State<NewsContainerWidget> {
+  int currentNewsPage = 0;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -31,107 +32,156 @@ class _NewsContainerWidgetState extends State<NewsContainerWidget> {
               height: getMaxHieghtMediaQuery(context, 0.23),
               useMargin: false,
             )
-          : SizedBox(
-              width: getMaxWidthMediaQuery(context),
-              height: getMaxHieghtMediaQuery(context, 0.23),
-              child: PageView.builder(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) => CachedNetworkImage(
-                  imageUrl: widget.postList[0].getImage(),
-                  placeholder: (context, url) {
-                    return ShimmerEffect(
-                      useMargin: false,
-                      width: getMaxWidthMediaQuery(context),
-                      height: getMaxHieghtMediaQuery(context, 0.23),
-                    );
-                  },
-                  imageBuilder: (context, imageProvider) {
-                    return Container(
-                      width: getMaxWidthMediaQuery(context),
-                      height: getMaxHieghtMediaQuery(context, 0.23),
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(15),
-                        ),
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            child: Container(
-                              width: getMaxWidthMediaQuery(context),
-                              height: getMaxHieghtMediaQuery(context, 0.23),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    kBlackColor,
-                                    kBlackColor.withOpacity(.7),
-                                    kBlackColor.withOpacity(.5),
-                                    kTransparentColor,
-                                  ],
-                                  begin: Alignment.bottomCenter,
-                                  end: Alignment.topCenter,
+          : Column(
+              children: [
+                SizedBox(
+                  width: getMaxWidthMediaQuery(context),
+                  height: getMaxHieghtMediaQuery(context, 0.23),
+                  child: PageView.builder(
+                    itemCount: 3,
+                    onPageChanged: (value) {
+                      setState(() {
+                        currentNewsPage = value;
+                      });
+                    },
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) => CachedNetworkImage(
+                      imageUrl: widget.postList[index].getImage(),
+                      placeholder: (context, url) {
+                        return ShimmerEffect(
+                          useMargin: false,
+                          width: getMaxWidthMediaQuery(context),
+                          height: getMaxHieghtMediaQuery(context, 0.23),
+                        );
+                      },
+                      imageBuilder: (context, imageProvider) {
+                        return Container(
+                          width: getMaxWidthMediaQuery(context),
+                          height: getMaxHieghtMediaQuery(context, 0.23),
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(15),
+                            ),
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                child: Container(
+                                  width: getMaxWidthMediaQuery(context),
+                                  height: getMaxHieghtMediaQuery(context, 0.23),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        kBlackColor,
+                                        kBlackColor.withOpacity(.7),
+                                        kBlackColor.withOpacity(.5),
+                                        kTransparentColor,
+                                      ],
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter,
+                                    ),
+                                  ),
                                 ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 25,
+                                  vertical: 25,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      'LATEST UPDATES',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall!
+                                          .copyWith(
+                                            color: kWhiteColor70,
+                                            decoration:
+                                                TextDecoration.underline,
+                                            decorationThickness: 2,
+                                            decorationColor: kWhiteColor70,
+                                            fontSize: 9,
+                                          ),
+                                    ),
+                                    ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                        maxWidth:
+                                            getMaxWidthMediaQuery(context, 0.9),
+                                        maxHeight: 50,
+                                      ),
+                                      child: DefaultTextStyle(
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                              color: kWhiteColor,
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                        child: AnimatedTextKit(
+                                          animatedTexts: [
+                                            TypewriterAnimatedText(
+                                              cursor: '..|',
+                                              speed: const Duration(
+                                                milliseconds: 90,
+                                              ),
+                                              widget.postList[index]
+                                                  .getDescription(),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                SizedBox(
+                  width: getMaxWidthMediaQuery(context),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Row(
+                      children: [
+                        ...List.generate(
+                          3,
+                          (index) => Expanded(
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 400),
+                              height: 1.5,
+                              margin: const EdgeInsets.only(right: 2),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(1),
+                                color: currentNewsPage == index
+                                    ? kWhiteColor
+                                    : kWhiteColor30,
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 25,
-                              vertical: 25,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  'LATEST UPDATES',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall!
-                                      .copyWith(
-                                        color: kWhiteColor70,
-                                        decoration: TextDecoration.underline,
-                                        decorationThickness: 2,
-                                        decorationColor: kWhiteColor70,
-                                        fontSize: 9,
-                                      ),
-                                ),
-                                ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth:
-                                        getMaxWidthMediaQuery(context, 0.9),
-                                    maxHeight: 50,
-                                  ),
-                                  child: Text(
-                                    widget.postList[0].getDescription(),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
-                                          color: kWhiteColor,
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
 
 // ExtendedImage.network(
-//               widget.postList[0].getImage(),
+//               widget.postList[index].getImage(),
 //               fit: BoxFit.cover,
 //               loadStateChanged: (ExtendedImageState state) {
 //                 switch (state.extendedImageLoadState) {
@@ -154,7 +204,7 @@ class _NewsContainerWidgetState extends State<NewsContainerWidget> {
 //                         color: kScaffoldBackgroundColor,
 //                         image: DecorationImage(
 //                           image: ExtendedNetworkImageProvider(
-//                             widget.postList[0].getImage(),
+//                             widget.postList[index].getImage(),
 //                           ),
 //                           fit: BoxFit.cover,
 //                         ),
@@ -187,7 +237,7 @@ class _NewsContainerWidgetState extends State<NewsContainerWidget> {
 //                                 maxHeight: 50,
 //                               ),
 //                               child: Text(
-//                                 widget.postList[0].getDescription(),
+//                                 widget.postList[index].getDescription(),
 //                                 style: Theme.of(context)
 //                                     .textTheme
 //                                     .bodyMedium!

@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -23,36 +22,10 @@ class NewsScreen extends StatefulWidget {
 }
 
 class _NewsScreenState extends State<NewsScreen> {
-  var newsResponse;
-  bool enteredFirstTime = false;
   @override
   void initState() {
     super.initState();
     fetchPostsFromFirebase();
-  }
-
-  Future<List<PostModel>> fetchNewsPosts() async {
-    newsResponse = await http.get(Uri.parse(newsUrl));
-    var fetchedNewsPostsList = [];
-    if (newsResponse.statusCode == 200) {
-      try {
-        fetchedNewsPostsList = jsonDecode(newsResponse.body);
-        // for (var x in fetchedNewsPostsList) {
-        //   newsPostList.add(NewsModel.fromJson(x));
-        //   for (var i = 0; i < newsPostList.length; i++) {
-        //     print(newsPostList[i].getCopyRight());
-        //   }
-        // }
-        setState(() {
-          isPostsLoading = false;
-          enteredFirstTime = true;
-        });
-        return newsPostList;
-      } catch (e) {
-        debugPrint(e.toString());
-      }
-    }
-    return newsPostList;
   }
 
   Future<void> fetchPostsFromFirebase() async {
