@@ -176,6 +176,8 @@ List<PlanetModel> fetchedPlanets = [
   ),
 ];
 
+List<PostModel> fetchedPostsList = [];
+
 List solarImages = [
   'earth.png',
   'jupiter.png',

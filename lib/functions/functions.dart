@@ -287,7 +287,7 @@ String getDate() {
               ? 'PM'
               : 'AM';
   String postDate =
-      '$postedYear-$postedMonth-$postedDay|$postedTimeHour:$postedTimeMinute$postedTimeZone';
+      '$postedYear-$postedMonth-$postedDay | $postedTimeHour:$postedTimeMinute$postedTimeZone';
   return postDate;
 }
 //? home screen functions -----

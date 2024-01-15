@@ -40,6 +40,8 @@ var imagesModelList = [];
 
 // news screen
 var newsUrl = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=10';
+bool isPostsLoading = true;
+
 // news screen
 
 //

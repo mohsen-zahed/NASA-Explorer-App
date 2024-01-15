@@ -8,6 +8,7 @@ class PostModel {
   late String url;
   late int likesCount;
   late bool isLiked;
+  late bool isPostSaved;
 
   PostModel();
   PostModel.init({
@@ -20,6 +21,7 @@ class PostModel {
     required this.url,
     required this.likesCount,
     required this.isLiked,
+    required this.isPostSaved,
   });
 
   // factory NewsModel.fromJson(Map<String, dynamic> json) {
@@ -51,4 +53,5 @@ class PostModel {
   String getUrl() => url;
   int getLikesCount() => likesCount;
   bool getIsLiked() => isLiked;
+  bool getIsPostSaved() => isPostSaved;
 }

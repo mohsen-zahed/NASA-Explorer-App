@@ -154,6 +154,7 @@ class _NewsPostWidgetState extends State<NewsPostWidget> {
                     Container(
                       width: 48,
                       height: 48,
+                      padding: const EdgeInsets.all(1.5),
                       decoration: BoxDecoration(
                         borderRadius: const BorderRadius.all(
                           Radius.circular(100),
@@ -163,11 +164,15 @@ class _NewsPostWidgetState extends State<NewsPostWidget> {
                           width: 1.5,
                         ),
                       ),
-                      child: CachedNetworkImage(
-                        imageUrl: demoProfileImageHolder,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) =>
-                            Image.network(demoImagePlaceHolder),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: CachedNetworkImage(
+                          imageUrl:
+                              widget.itemList[widget.index].getAuthorImage(),
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) =>
+                              Image.network(demoImagePlaceHolder),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 10),

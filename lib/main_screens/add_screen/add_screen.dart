@@ -78,7 +78,7 @@ class _AddScreenState extends State<AddScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 6, vsync: this);
+    _tabController = TabController(length: 5, vsync: this);
   }
 
   bool isPosting = true;
@@ -256,7 +256,7 @@ class _AddScreenState extends State<AddScreen>
       setState(() {
         isPostUploading = true;
       });
-      var _id = NumberGenerator.generateNumber();
+      var _id = NumberGenerator.generateNumbersForOther();
       FirebaseFirestore _posts = FirebaseFirestore.instance;
       var _docIDs = _posts.collection('postsData').doc().id;
       if (_postPickedImage != null) {
@@ -291,6 +291,7 @@ class _AddScreenState extends State<AddScreen>
         'postDescription': _postDescription,
         'postedDate': date,
         'postLikesCount': 0,
+        'isPostSaved': false,
         'postIsLike': false,
       });
       setState(() {
@@ -303,58 +304,58 @@ class _AddScreenState extends State<AddScreen>
     }
   }
 
-  Future<void> uploadNews() async {
-    try {
-      setState(() {
-        newsUploading = true;
-      });
-      var _id = NumberGenerator.generateNumber();
-      FirebaseFirestore _news = FirebaseFirestore.instance;
-      var _docIDs = _news.collection('newsBannerData').doc().id;
-      if (_newsPickedImage != null) {
-        var imageName = joinWords(text: _newsDescription);
-        final ref = FirebaseStorage.instance
-            .ref()
-            .child('newsBannerImages')
-            .child(imageName.toString().trim() + '.png');
-        await ref.putFile(_newsPickedImageFile);
-        if (mounted) {
-          showSnackBar(
-              context: context,
-              text: 'News uploaded successfuly!',
-              duration: 3);
-        }
-        _urlDownloadNewsImage = await ref.getDownloadURL();
-        setState(() {
-          _urlDownloadNewsImage = _urlDownloadNewsImage;
-        });
-      } else {
-        showSnackBar(
-            context: context, text: 'Failed to upload news!', duration: 4);
-      }
-      String date = getDate();
-      await _news.collection('newsBannerData').doc(_docIDs).set({
-        'id': _id,
-        'newsImageUrl': _urlDownloadNewsImage,
-        'newsDescription': _newsDescription,
-        'postedDate': date,
-      });
-      setState(() {
-        newsUploading = false;
-      });
-    } on FirebaseFirestore catch (e) {
-      if (mounted) {
-        showSnackBar(context: context, text: e.toString(), duration: 4);
-      }
-    }
-  }
+  // Future<void> uploadNews() async {
+  //   try {
+  //     setState(() {
+  //       newsUploading = true;
+  //     });
+  //     var _id = NumberGenerator.generateNumber(isSolarSystem: false);
+  //     FirebaseFirestore _news = FirebaseFirestore.instance;
+  //     var _docIDs = _news.collection('newsBannerData').doc().id;
+  //     if (_newsPickedImage != null) {
+  //       var imageName = joinWords(text: _newsDescription);
+  //       final ref = FirebaseStorage.instance
+  //           .ref()
+  //           .child('newsBannerImages')
+  //           .child(imageName.toString().trim() + '.png');
+  //       await ref.putFile(_newsPickedImageFile);
+  //       if (mounted) {
+  //         showSnackBar(
+  //             context: context,
+  //             text: 'News uploaded successfuly!',
+  //             duration: 3);
+  //       }
+  //       _urlDownloadNewsImage = await ref.getDownloadURL();
+  //       setState(() {
+  //         _urlDownloadNewsImage = _urlDownloadNewsImage;
+  //       });
+  //     } else {
+  //       showSnackBar(
+  //           context: context, text: 'Failed to upload news!', duration: 4);
+  //     }
+  //     String date = getDate();
+  //     await _news.collection('newsBannerData').doc(_docIDs).set({
+  //       'id': _id,
+  //       'newsImageUrl': _urlDownloadNewsImage,
+  //       'newsDescription': _newsDescription,
+  //       'postedDate': date,
+  //     });
+  //     setState(() {
+  //       newsUploading = false;
+  //     });
+  //   } on FirebaseFirestore catch (e) {
+  //     if (mounted) {
+  //       showSnackBar(context: context, text: e.toString(), duration: 4);
+  //     }
+  //   }
+  // }
 
   Future<void> uploadGallery() async {
     try {
       setState(() {
         galleryUploading = true;
       });
-      var _id = NumberGenerator.generateNumber();
+      var _id = NumberGenerator.generateNumbersForOther();
       FirebaseFirestore _gallery = FirebaseFirestore.instance;
       var _docIDs = _gallery.collection('galleryImages').doc().id;
       if (_galleryPickedImage != null) {
@@ -472,7 +473,7 @@ class _AddScreenState extends State<AddScreen>
       }
       String date = getDate();
       await _mission.collection('NasaMissionsData').doc(_docIDs).set({
-        'id': NumberGenerator.generateNumber(),
+        'id': NumberGenerator.generateNumbersForOther(),
         'imageUrl': _urlDownloadMissionImage,
         'missionName': _missionName,
         'missionSubtitle': _missionSubtitle,
@@ -518,7 +519,7 @@ class _AddScreenState extends State<AddScreen>
       }
       String date = getDate();
       await _astro.collection('NasaAstronautsData').doc(_docIDs).set({
-        'id': NumberGenerator.generateNumber(),
+        'id': NumberGenerator.generateNumbersForOther(),
         'imageUrl': _urlDownloadAstronautImage,
         'astronautName': _astronautName,
         'astronautSubtitle': _astronautSubtitle,
@@ -564,7 +565,7 @@ class _AddScreenState extends State<AddScreen>
       }
       String date = getDate();
       await _banner.collection('AdBannerData').doc(_docIDs).set({
-        'id': NumberGenerator.generateNumber(),
+        'id': NumberGenerator.generateNumbersForOther(),
         'imageUrl': _urlDownloadBannerImage,
         'bannerName': _bannerName,
         'bannerDescription': _bannerDesc,
@@ -811,7 +812,7 @@ class _AddScreenState extends State<AddScreen>
                                   labelColor: kWhiteColor,
                                   unselectedLabelColor: kWhiteColor30,
                                   tabs: const [
-                                    Tab(text: 'News Container'),
+                                    // Tab(text: 'News Container'),
                                     Tab(text: 'GalleryImages'),
                                     Tab(text: 'Planets'),
                                     Tab(text: 'NASA Missions'),
@@ -825,99 +826,99 @@ class _AddScreenState extends State<AddScreen>
                                 child: TabBarView(
                                   controller: _tabController,
                                   children: [
-                                    SingleChildScrollView(
-                                      child: Column(
-                                        children: [
-                                          Stack(
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () => selectNewsImage(),
-                                                child: Container(
-                                                  width: getMaxWidthMediaQuery(
-                                                      context),
-                                                  height:
-                                                      getMaxHieghtMediaQuery(
-                                                          context, 0.25),
-                                                  decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: kGreyColor),
-                                                    color: kTransparentColor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                  ),
-                                                  child: _newsPickedImageFile !=
-                                                          null
-                                                      ? Image.file(
-                                                          _newsPickedImageFile)
-                                                      : const Icon(
-                                                          Icons
-                                                              .camera_alt_outlined,
-                                                          color: kWhiteColor30,
-                                                          size: 100,
-                                                        ),
-                                                ),
-                                              ),
-                                              _newsPickedImageFile != null
-                                                  ? Positioned(
-                                                      right: 0,
-                                                      child: IconButton(
-                                                        icon: const Icon(
-                                                            Icons.cancel),
-                                                        onPressed: () {
-                                                          setState(() {
-                                                            _newsPickedImageFile =
-                                                                null;
-                                                          });
-                                                        },
-                                                      ),
-                                                    )
-                                                  : const SizedBox(),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 10),
-                                          CustomTextField(
-                                            hintText: 'News Description',
-                                            textEditingController:
-                                                _newsTextEditingController,
-                                          ),
-                                          const SizedBox(height: 10),
-                                          CustomElevatedButton(
-                                            textButton: newsUploading
-                                                ? 'Uplaoding...'
-                                                : 'Upload News',
-                                            onPressed: () async {
-                                              setState(() {
-                                                _newsDescription =
-                                                    _newsTextEditingController
-                                                        .text;
-                                              });
-                                              if (_newsTextEditingController
-                                                      .text.isNotEmpty &&
-                                                  _newsPickedImageFile !=
-                                                      null) {
-                                                await uploadNews();
-                                                setState(() {
-                                                  _newsTextEditingController
-                                                      .clear();
-                                                  _newsPickedImageFile = null;
-                                                  _urlDownloadNewsImage = '';
-                                                });
-                                              } else {
-                                                showSnackBar(
-                                                    context: context,
-                                                    text:
-                                                        'No empty field or image is allowed!',
-                                                    duration: 4);
-                                              }
-                                              setState(() {
-                                                newsUploading = false;
-                                              });
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                    // SingleChildScrollView(
+                                    //   child: Column(
+                                    //     children: [
+                                    //       Stack(
+                                    //         children: [
+                                    //           GestureDetector(
+                                    //             onTap: () => selectNewsImage(),
+                                    //             child: Container(
+                                    //               width: getMaxWidthMediaQuery(
+                                    //                   context),
+                                    //               height:
+                                    //                   getMaxHieghtMediaQuery(
+                                    //                       context, 0.25),
+                                    //               decoration: BoxDecoration(
+                                    //                 border: Border.all(
+                                    //                     color: kGreyColor),
+                                    //                 color: kTransparentColor,
+                                    //                 borderRadius:
+                                    //                     BorderRadius.circular(
+                                    //                         10),
+                                    //               ),
+                                    //               child: _newsPickedImageFile !=
+                                    //                       null
+                                    //                   ? Image.file(
+                                    //                       _newsPickedImageFile)
+                                    //                   : const Icon(
+                                    //                       Icons
+                                    //                           .camera_alt_outlined,
+                                    //                       color: kWhiteColor30,
+                                    //                       size: 100,
+                                    //                     ),
+                                    //             ),
+                                    //           ),
+                                    //           _newsPickedImageFile != null
+                                    //               ? Positioned(
+                                    //                   right: 0,
+                                    //                   child: IconButton(
+                                    //                     icon: const Icon(
+                                    //                         Icons.cancel),
+                                    //                     onPressed: () {
+                                    //                       setState(() {
+                                    //                         _newsPickedImageFile =
+                                    //                             null;
+                                    //                       });
+                                    //                     },
+                                    //                   ),
+                                    //                 )
+                                    //               : const SizedBox(),
+                                    //         ],
+                                    //       ),
+                                    //       const SizedBox(height: 10),
+                                    //       CustomTextField(
+                                    //         hintText: 'News Description',
+                                    //         textEditingController:
+                                    //             _newsTextEditingController,
+                                    //       ),
+                                    //       const SizedBox(height: 10),
+                                    //       CustomElevatedButton(
+                                    //         textButton: newsUploading
+                                    //             ? 'Uplaoding...'
+                                    //             : 'Upload News',
+                                    //         onPressed: () async {
+                                    //           setState(() {
+                                    //             _newsDescription =
+                                    //                 _newsTextEditingController
+                                    //                     .text;
+                                    //           });
+                                    //           if (_newsTextEditingController
+                                    //                   .text.isNotEmpty &&
+                                    //               _newsPickedImageFile !=
+                                    //                   null) {
+                                    //             await uploadNews();
+                                    //             setState(() {
+                                    //               _newsTextEditingController
+                                    //                   .clear();
+                                    //               _newsPickedImageFile = null;
+                                    //               _urlDownloadNewsImage = '';
+                                    //             });
+                                    //           } else {
+                                    //             showSnackBar(
+                                    //                 context: context,
+                                    //                 text:
+                                    //                     'No empty field or image is allowed!',
+                                    //                 duration: 4);
+                                    //           }
+                                    //           setState(() {
+                                    //             newsUploading = false;
+                                    //           });
+                                    //         },
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ),
                                     SingleChildScrollView(
                                       child: Column(
                                         children: [
