@@ -1,60 +1,40 @@
-import 'package:nasa_explorer_app_project/constants/variables.dart';
-
 class NewsModel {
-  String? copyRight;
-  String? date;
-  String? explanation;
-  String? hdurl;
-  String? mediaType;
-  String? serviceVersion;
-  String? title;
-  String? url;
+  late String image;
+  late String text;
+  late String userName;
+  late String profileImage;
+  late int postedDateYear;
+  late int postedDateMonth;
+  late int postedDateDay;
+  late int likesNumber;
+  late bool isLiked;
 
-  NewsModel();
-  NewsModel.init({
-    required this.copyRight,
-    required this.date,
-    required this.explanation,
-    required this.hdurl,
-    required this.serviceVersion,
-    required this.mediaType,
-    required this.title,
-    required this.url,
+  NewsModel.init();
+
+  NewsModel.createPost({
+    required this.image,
+    required this.text,
+    required this.userName,
+    required this.profileImage,
+    required this.postedDateYear,
+    required this.postedDateMonth,
+    required this.postedDateDay,
+    required this.likesNumber,
+    required this.isLiked,
   });
 
-  factory NewsModel.fromJson(Map<String, dynamic> json) {
-    return NewsModel.init(
-      copyRight: json['copyright'] ?? 'Unknown',
-      date: json['date'] ?? '2002-1-17',
-      explanation: json['explanation'] ?? '...',
-      hdurl: json['hdurl'] ?? demoImagePlaceHolder,
-      serviceVersion: json['service_version'] ?? '1',
-      mediaType: json['media_type'] ?? 'Not specified',
-      title: json['title'] ?? 'a title from NASA',
-      url: json['url'] ?? demoImagePlaceHolder,
-    );
-  }
+  NewsModel.fromJson(List<Map<String, dynamic>> json) {}
 
-  // Map<String, dynamic> toJson() {
-  //   final Map<String, dynamic> data = Map<String, dynamic>();
-  //   data['apod_site'] = apodSite;
-  //   data['copyRight'] = copyRight;
-  //   data['date'] = date;
-  //   data['explanation'] = explanation;
-  //   data['hdurl'] = hdurl;
-  //   data['image_thumbnail'] = serviceVersion;
-  //   data['media_type'] = mediaType;
-  //   data['title'] = title;
-  //   data['url'] = url;
-  //   return data;
-  // }
-
-  String getCopyRight() => copyRight!;
-  String getDate() => date!;
-  String getexplanation() => explanation!;
-  String getHdurl() => hdurl!;
-  String getserviceVersion() => serviceVersion!;
-  String getMediaType() => mediaType!;
-  String getTitle() => title!;
-  String getUrl() => url!;
+  String getImages() => image;
+  void setImages(List<String> image) => image = image;
+  String getText() => text;
+  void setText(String text) => text = text;
+  String getUserName() => userName;
+  String getProfileImage() => profileImage;
+  int getPostedDateYear() => postedDateYear;
+  int getPostedDateMonth() => postedDateMonth;
+  int getPostedDateDay() => postedDateDay;
+  int getLikesNumber() => likesNumber;
+  bool getIsLiked() => isLiked;
+  void setIsLiked(bool isLiked) => isLiked = isLiked;
 }

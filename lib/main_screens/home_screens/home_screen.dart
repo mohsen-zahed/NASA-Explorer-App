@@ -22,8 +22,8 @@ import 'package:nasa_explorer_app_project/main_screens/images_screen/image_galle
 import 'package:nasa_explorer_app_project/main_screens/news_screen/news_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/profile_screen.dart';
 import 'package:nasa_explorer_app_project/models/image_model.dart';
+import 'package:nasa_explorer_app_project/models/post_model.dart';
 import 'package:nasa_explorer_app_project/models/planet_model.dart';
-import 'package:nasa_explorer_app_project/services/shared_preferences_service.dart';
 import 'package:nasa_explorer_app_project/widgets/background_image_widget.dart';
 import 'package:http/http.dart' as http;
 
@@ -39,12 +39,28 @@ class _HomeScreenState extends State<HomeScreen> {
   var newsContainerImageList = [];
   List<ImageModel> fetchedNewsContainerImageList = [];
   List<String> demoHomeImagesList = [];
-  var newsContainerImageResponse;
   final storage = FirebaseStorage.instance;
   String? solarImagesUrl;
   String? imageUrll = '';
   List<String>? imageUrls;
   bool userFirstTimeVisitHome = false;
+
+  //* news container vars
+  List<PostModel> fetchedNewsList = [
+    PostModel.init(
+        id: 3,
+        author: 'mohse',
+        authorImage:
+            'https://firebasestorage.googleapis.com/v0/b/nasa-explorer-app-3be03.appspot.com/o/usersImage%2Fmohse.jpeg?alt=media&token=06fb4d85-46f9-4e5b-a568-df070f67da90',
+        date: '2024-1-15|14:3PM',
+        explanation:
+            "Innovators at NASA's Glenn Research Center have developed a breakthrough in ion thruster technology. The Annular Ion Engine (AIE) features an annular discharge chamber with a set of annular ion optics, potentially configured with a centrally mounted neutralizer cathode assembly. Compared to current state-of-the-art, cylindrically shaped ion thrusters, the AIE includes two primary advantages: 1) it enables scaling of ion thruster technology to high power at specific impulse (Isp) desirable for near-term missions, and 2) it provides a substantial increase in both thrust density and thrust-to-power (F/P) ratio. With its additional increase in lifetime service and improvements in packaging, Glenn's AIE represents the next generation of electric propulsion systems that require higher power, F/P, and efficiency, such as Solar Electric Propulsion (SEP) vehicles that may transport humans to the moon and Mars.",
+        title: 'Annular Ion Engine',
+        url:
+            'https://firebasestorage.googleapis.com/v0/b/nasa-explorer-app-3be03.appspot.com/o/postsImages%2Fmohse-Innovators%20at.png?alt=media&token=b22bab64-697b-438f-ad8e-32a6d59643e3',
+        likesCount: 0,
+        isLiked: false)
+  ];
 
   @override
   void initState() {
@@ -53,7 +69,6 @@ class _HomeScreenState extends State<HomeScreen> {
     // fetchGalleryImages();
     getPlanetsFromFirebase();
     getUserInfo();
-    SharedPreferencesClass().saveUserVisitHomeStatus(alreadyVisited: true);
   }
 
   User? user;
@@ -80,21 +95,45 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> fetchNewsContainerImage() async {
+  Future<void> fetchPostsFromFirebase() async {
     try {
-      newsContainerImageResponse = await http.get(Uri.parse(newsImageUrl));
-      if (newsContainerImageResponse.statusCode == 200) {
-        newsContainerImageList = jsonDecode(newsContainerImageResponse.body);
-        for (var x in newsContainerImageList) {
-          fetchedNewsContainerImageList.add(ImageModel.fromJson(x));
+      await FirebaseFirestore.instance
+          .collection('postsData')
+          .orderBy('id', descending: false)
+          .get()
+          .then((value) {
+        for (var element in value.docs) {
+          if (fetchedNewsList.last.getId() < element.data()['id']) {
+            fetchedNewsList.add(
+              PostModel.init(
+                id: element.data()['id'],
+                author: element.data()['author'],
+                authorImage: element.data()['authorImage'],
+                date: element.data()['postedDate'],
+                explanation: element.data()['postDescription'],
+                title: element.data()['postTitle'],
+                url: element.data()['postImageUrl'],
+                likesCount: element.data()['postLikesCount'],
+                isLiked: element.data()['postIsLike'],
+              ),
+            );
+          }
         }
-        if (mounted) {
-          setState(() {
-            imageUrl = fetchedNewsContainerImageList[0].getUrl();
-          });
-        }
-      }
-    } on HttpExceptionWithStatus catch (e) {
+        print(fetchedNewsList);
+      });
+      // newsContainerImageResponse = await http.get(Uri.parse(newsImageUrl));
+      // if (newsContainerImageResponse.statusCode == 200) {
+      //   newsContainerImageList = jsonDecode(newsContainerImageResponse.body);
+      //   for (var x in newsContainerImageList) {
+      //     fetchedNewsContainerImageList.add(ImageModel.fromJson(x));
+      //   }
+      //   if (mounted) {
+      //     setState(() {
+      //       imageUrl = fetchedNewsContainerImageList[0].getUrl();
+      //     });
+      //   }
+      // }
+    } on FirebaseException catch (e) {
       if (mounted) {
         showSnackBar(context: context, text: e.message.toString(), duration: 4);
       }
@@ -125,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future getPlanetsFromFirebase() async {
-    final planetsRef = await FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection("planetsData")
         .orderBy('id', descending: false)
         .get()
@@ -147,12 +186,6 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       });
     });
-    // for (var i = 0; i < 2; i++) {
-    //   setState(() {
-    //     demoSolarFetchedPlanets.add(fetchedPlanets[i]);
-    //   });
-    // }
-
     if (mounted) {
       setState(() {});
     }
@@ -189,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: BackgroundImageWidget(
           child: RefreshIndicator(
             onRefresh: () async {
-              // await fetchNewsContainerImage();
+              await fetchPostsFromFirebase();
               // await fetchGalleryImages();
               await getPlanetsFromFirebase();
               getUserInfo();

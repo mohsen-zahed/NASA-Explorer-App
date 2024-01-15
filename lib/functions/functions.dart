@@ -267,13 +267,30 @@ AppBar customAppWidget({required String text}) {
   );
 }
 
-//? home screen functions -----
 String joinWords({required String text}) {
   List<String> _words = text.split(' ');
   String _extractedWord =
       _words.sublist(0, _words.length == 1 ? 1 : 2).join(' ');
   return _extractedWord;
 }
+
+String getDate() {
+  String postedDay = DateTime.now().day.toString();
+  String postedMonth = DateTime.now().month.toString();
+  String postedYear = DateTime.now().year.toString();
+  String postedTimeHour = DateTime.now().hour.toString();
+  String postedTimeMinute = DateTime.now().minute.toString();
+  String postedTimeZone =
+      (int.parse(postedTimeHour) < 12 && int.parse(postedTimeHour) >= 1)
+          ? 'AM'
+          : (int.parse(postedTimeHour) >= 12 && int.parse(postedTimeHour) < 23)
+              ? 'PM'
+              : 'AM';
+  String postDate =
+      '$postedYear-$postedMonth-$postedDay|$postedTimeHour:$postedTimeMinute$postedTimeZone';
+  return postDate;
+}
+//? home screen functions -----
 //? home screen functions -----
 
 //* news container fetch image function ...

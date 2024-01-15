@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
-import 'package:nasa_explorer_app_project/models/news_model.dart';
+import 'package:nasa_explorer_app_project/models/post_model.dart';
 
 class NewsPostWidget extends StatefulWidget {
   const NewsPostWidget({
@@ -12,7 +12,7 @@ class NewsPostWidget extends StatefulWidget {
     required this.itemList,
   });
   final int index;
-  final List<NewsModel> itemList;
+  final List<PostModel> itemList;
 
   @override
   State<NewsPostWidget> createState() => _NewsPostWidgetState();
@@ -131,7 +131,7 @@ class _NewsPostWidgetState extends State<NewsPostWidget> {
                   maxWidth: MediaQuery.of(context).size.width,
                 ),
                 child: Text(
-                  widget.itemList[widget.index].getexplanation(),
+                  widget.itemList[widget.index].getExplanation(),
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium!
@@ -181,7 +181,7 @@ class _NewsPostWidgetState extends State<NewsPostWidget> {
                             maxHeight: 50,
                           ),
                           child: Text(
-                            widget.itemList[widget.index].getCopyRight(),
+                            widget.itemList[widget.index].getAuthor(),
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context)
                                 .textTheme
