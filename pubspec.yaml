@@ -58,6 +58,7 @@ dependencies:
   shared_preferences: ^2.2.2
   extended_image: ^8.1.0
   animated_text_kit: ^4.2.2
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:

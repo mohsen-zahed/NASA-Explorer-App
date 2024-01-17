@@ -1,8 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
+import 'package:nasa_explorer_app_project/initial_screens/onboarding_screen/onboarding_screen.dart';
+import 'package:nasa_explorer_app_project/initial_screens/registration_screen/registration_screen.dart';
 import 'package:nasa_explorer_app_project/initial_screens/splash_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/add_screen/add_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/home_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/images_screen/image_gallery_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/news_screen/news_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/profile_screen/profile_screen.dart';
@@ -70,7 +73,7 @@ class MyApp extends StatelessWidget {
         ProfileImageScreen.id: (context) => const ProfileImageScreen(),
         AddScreen.id: (context) => const AddScreen(),
       },
-      home: const SplashScreen(),
+      home: const HomeScreen(),
     );
   }
 }

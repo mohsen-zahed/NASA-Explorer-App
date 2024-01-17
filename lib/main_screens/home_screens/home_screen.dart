@@ -1,9 +1,7 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
@@ -44,12 +42,14 @@ class _HomeScreenState extends State<HomeScreen> {
   bool userFirstTimeVisitHome = false;
 
   List<NewsModel> fetchedNewsList = [];
+  List<ImageModel> fetchedImagesList = [];
 
   @override
   void initState() {
     super.initState();
-    getPlanetsFromFirebase();
+    fetchPlanetsFromFirebase();
     fetchTopNewsContainerData();
+    fetchGalleryImagesData();
     getUserInfo();
   }
 
@@ -106,26 +106,72 @@ class _HomeScreenState extends State<HomeScreen> {
     // print(fetchedNewsList[0].getDescription());
   }
 
-  Future getPlanetsFromFirebase() async {
+  Future<void> fetchGalleryImagesData() async {
+    try {
+      fetchedImagesList.clear();
+      await FirebaseFirestore.instance
+          .collection('galleryImagesData')
+          .orderBy('id', descending: false)
+          .get()
+          .then((value) {
+        int listLength = value.docs.length == 4
+            ? 4
+            : value.docs.length == 3
+                ? 3
+                : value.docs.length == 2
+                    ? 2
+                    : value.docs.length == 1
+                        ? 1
+                        : value.docs.length;
+        for (var i = 0; i < listLength; i++) {
+          if (value.docs.isNotEmpty) {
+            fetchedImagesList.add(
+              ImageModel.init(
+                id: value.docs.elementAt(i).data()['id'],
+                url: value.docs.elementAt(i).data()['galleryImageUrl'],
+                imageDescription:
+                    value.docs.elementAt(i).data()['galleryDescription'],
+                date: value.docs.elementAt(i).data()['postedDate'],
+                authorName: value.docs.elementAt(i).data()['authorName'],
+                likesCount: value.docs.elementAt(i).data()['likesCount'],
+                isLiked: value.docs.elementAt(i).data()['isLiked'],
+                authorImage: value.docs.elementAt(i).data()['authorImageUrl'],
+              ),
+            );
+          }
+        }
+        if (mounted) {
+          setState(() {
+            fetchedImagesList = fetchedImagesList;
+          });
+        }
+      });
+    } on FirebaseException catch (e) {
+      if (mounted) {
+        showSnackBar(context: context, text: e.message.toString(), duration: 4);
+      }
+    }
+  }
+
+  Future fetchPlanetsFromFirebase() async {
+    fetchedPlanets.clear();
     await FirebaseFirestore.instance
         .collection("planetsData")
         .orderBy('id', descending: false)
         .get()
         .then((value) {
       for (var element in value.docs) {
-        if (fetchedPlanets.last.getId() < element.data()['id']) {
-          fetchedPlanets.add(
-            PlanetModel.create(
-              element.data()['id'],
-              element.data()['planetName'],
-              element.data()['imageUrl'],
-              element.data()['planetSubtitle'],
-              element.data()['planetIntro'],
-              element.data()['planetHistory'],
-              element.data()['planetClimate'],
-            ),
-          );
-        }
+        fetchedPlanets.add(
+          PlanetModel.create(
+            element.data()['id'],
+            element.data()['planetName'],
+            element.data()['imageUrl'],
+            element.data()['planetSubtitle'],
+            element.data()['planetIntro'],
+            element.data()['planetHistory'],
+            element.data()['planetClimate'],
+          ),
+        );
       }
     });
     if (mounted) {
@@ -141,55 +187,54 @@ class _HomeScreenState extends State<HomeScreen> {
           child: RefreshIndicator(
             onRefresh: () async {
               await fetchTopNewsContainerData();
-              await getPlanetsFromFirebase();
+              await fetchPlanetsFromFirebase();
+              await fetchGalleryImagesData();
               getUserInfo();
             },
             child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                ),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 50),
-                    AppLogoAndProfileImage(
-                      imageUrl: userImage != null
-                          ? userImage
-                          : demoProfileImageHolder,
-                      nasaLogoUrl: 'assets/images/nasa_text_logo.png',
-                      onProfileImageTap: () {
-                        Navigator.pushNamed(context, ProfileScreen.id);
-                      },
-                    ),
-                    const SizedBox(height: 25),
-                    const SearchField(),
-                    const SizedBox(height: 15),
-                    NewsContainerWidget(
-                      postList: fetchedNewsList,
-                      onTap: () {
-                        Navigator.pushNamed(context, NewsScreen.id);
-                      },
-                    ),
-                    const SizedBox(height: 25),
-                    HorizontalImagesCarouselSlider(
-                      imagesList: demoHomeImagesList,
-                      onImagesSeeAllTap: () {
-                        Navigator.pushNamed(context, ImageGalleryScreen.id);
-                      },
-                    ),
-                    const SizedBox(height: 35),
-                    HorizontalSolarSystemCarouselSlider(
-                      planetsList: fetchedPlanets,
-                      onSolarViewAllTap: () {},
-                    ),
-                    const SizedBox(height: 35),
-                    const AdvertisementBannerSliderWidget(),
-                    const SizedBox(height: 35),
-                    const HorizontalNASAMissionsCarouselSlider(),
-                    const SizedBox(height: 35),
-                    const HorizontalAstronautFiguresSlider(),
-                  ],
-                ),
+              child: Column(
+                children: [
+                  const SizedBox(height: 50),
+                  AppLogoAndProfileImage(
+                    imageUrl:
+                        userImage != null ? userImage : demoProfileImageHolder,
+                    nasaLogoUrl: 'assets/images/nasa_text_logo.png',
+                    onProfileImageTap: () {
+                      Navigator.pushNamed(context, ProfileScreen.id);
+                    },
+                  ),
+                  const SizedBox(height: 25),
+                  const SearchField(),
+                  const SizedBox(height: 15),
+                  NewsContainerWidget(
+                    postList: fetchedNewsList,
+                    onTap: () {
+                      Navigator.pushNamed(context, NewsScreen.id);
+                    },
+                  ),
+                  const SizedBox(height: 25),
+                  HorizontalImagesCarouselSlider(
+                    imagesList: fetchedImagesList,
+                    onImagesSeeAllTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        ImageGalleryScreen.id,
+                        arguments: {'title': 'Discover Perfect Images'},
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 35),
+                  HorizontalSolarSystemCarouselSlider(
+                    planetsList: fetchedPlanets,
+                    onSolarViewAllTap: () {},
+                  ),
+                  const SizedBox(height: 35),
+                  const AdvertisementBannerSliderWidget(),
+                  const SizedBox(height: 35),
+                  const HorizontalNASAMissionsCarouselSlider(),
+                  const SizedBox(height: 35),
+                  const HorizontalAstronautFiguresSlider(),
+                ],
               ),
             ),
           ),

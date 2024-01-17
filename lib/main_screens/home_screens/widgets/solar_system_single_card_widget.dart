@@ -4,27 +4,34 @@ import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/models/planet_model.dart';
 import 'package:nasa_explorer_app_project/widgets/shimmer_effect.dart';
 
-class SolarSystemSinglCardWidget extends StatelessWidget {
+class SolarSystemSinglCardWidget extends StatefulWidget {
   const SolarSystemSinglCardWidget({
     super.key,
     required this.index,
     required this.onTap,
     required this.planetsList,
+    required this.currentIndex,
   });
   final int index;
   final VoidCallback onTap;
-  final List<PlanetModel>? planetsList;
+  final List<PlanetModel> planetsList;
+  final int currentIndex;
 
+  @override
+  State<SolarSystemSinglCardWidget> createState() =>
+      _SolarSystemSinglCardWidgetState();
+}
+
+class _SolarSystemSinglCardWidgetState
+    extends State<SolarSystemSinglCardWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Container(
-        margin: EdgeInsets.fromLTRB(
-          0,
-          0,
-          index != planetsList!.length - 1 ? 20 : 0,
-          0,
+        margin: EdgeInsets.only(
+          left: widget.index == widget.currentIndex ? 15 : 0,
+          right: widget.index == widget.planetsList.length ? 0 : 15,
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
@@ -37,15 +44,17 @@ class SolarSystemSinglCardWidget extends StatelessWidget {
               top: -60,
               left: 0,
               right: 0,
-              child: planetsList![index].getPlanetImageUrl() == ''
-                  ? const ShimmerEffect(useMargin: false)
-                  : Container(
-                      width: 130,
-                      height: 130,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: CachedNetworkImageProvider(
-                            planetsList![index].getPlanetImageUrl(),
+              child: widget.planetsList.isEmpty
+                  ? const ShimmerEffect()
+                  : CachedNetworkImage(
+                      imageUrl:
+                          widget.planetsList[widget.index].getPlanetImageUrl(),
+                      imageBuilder: (context, imageProvider) => Container(
+                        width: 130,
+                        height: 130,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: imageProvider,
                           ),
                         ),
                       ),
@@ -59,7 +68,7 @@ class SolarSystemSinglCardWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    planetsList![index].getPlanetName(),
+                    widget.planetsList[widget.index].getPlanetName(),
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
                           color: kWhiteColor,
                           fontSize: 28,
@@ -67,7 +76,7 @@ class SolarSystemSinglCardWidget extends StatelessWidget {
                         ),
                   ),
                   Text(
-                    planetsList![index].getPlanetSubTitle(),
+                    widget.planetsList[widget.index].getPlanetSubTitle(),
                     style: Theme.of(context).textTheme.titleMedium!.copyWith(
                           color: kWhiteColor,
                           overflow: TextOverflow.ellipsis,

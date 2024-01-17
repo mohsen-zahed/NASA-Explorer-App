@@ -23,20 +23,25 @@ class HorizontalSolarSystemCarouselSlider extends StatefulWidget {
 
 class _HorizontalSolarSystemCarouselSliderState
     extends State<HorizontalSolarSystemCarouselSlider> {
+  int currentPlanet = 0;
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TitleWithViewAllButton(
-          title: 'Solar System',
-          onViewAllTap: widget.onSolarViewAllTap,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: TitleWithViewAllButton(
+            title: 'Solar System',
+            onViewAllTap: widget.onSolarViewAllTap,
+          ),
         ),
         const SizedBox(height: 70),
         CarouselSlider.builder(
           itemCount: widget.planetsList.length,
           itemBuilder: (context, index, realIndex) {
             return SolarSystemSinglCardWidget(
+              currentIndex: currentPlanet,
               index: index,
               onTap: () => showSolarBottomSheet(context, index),
               planetsList: widget.planetsList,
@@ -53,6 +58,11 @@ class _HorizontalSolarSystemCarouselSliderState
             initialPage: 0,
             scrollDirection: Axis.horizontal,
             enableInfiniteScroll: false,
+            onPageChanged: (index, reason) {
+              setState(() {
+                currentPlanet = index;
+              });
+            },
           ),
         ),
       ],

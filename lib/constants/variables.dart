@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:nasa_explorer_app_project/models/image_model.dart';
-import 'package:nasa_explorer_app_project/models/news_model.dart';
 
 // general var
 var demoImagePlaceHolder =
@@ -36,7 +35,6 @@ var imagesModelList = [];
 
 // news screen
 bool isPostsLoading = true;
-
 // news screen
 
-//
+double paddingDefaultValue = 15.0;
