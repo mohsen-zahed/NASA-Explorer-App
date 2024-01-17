@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
+import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/initial_screens/onboarding_screen/onboarding_screen.dart';
 import 'package:nasa_explorer_app_project/initial_screens/registration_screen/registration_screen.dart';
 import 'package:nasa_explorer_app_project/initial_screens/splash_screen.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
           foregroundColor: kTransparentColor,
           backgroundColor: kTransparentColor,
           elevation: 0,
+          toolbarHeight: getMaxHieghtMediaQuery(context, 0.08),
           shadowColor: kTransparentColor,
           surfaceTintColor: kTransparentColor,
           iconTheme: const IconThemeData(color: kWhiteColor),

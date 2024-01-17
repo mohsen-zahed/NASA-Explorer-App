@@ -76,80 +76,18 @@ class _ImageGalleryScreenState extends State<ImageGalleryScreen> {
     map = ModalRoute.of(context)!.settings.arguments;
     String title = map['title'];
     return Scaffold(
+      appBar: customAppWidget(text: title),
       body: BackgroundImageWidget(
         child: SafeArea(
-            child: ListView.builder(
-          itemCount: fetchedAllImagesList.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
-                    child: Text(
-                      title,
-                      textAlign: TextAlign.left,
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                            color: kWhiteColor,
-                            fontSize: 23,
-                            fontWeight: FontWeight.w600,
-                          ),
-                    ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: isScreenLoading
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : VerticalImagesGridView(
+                    imagesList: fetchedAllImagesList,
                   ),
-                  isScreenLoading
-                      ? const Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : VerticalImagesGridView(
-                          imagesList: fetchedAllImagesList,
-                          onImageTap: () {
-                            print(index);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ImageFullScreen(
-                                  image: fetchedAllImagesList[index].getUrl(),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                ],
-              ),
-            );
-          },
-        )),
-      ),
-    );
-  }
-}
-
-class ImageFullScreen extends StatelessWidget {
-  const ImageFullScreen({
-    super.key,
-    required this.image,
-  });
-  final String image;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: GestureDetector(
-        onTap: () => Navigator.pop(context),
-        child: Center(
-          child: CachedNetworkImage(
-            imageUrl: image,
-            cacheManager: CacheManager(
-              Config(
-                'cacheKey',
-                stalePeriod: const Duration(hours: 1),
-              ),
-            ),
-            fit: BoxFit.contain,
           ),
         ),
       ),

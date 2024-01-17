@@ -7,16 +7,15 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:lottie/lottie.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
+import 'package:nasa_explorer_app_project/main_screens/images_screen/widgets/image_full_screen.dart';
 import 'package:nasa_explorer_app_project/models/image_model.dart';
 
 class VerticalImagesGridView extends StatefulWidget {
   const VerticalImagesGridView({
     super.key,
     required this.imagesList,
-    required this.onImageTap,
   });
   final List<ImageModel> imagesList;
-  final VoidCallback onImageTap;
 
   @override
   State<VerticalImagesGridView> createState() => _VerticalImagesGridViewState();
@@ -55,7 +54,17 @@ class _VerticalImagesGridViewState extends State<VerticalImagesGridView> {
               child: Column(
                 children: [
                   GestureDetector(
-                    onTap: widget.onImageTap,
+                    onTap: () {
+                      // print(index);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ImageFullScreen(
+                            image: widget.imagesList[index].getUrl(),
+                          ),
+                        ),
+                      );
+                    },
                     child: Center(
                       child: CachedNetworkImage(
                         imageUrl: widget.imagesList[index].getUrl(),
@@ -67,9 +76,9 @@ class _VerticalImagesGridViewState extends State<VerticalImagesGridView> {
                             fit: BoxFit.cover,
                           ),
                         ),
-                        errorWidget: (BuildContext context, String url,
-                                dynamic error) =>
-                            const Icon(Icons.error),
+                        errorWidget:
+                            (BuildContext context, String url, dynamic error) =>
+                                const Icon(Icons.error),
                         imageBuilder: (context, imageProvider) {
                           return Container(
                             width: getMaxWidthMediaQuery(context),
