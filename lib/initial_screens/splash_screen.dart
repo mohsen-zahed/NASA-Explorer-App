@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> redirectToNextScreen() async {
     isUserConnected = await checkInternetConnectivity(context);
-    if (!isUserConnected) {
+    if (isUserConnected) {
       checkOnboardingScreen();
       await SharedPreferencesClass()
           .saveUserVisitHomeStatus(alreadyVisited: false);
@@ -38,7 +38,10 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const NoConnectionScreen(),
+          builder: (context) => NoConnectionScreen(
+            onRetryPressed: () async => await redirectToNextScreen(),
+            textButton: 'Retry!',
+          ),
         ),
       );
     }

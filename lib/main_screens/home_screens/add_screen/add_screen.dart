@@ -10,7 +10,7 @@ import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/functions/show_snackbar.dart';
-import 'package:nasa_explorer_app_project/main_screens/add_screen/widgets/custom_post_text_field.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/add_screen/widgets/custom_post_text_field.dart';
 import 'package:nasa_explorer_app_project/services/rand_number_generator.dart';
 import 'package:nasa_explorer_app_project/widgets/background_image_widget.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_elevated_button.dart';

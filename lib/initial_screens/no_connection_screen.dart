@@ -3,7 +3,10 @@ import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
 
 class NoConnectionScreen extends StatelessWidget {
-  const NoConnectionScreen({super.key});
+  const NoConnectionScreen(
+      {super.key, required this.onRetryPressed, required this.textButton});
+  final VoidCallback onRetryPressed;
+  final String textButton;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +41,22 @@ class NoConnectionScreen extends StatelessWidget {
                     backgroundImage: AssetImage(
                         'assets/images/no_connection_wallpaper.jpeg'),
                     maxRadius: 170,
+                  ),
+                  const SizedBox(height: 20),
+                  IconButton(
+                    onPressed: onRetryPressed,
+                    icon: const Icon(
+                      Icons.restart_alt,
+                      size: 35,
+                      color: kWhiteColor,
+                    ),
+                  ),
+                  Text(
+                    textButton,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(color: kWhiteColor),
                   ),
                 ],
               ),

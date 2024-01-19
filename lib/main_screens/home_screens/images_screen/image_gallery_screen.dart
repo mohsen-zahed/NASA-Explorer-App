@@ -1,11 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/functions/show_snackbar.dart';
-import 'package:nasa_explorer_app_project/main_screens/images_screen/widgets/vertical_images_grid_view.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/images_screen/widgets/vertical_images_grid_view.dart';
 import 'package:nasa_explorer_app_project/models/image_model.dart';
 import 'package:nasa_explorer_app_project/widgets/background_image_widget.dart';
 

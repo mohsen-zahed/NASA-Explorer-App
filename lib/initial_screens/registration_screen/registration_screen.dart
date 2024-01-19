@@ -15,7 +15,7 @@ import 'package:nasa_explorer_app_project/initial_screens/registration_screen/wi
 import 'package:nasa_explorer_app_project/initial_screens/registration_screen/widgets/privacy_policy_text_acceptance.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/home_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/suspended_main_home.dart';
-import 'package:nasa_explorer_app_project/main_screens/profile_screen/widgets/about_me_dialog_widget.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/profile_screen/widgets/about_me_dialog_widget.dart';
 import 'package:nasa_explorer_app_project/services/shared_preferences_service.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_elevated_button.dart';
 import 'package:nasa_explorer_app_project/widgets/custom_registration_text_field.dart';

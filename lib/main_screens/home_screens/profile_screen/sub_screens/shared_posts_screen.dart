@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
-import 'package:nasa_explorer_app_project/main_screens/news_screen/widgets/news_post_widget.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/news_screen/widgets/news_post_widget.dart';
 
 class SharedPostsScreen extends StatelessWidget {
   const SharedPostsScreen({super.key});

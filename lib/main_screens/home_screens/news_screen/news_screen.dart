@@ -4,8 +4,8 @@ import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/functions/show_snackbar.dart';
-import 'package:nasa_explorer_app_project/main_screens/news_screen/widgets/news_post_widget.dart';
-import 'package:nasa_explorer_app_project/main_screens/news_screen/widgets/weather_forecast_widget.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/news_screen/widgets/news_post_widget.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/news_screen/widgets/weather_forecast_widget.dart';
 import 'package:nasa_explorer_app_project/models/post_model.dart';
 import 'package:nasa_explorer_app_project/widgets/background_image_widget.dart';
 

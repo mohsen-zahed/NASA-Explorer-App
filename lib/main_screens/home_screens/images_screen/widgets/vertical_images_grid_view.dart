@@ -9,7 +9,7 @@ import 'package:lottie/lottie.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/horizontal_solar_system_carousel_slider.dart';
-import 'package:nasa_explorer_app_project/main_screens/images_screen/widgets/image_full_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/images_screen/widgets/image_full_screen.dart';
 import 'package:nasa_explorer_app_project/models/image_model.dart';
 
 class VerticalImagesGridView extends StatefulWidget {
