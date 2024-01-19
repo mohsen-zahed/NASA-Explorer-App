@@ -42,6 +42,7 @@ class _HorizontalSolarSystemCarouselSliderState
           itemBuilder: (context, index, realIndex) {
             return SolarSystemSinglCardWidget(
               currentIndex: currentPlanet,
+              cardWallpaper: widget.planetsList[index].getPlanetWallpaper(),
               index: index,
               onTap: () => showSolarBottomSheet(context, index),
               planetsList: widget.planetsList,
@@ -71,10 +72,8 @@ class _HorizontalSolarSystemCarouselSliderState
 
   Future<dynamic> showSolarBottomSheet(BuildContext context, int index) {
     return showModalBottomSheet(
-      isDismissible: true,
-      isScrollControlled: true,
       backgroundColor: kScaffoldBackgroundColor,
-      enableDrag: false,
+      enableDrag: true,
       showDragHandle: true,
       context: context,
       builder: (context) {
@@ -109,7 +108,6 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
       builder: (context, setState) => SizedBox(
         height: getMaxHieghtMediaQuery(context, 0.9),
         child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

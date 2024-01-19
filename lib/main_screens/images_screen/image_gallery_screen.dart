@@ -64,9 +64,11 @@ class _ImageGalleryScreenState extends State<ImageGalleryScreen> {
         showSnackBar(context: context, text: e.message.toString(), duration: 4);
       }
     } finally {
-      setState(() {
-        isScreenLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isScreenLoading = false;
+        });
+      }
     }
   }
 

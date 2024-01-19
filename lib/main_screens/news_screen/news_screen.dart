@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
@@ -9,7 +8,6 @@ import 'package:nasa_explorer_app_project/main_screens/news_screen/widgets/news_
 import 'package:nasa_explorer_app_project/main_screens/news_screen/widgets/weather_forecast_widget.dart';
 import 'package:nasa_explorer_app_project/models/post_model.dart';
 import 'package:nasa_explorer_app_project/widgets/background_image_widget.dart';
-import 'package:http/http.dart' as http;
 
 class NewsScreen extends StatefulWidget {
   const NewsScreen({
@@ -82,47 +80,49 @@ class _NewsScreenState extends State<NewsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppWidget(text: 'Latest Updates From NASA+'),
-      body: BackgroundImageWidget(
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              children: [
-                const SizedBox(height: 10),
-                GestureDetector(
-                  onTap: () async {
-                    await fetchPostsFromFirebase();
-                  },
-                  child: const WeatherForecastWidget(),
-                ),
-                const SizedBox(height: 10),
-                isPostsLoading
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : RefreshIndicator(
-                        onRefresh: () => fetchPostsFromFirebase(),
-                        child: SizedBox(
-                          width: double.infinity,
-                          height: MediaQuery.of(context).size.height - 185,
-                          child: SingleChildScrollView(
-                            physics: const BouncingScrollPhysics(),
-                            child: Column(
-                              children: [
-                                ...List.generate(
-                                  fetchedPostsList.length,
-                                  (index) => NewsPostWidget(
-                                    index: index,
-                                    itemList: fetchedPostsList,
+      body: SingleChildScrollView(
+        child: BackgroundImageWidget(
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: () async {
+                      await fetchPostsFromFirebase();
+                    },
+                    child: const WeatherForecastWidget(),
+                  ),
+                  const SizedBox(height: 10),
+                  isPostsLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : RefreshIndicator(
+                          onRefresh: () => fetchPostsFromFirebase(),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: MediaQuery.of(context).size.height - 185,
+                            child: SingleChildScrollView(
+                              physics: const BouncingScrollPhysics(),
+                              child: Column(
+                                children: [
+                                  ...List.generate(
+                                    fetchedPostsList.length,
+                                    (index) => NewsPostWidget(
+                                      index: index,
+                                      itemList: fetchedPostsList,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                // const SizedBox(height: 65)
-              ],
+                  // const SizedBox(height: 65)
+                ],
+              ),
             ),
           ),
         ),

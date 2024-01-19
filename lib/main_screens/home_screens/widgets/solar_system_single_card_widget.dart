@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
+import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/models/planet_model.dart';
 import 'package:nasa_explorer_app_project/widgets/shimmer_effect.dart';
 
@@ -11,11 +12,13 @@ class SolarSystemSinglCardWidget extends StatefulWidget {
     required this.onTap,
     required this.planetsList,
     required this.currentIndex,
+    required this.cardWallpaper,
   });
   final int index;
   final VoidCallback onTap;
   final List<PlanetModel> planetsList;
   final int currentIndex;
+  final String cardWallpaper;
 
   @override
   State<SolarSystemSinglCardWidget> createState() =>
@@ -36,10 +39,33 @@ class _SolarSystemSinglCardWidgetState
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           color: kGreyColor800,
+          image: DecorationImage(
+            image: CachedNetworkImageProvider(widget.cardWallpaper),
+            fit: BoxFit.cover,
+          ),
         ),
         child: Stack(
           clipBehavior: Clip.none,
           children: [
+            Positioned(
+              child: Container(
+                width: getMaxWidthMediaQuery(context),
+                height: getMaxHieghtMediaQuery(context),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  gradient: LinearGradient(
+                    colors: [
+                      kBlackColor,
+                      kBlackColor.withOpacity(.7),
+                      kBlackColor.withOpacity(.5),
+                      kTransparentColor,
+                    ],
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                  ),
+                ),
+              ),
+            ),
             Positioned(
               top: -60,
               left: 0,

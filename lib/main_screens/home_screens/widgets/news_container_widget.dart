@@ -23,6 +23,7 @@ class NewsContainerWidget extends StatefulWidget {
 
 class _NewsContainerWidgetState extends State<NewsContainerWidget> {
   int currentNewsPage = 0;
+  bool autoPlay = false;
 
   @override
   Widget build(BuildContext context) {
@@ -37,124 +38,130 @@ class _NewsContainerWidgetState extends State<NewsContainerWidget> {
               )
             : Column(
                 children: [
-                  SizedBox(
-                    width: getMaxWidthMediaQuery(context),
-                    height: getMaxHieghtMediaQuery(context, 0.23),
-                    child: CarouselSlider.builder(
-                      options: CarouselOptions(
-                        viewportFraction: 1,
-                        autoPlay: true,
-                        onPageChanged: (index, reason) {
-                          setState(() {
-                            currentNewsPage = index;
-                          });
-                        },
-                      ),
-                      itemCount: 3,
-                      itemBuilder: (context, index, realIndex) =>
-                          CachedNetworkImage(
-                        imageUrl: widget.postList[index].getImage(),
-                        placeholder: (context, url) {
-                          return ShimmerEffect(
-                            width: getMaxWidthMediaQuery(context),
-                            height: getMaxHieghtMediaQuery(context, 0.23),
-                          );
-                        },
-                        imageBuilder: (context, imageProvider) {
-                          return Container(
-                            width: getMaxWidthMediaQuery(context),
-                            height: getMaxHieghtMediaQuery(context, 0.23),
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(15),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: SizedBox(
+                      width: getMaxWidthMediaQuery(context),
+                      height: getMaxHieghtMediaQuery(context, 0.23),
+                      child: CarouselSlider.builder(
+                        options: CarouselOptions(
+                          viewportFraction: 1,
+                          autoPlay: true,
+                          onPageChanged: (index, reason) {
+                            setState(() {
+                              currentNewsPage = index;
+                            });
+                          },
+                        ),
+                        itemCount: 3,
+                        itemBuilder: (context, index, realIndex) =>
+                            CachedNetworkImage(
+                          imageUrl: widget.postList[index].getImage(),
+                          placeholder: (context, url) {
+                            return ShimmerEffect(
+                              width: getMaxWidthMediaQuery(context),
+                              height: getMaxHieghtMediaQuery(context, 0.23),
+                            );
+                          },
+                          imageBuilder: (context, imageProvider) {
+                            return Container(
+                              width: getMaxWidthMediaQuery(context),
+                              height: getMaxHieghtMediaQuery(context, 0.23),
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(15),
+                                ),
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                              image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  child: Container(
-                                    width: getMaxWidthMediaQuery(context),
-                                    height:
-                                        getMaxHieghtMediaQuery(context, 0.23),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          kBlackColor,
-                                          kBlackColor.withOpacity(.7),
-                                          kBlackColor.withOpacity(.5),
-                                          kTransparentColor,
-                                        ],
-                                        begin: Alignment.bottomCenter,
-                                        end: Alignment.topCenter,
+                              child: Stack(
+                                children: [
+                                  Positioned(
+                                    child: Container(
+                                      width: getMaxWidthMediaQuery(context),
+                                      height:
+                                          getMaxHieghtMediaQuery(context, 0.23),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            kBlackColor,
+                                            kBlackColor.withOpacity(.7),
+                                            kBlackColor.withOpacity(.5),
+                                            kTransparentColor,
+                                          ],
+                                          begin: Alignment.bottomCenter,
+                                          end: Alignment.topCenter,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 25,
-                                    vertical: 25,
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        'LATEST UPDATES',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall!
-                                            .copyWith(
-                                              color: kWhiteColor70,
-                                              decoration:
-                                                  TextDecoration.underline,
-                                              decorationThickness: 2,
-                                              decorationColor: kWhiteColor70,
-                                              fontSize: 9,
-                                            ),
-                                      ),
-                                      ConstrainedBox(
-                                        constraints: BoxConstraints(
-                                          maxWidth: getMaxWidthMediaQuery(
-                                              context, 0.9),
-                                          maxHeight: 50,
-                                        ),
-                                        child: DefaultTextStyle(
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 25,
+                                      vertical: 25,
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          'LATEST UPDATES',
                                           style: Theme.of(context)
                                               .textTheme
-                                              .bodyMedium!
+                                              .bodySmall!
                                               .copyWith(
-                                                color: kWhiteColor,
-                                                fontSize: 17,
-                                                fontWeight: FontWeight.w600,
+                                                color: kWhiteColor70,
+                                                decoration:
+                                                    TextDecoration.underline,
+                                                decorationThickness: 2,
+                                                decorationColor: kWhiteColor70,
+                                                fontSize: 9,
                                               ),
-                                          child: AnimatedTextKit(
-                                            animatedTexts: [
-                                              TypewriterAnimatedText(
-                                                cursor: '..|',
-                                                speed: const Duration(
-                                                  milliseconds: 90,
+                                        ),
+                                        ConstrainedBox(
+                                          constraints: BoxConstraints(
+                                            maxWidth: getMaxWidthMediaQuery(
+                                                context, 0.9),
+                                            maxHeight: 50,
+                                          ),
+                                          child: DefaultTextStyle(
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .copyWith(
+                                                  color: kWhiteColor,
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.w600,
                                                 ),
-                                                widget.postList[index]
-                                                    .getDescription(),
-                                              ),
-                                            ],
+                                            child: AnimatedTextKit(
+                                              displayFullTextOnTap: true,
+                                              isRepeatingAnimation: false,
+                                              stopPauseOnTap: true,
+                                              animatedTexts: [
+                                                TypewriterAnimatedText(
+                                                  cursor: '..|',
+                                                  speed: const Duration(
+                                                    milliseconds: 90,
+                                                  ),
+                                                  widget.postList[index]
+                                                      .getDescription(),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+                                ],
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),

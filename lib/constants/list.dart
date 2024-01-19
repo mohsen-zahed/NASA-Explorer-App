@@ -155,7 +155,7 @@ List<String> emptyImagesList = [
 List<String> userRegFormErrors = [];
 
 List<PlanetModel> demoSolarFetchedPlanets = [];
-List<PlanetModel> fetchedPlanets = [];
+List<PlanetModel> fetchedPlanetsList = [];
 
 List<PostModel> fetchedPostsList = [];
 

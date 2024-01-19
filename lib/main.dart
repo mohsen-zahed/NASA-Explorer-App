@@ -74,8 +74,10 @@ class MyApp extends StatelessWidget {
         ProfileScreen.id: (context) => const ProfileScreen(),
         ProfileImageScreen.id: (context) => const ProfileImageScreen(),
         AddScreen.id: (context) => const AddScreen(),
+        SolarSystemGalleryScreen.id: (context) =>
+            const SolarSystemGalleryScreen(),
       },
-      home: const HomeScreen(),
+      home: const SplashScreen(),
     );
   }
 }

@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
+import 'package:nasa_explorer_app_project/initial_screens/no_connection_screen.dart';
 import 'package:nasa_explorer_app_project/initial_screens/onboarding_screen/onboarding_screen.dart';
 import 'package:nasa_explorer_app_project/initial_screens/registration_screen/registration_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/home_screen.dart';
-import 'package:nasa_explorer_app_project/main_screens/home_screens/suspended_main_home.dart';
 import 'package:nasa_explorer_app_project/services/shared_preferences_service.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -22,18 +22,26 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // Future.delayed(
-    //   const Duration(seconds: 3),
-    //   () => redirectToNextScreen(),
-    // );
+    Future.delayed(
+      const Duration(seconds: 3),
+      () => redirectToNextScreen(),
+    );
   }
 
   Future<void> redirectToNextScreen() async {
     isUserConnected = await checkInternetConnectivity(context);
-
-    checkOnboardingScreen();
-    await SharedPreferencesClass()
-        .saveUserVisitHomeStatus(alreadyVisited: false);
+    if (!isUserConnected) {
+      checkOnboardingScreen();
+      await SharedPreferencesClass()
+          .saveUserVisitHomeStatus(alreadyVisited: false);
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const NoConnectionScreen(),
+        ),
+      );
+    }
   }
 
   checkOnboardingScreen() async {
