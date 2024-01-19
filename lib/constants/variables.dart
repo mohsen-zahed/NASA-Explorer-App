@@ -10,8 +10,6 @@ var demoProfileImageHolder =
     'https://www.pngall.com/wp-content/uploads/5/Profile.png';
 // general var
 
-List<ImageModel> fetchedImagesList = [];
-
 var isUserConnected;
 
 // image picker
@@ -26,15 +24,12 @@ var uid;
 var userName;
 var userEmail;
 var userImage;
+List userSavedPosts = [];
 
 var demoNewsImageHolder =
     'https://th.bing.com/th/id/OIP.o77g1Q7GoA_ozXdDCwoABwHaEo?w=263&h=180&c=7&r=0&o=5&pid=1.7';
-var imagesModelList = [];
 
 // home screen variables
 
-// news screen
-bool isPostsLoading = true;
-// news screen
 
 double paddingDefaultValue = 15.0;

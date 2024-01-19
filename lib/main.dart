@@ -6,6 +6,7 @@ import 'package:nasa_explorer_app_project/initial_screens/splash_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/add_screen/add_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/images_screen/image_gallery_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/news_screen/news_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/profile_screen/sub_screens/saved_posts_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/solar_system_gallery_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/profile_screen/profile_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/profile_screen/sub_screens/profile_image_screen.dart';
@@ -74,6 +75,7 @@ class MyApp extends StatelessWidget {
         AddScreen.id: (context) => const AddScreen(),
         SolarSystemGalleryScreen.id: (context) =>
             const SolarSystemGalleryScreen(),
+        SavedPostsScreen.id: (context) => const SavedPostsScreen(),
       },
       home: const SplashScreen(),
     );

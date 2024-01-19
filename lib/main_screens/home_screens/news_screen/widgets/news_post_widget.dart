@@ -2,27 +2,34 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
+import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
-import 'package:nasa_explorer_app_project/models/post_model.dart';
 
 class NewsPostWidget extends StatefulWidget {
   const NewsPostWidget({
     super.key,
     required this.index,
     required this.itemList,
+    required this.onBookmarkTapNews,
+    this.onBookmarkTapSaved,
   });
   final int index;
-  final List<PostModel> itemList;
+  final List itemList;
+  final VoidCallback onBookmarkTapNews;
+  final VoidCallback? onBookmarkTapSaved;
 
   @override
   State<NewsPostWidget> createState() => _NewsPostWidgetState();
 }
 
 class _NewsPostWidgetState extends State<NewsPostWidget> {
+  var map;
   bool isExpanded = false;
   int currentPostImage = 0;
   @override
   Widget build(BuildContext context) {
+    map = ModalRoute.of(context)!.settings.arguments;
+    bool comingFromSavedScreen = map['comingFromSaved'];
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(
@@ -214,9 +221,16 @@ class _NewsPostWidgetState extends State<NewsPostWidget> {
                 ),
                 //! the second child
                 GestureDetector(
-                  onTap: () {},
-                  child: const Icon(
-                    Icons.bookmark_border_rounded,
+                  onTap: comingFromSavedScreen
+                      ? widget.onBookmarkTapSaved
+                      : widget.onBookmarkTapNews,
+                  child: Icon(
+                    comingFromSavedScreen
+                        ? Icons.bookmark
+                        : userSavedPosts
+                                .contains(widget.itemList[widget.index].getId())
+                            ? Icons.bookmark
+                            : Icons.bookmark_border_rounded,
                     color: kWhiteColor,
                   ),
                 )

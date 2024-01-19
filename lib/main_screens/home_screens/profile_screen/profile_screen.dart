@@ -12,6 +12,7 @@ import 'package:nasa_explorer_app_project/functions/firebase_functions/firebase_
 import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/functions/show_snackbar.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/profile_screen/sub_screens/profile_image_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/profile_screen/sub_screens/saved_posts_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/profile_screen/sub_screens/shared_posts_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/profile_screen/widgets/about_me_dialog_widget.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/profile_screen/widgets/edit_image_profile_change_profile_widgets.dart';
@@ -54,6 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             userName = userDocSnapshot.get('name');
             userEmail = userDocSnapshot.get('emailAddress');
             userImage = userDocSnapshot.get('imageUrl');
+            userSavedPosts = userDocSnapshot.get('savedItems');
           });
         }
       }
@@ -235,7 +237,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     CustomListTileWidget(
                       text: 'Saved Posts',
                       leadingIcon: Icons.bookmark,
-                      onListTileTap: () {},
+                      onListTileTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          SavedPostsScreen.id,
+                          arguments: {
+                            'comingFromSaved': true,
+                            'title': 'Saved Posts',
+                          },
+                        );
+                      },
                       trailingIcon: Icons.arrow_forward_ios_rounded,
                     ),
                     const SizedBox(height: 10),

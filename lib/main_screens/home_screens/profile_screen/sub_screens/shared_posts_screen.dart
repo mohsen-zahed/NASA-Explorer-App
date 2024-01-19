@@ -32,6 +32,7 @@ class SharedPostsScreen extends StatelessWidget {
                 (index) => NewsPostWidget(
                   index: index,
                   itemList: newsPostList,
+                  onBookmarkTapNews: () {},
                 ),
               ),
             ],

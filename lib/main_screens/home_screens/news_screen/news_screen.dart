@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
@@ -8,6 +10,7 @@ import 'package:nasa_explorer_app_project/main_screens/home_screens/news_screen/
 import 'package:nasa_explorer_app_project/main_screens/home_screens/news_screen/widgets/weather_forecast_widget.dart';
 import 'package:nasa_explorer_app_project/models/post_model.dart';
 import 'package:nasa_explorer_app_project/widgets/background_image_widget.dart';
+import 'package:nasa_explorer_app_project/widgets/custom_circular_progress_indicator.dart';
 
 class NewsScreen extends StatefulWidget {
   const NewsScreen({
@@ -20,10 +23,27 @@ class NewsScreen extends StatefulWidget {
 }
 
 class _NewsScreenState extends State<NewsScreen> {
+  bool isPostsLoading = true;
   @override
   void initState() {
     super.initState();
     fetchPostsFromFirebase();
+  }
+
+  Future<void> getSavedPosts() async {
+    User? user;
+    FirebaseAuth auth = FirebaseAuth.instance;
+    user = auth.currentUser;
+    if (user != null) {
+      uid = user.uid;
+      final DocumentSnapshot userDocSnapshot =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      if (mounted) {
+        setState(() {
+          userSavedPosts = userDocSnapshot.get('savedItems');
+        });
+      }
+    }
   }
 
   Future<void> fetchPostsFromFirebase() async {
@@ -33,7 +53,7 @@ class _NewsScreenState extends State<NewsScreen> {
           .collection('postsData')
           .orderBy('id', descending: false)
           .get()
-          .then((value) {
+          .then((value) async {
         for (var element in value.docs) {
           fetchedPostsList.add(
             PostModel.init(
@@ -50,12 +70,12 @@ class _NewsScreenState extends State<NewsScreen> {
             ),
           );
         }
+        await getSavedPosts();
         if (mounted) {
           setState(() {
             isPostsLoading = false;
           });
         }
-        print(fetchedPostsList);
       });
       // newsContainerImageResponse = await http.get(Uri.parse(newsImageUrl));
       // if (newsContainerImageResponse.statusCode == 200) {
@@ -76,6 +96,43 @@ class _NewsScreenState extends State<NewsScreen> {
     }
   }
 
+  Future<void> onBookmarkTap(int index) async {
+    try {
+      if (!bookmarkedNewsToUpload.contains(fetchedPostsList[index].getId())) {
+        setState(() {
+          bookmarkedNewsToUpload.add(fetchedPostsList[index].getId());
+        });
+        getSavedPosts();
+        if (mounted) {
+          showSnackBar(
+              context: context, text: 'Post added to Saved List', duration: 2);
+        }
+      } else {
+        setState(() {
+          bookmarkedNewsToUpload.remove(fetchedPostsList[index].getId());
+        });
+        getSavedPosts();
+        if (mounted) {
+          showSnackBar(
+              context: context,
+              text: 'Post removed from Saved List',
+              duration: 2);
+        }
+      }
+      await FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'savedItems': bookmarkedNewsToUpload,
+      });
+      getSavedPosts();
+    } on FirebaseException catch (e) {
+      if (mounted) {
+        setState(() {
+          bookmarkedNewsToUpload.remove(fetchedPostsList[index].getId());
+        });
+        showSnackBar(context: context, text: e.message.toString(), duration: 4);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,16 +145,13 @@ class _NewsScreenState extends State<NewsScreen> {
               child: Column(
                 children: [
                   const SizedBox(height: 10),
-                  GestureDetector(
-                    onTap: () async {
-                      await fetchPostsFromFirebase();
-                    },
-                    child: const WeatherForecastWidget(),
-                  ),
+                  const WeatherForecastWidget(),
                   const SizedBox(height: 10),
                   isPostsLoading
                       ? const Center(
-                          child: CircularProgressIndicator(),
+                          child: CustomCircularProgressIndicator(
+                            indicatorColor: kWhiteColor,
+                          ),
                         )
                       : RefreshIndicator(
                           onRefresh: () => fetchPostsFromFirebase(),
@@ -111,9 +165,11 @@ class _NewsScreenState extends State<NewsScreen> {
                                   ...List.generate(
                                     fetchedPostsList.length,
                                     (index) => NewsPostWidget(
-                                      index: index,
-                                      itemList: fetchedPostsList,
-                                    ),
+                                        index: index,
+                                        itemList: fetchedPostsList,
+                                        onBookmarkTapNews: () {
+                                          onBookmarkTap(index);
+                                        }),
                                   ),
                                 ],
                               ),

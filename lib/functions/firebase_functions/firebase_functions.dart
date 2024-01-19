@@ -36,6 +36,7 @@ class FirebaseFunctions {
         'imageUrl': demoProfileImageHolder,
         'joinedAt': formattedDate,
         'createdAt': Timestamp.now(),
+        'savedItems': [],
       });
       userRegFormErrors.clear();
       errorList.clear();

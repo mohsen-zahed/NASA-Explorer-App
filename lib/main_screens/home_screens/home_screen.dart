@@ -57,13 +57,13 @@ class _HomeScreenState extends State<HomeScreen> {
     getUserInfo();
   }
 
-  User? user;
   void getUserInfo() async {
     try {
+      User? user;
       FirebaseAuth auth = FirebaseAuth.instance;
       user = auth.currentUser;
       if (user != null) {
-        uid = user?.uid;
+        uid = user.uid;
         final DocumentSnapshot userDocSnapshot =
             await FirebaseFirestore.instance.collection('users').doc(uid).get();
         if (mounted) {
@@ -71,7 +71,13 @@ class _HomeScreenState extends State<HomeScreen> {
             userName = userDocSnapshot.get('name');
             userEmail = userDocSnapshot.get('emailAddress');
             userImage = userDocSnapshot.get('imageUrl');
+            userSavedPosts = userDocSnapshot.get('savedItems');
           });
+        } else {
+          userName = userDocSnapshot.get('name');
+          userEmail = userDocSnapshot.get('emailAddress');
+          userImage = userDocSnapshot.get('imageUrl');
+          userSavedPosts = userDocSnapshot.get('savedItems');
         }
       }
     } on FirebaseException catch (e) {
@@ -185,7 +191,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    getUserInfo();
     return Scaffold(
       body: SingleChildScrollView(
         child: BackgroundImageWidget(
@@ -214,7 +219,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   NewsContainerWidget(
                     postList: fetchedNewsList,
                     onTap: () {
-                      Navigator.pushNamed(context, NewsScreen.id);
+                      Navigator.pushNamed(
+                        context,
+                        NewsScreen.id,
+                        arguments: {'comingFromSaved': false},
+                      );
                     },
                   ),
                   const SizedBox(height: 25),
