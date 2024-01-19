@@ -25,16 +25,21 @@ class VerticalImagesGridView extends StatefulWidget {
 
 class _VerticalImagesGridViewState extends State<VerticalImagesGridView>
     with TickerProviderStateMixin {
-  late AnimationController _animationController;
+  late AnimationController animationController;
   bool isLoadingImages = false;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _animationController = AnimationController(
+    animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    animationController.dispose();
   }
 
   @override

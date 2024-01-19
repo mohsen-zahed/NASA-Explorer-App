@@ -1,9 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, prefer_typing_uninitialized_variables
 
 import 'dart:io';
-import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -79,11 +77,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
             .child('${userName.toString().trim()}.jpeg');
         await ref.putFile(pickedImageFile);
         getUserInfo();
+        downloadedImageUrl = await ref.getDownloadURL();
+        setState(() {
+          userImage = downloadedImageUrl;
+        });
+        List<String> postsDocIds = await FirebaseFunctions()
+            .getDocumentIds(collectionName: 'postsData', context: context);
+        for (var i = 0; i < postsDocIds.length; i++) {
+          FirebaseFirestore.instance
+              .collection('postsData')
+              .doc(postsDocIds[i])
+              .update({
+            'authorImage': downloadedImageUrl,
+          });
+        }
+        List<String> imagesDocIds = await FirebaseFunctions().getDocumentIds(
+            collectionName: 'galleryImagesData', context: context);
+        for (var i = 0; i < imagesDocIds.length; i++) {
+          FirebaseFirestore.instance
+              .collection('galleryImagesData')
+              .doc(imagesDocIds[i])
+              .update({
+            'authorImageUrl': downloadedImageUrl,
+          });
+        }
         showSnackBar(
             context: context,
             text: 'Profile image updated successfuly',
             duration: 3);
-        downloadedImageUrl = await ref.getDownloadURL();
       } else {
         showSnackBar(
             context: context,
@@ -99,15 +120,81 @@ class _ProfileScreenState extends State<ProfileScreen> {
             'imageUrl': imageUrlAfterChange,
           });
         }
-        getUserInfo();
-
         setState(() {
           isProfileImageUploading = false;
         });
+        getUserInfo();
       });
     } on FirebaseStorage catch (e) {
-      showSnackBar(context: context, text: e.toString(), duration: 3);
+      if (mounted) {
+        showSnackBar(context: context, text: e.toString(), duration: 3);
+      }
+    } finally {
+      // if (mounted) {
+      //   setState(() {
+      //     isProfileImageUploading = false;
+      //   });
+      // }
     }
+  }
+
+  void updateUserName() async {
+    try {
+      if (profileTextEditingController.value.text.isNotEmpty) {
+        setState(() {
+          FirebaseFirestore.instance.collection('users').doc(uid).update({
+            'name': profileTextEditingController.text,
+          });
+          getUserInfo();
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(uid)
+              .get()
+              .then((value) {
+            userName = value.data()!['name'];
+          });
+
+          Navigator.pop(context);
+        });
+        List<String> postsDocIds = await FirebaseFunctions()
+            .getDocumentIds(context: context, collectionName: 'postsData');
+        for (var i = 0; i < postsDocIds.length; i++) {
+          setState(() {
+            FirebaseFirestore.instance
+                .collection('postsData')
+                .doc(postsDocIds[i])
+                .update({
+              'author': profileTextEditingController.text,
+            });
+          });
+        }
+        List<String> imagesDocIds = await FirebaseFunctions().getDocumentIds(
+            context: context, collectionName: 'galleryImagesData');
+        for (var i = 0; i < imagesDocIds.length; i++) {
+          FirebaseFirestore.instance
+              .collection('galleryImagesData')
+              .doc(imagesDocIds[i])
+              .update({
+            'authorName': profileTextEditingController.text,
+          });
+        }
+        profileTextEditingController.clear();
+        if (mounted) {
+          showSnackBar(
+              context: context, text: 'Username updated!', duration: 3);
+        }
+      }
+    } on FirebaseException catch (e) {
+      if (mounted) {
+        showSnackBar(context: context, text: e.message.toString(), duration: 4);
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    profileTextEditingController.dispose();
   }
 
   @override
@@ -117,6 +204,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         onWillPop: () {
           setState(() {
             userImage = userImage;
+            getUserInfo();
           });
           Navigator.pop(context);
           return Future.value(false);
@@ -131,7 +219,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     EditImageProfileChangeImageWidgets(
                       isImageUploading: isProfileImageUploading,
                       urlImage: userImage ?? demoProfileImageHolder,
-                      name: userName ?? 'name',
+                      name: userName ?? 'loading name...',
                       email: userEmail ?? 'example@gmail.com',
                       onEditTap: () => editProfileName(context),
                       onCameraTap: () => changeProfileImage(),
@@ -291,19 +379,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       .copyWith(color: kWhiteColor),
                 ),
                 onPressed: () {
-                  if (profileTextEditingController.value.text.isNotEmpty) {
-                    setState(() {
-                      FirebaseFirestore.instance
-                          .collection('users')
-                          .doc(uid)
-                          .update({
-                        'name': profileTextEditingController.text,
-                      });
-                      getUserInfo();
-                      Navigator.pop(context);
-                      profileTextEditingController.clear();
-                    });
-                  }
+                  updateUserName();
                 },
               ),
             ],

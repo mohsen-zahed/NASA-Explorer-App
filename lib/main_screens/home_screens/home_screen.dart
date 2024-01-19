@@ -185,6 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    getUserInfo();
     return Scaffold(
       body: SingleChildScrollView(
         child: BackgroundImageWidget(

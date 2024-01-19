@@ -98,4 +98,22 @@ class FirebaseFunctions {
       showSnackBar(context: context, text: e.message.toString(), duration: 4);
     }
   }
+
+  Future<List<String>> getDocumentIds(
+      {required String collectionName, required BuildContext context}) async {
+    try {
+      CollectionReference collectionReference =
+          FirebaseFirestore.instance.collection(collectionName);
+
+      QuerySnapshot querySnapshot = await collectionReference.get();
+
+      List<String> documentIds = querySnapshot.docs
+          .map((DocumentSnapshot document) => document.id)
+          .toList();
+      return documentIds;
+    } on FirebaseException catch (e) {
+      showSnackBar(context: context, text: e.message.toString(), duration: 4);
+      return [];
+    }
+  }
 }
