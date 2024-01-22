@@ -1,5 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -7,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
-import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/functions/show_snackbar.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/add_screen/add_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/news_screen/news_screen.dart';
@@ -22,6 +19,7 @@ import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/news
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/search_field.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/images_screen/image_gallery_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/profile_screen/profile_screen.dart';
+import 'package:nasa_explorer_app_project/models/ad_model.dart';
 import 'package:nasa_explorer_app_project/models/image_model.dart';
 import 'package:nasa_explorer_app_project/models/news_model.dart';
 import 'package:nasa_explorer_app_project/models/planet_model.dart';
@@ -47,14 +45,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<NewsModel> fetchedNewsList = [];
   List<ImageModel> fetchedImagesList = [];
+  List<AdModel> fetchedAdsList = [];
 
   @override
   void initState() {
     super.initState();
-    fetchPlanetsFromFirebase();
-    fetchTopNewsContainerData();
-    fetchGalleryImagesData();
     getUserInfo();
+    fetchPlanetsDataFF();
+    fetchTopNewsContainerDataFF();
+    fetchGalleryImagesDataFF();
+    fetchAdBannerDataFF();
   }
 
   void getUserInfo() async {
@@ -87,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> fetchTopNewsContainerData() async {
+  Future<void> fetchTopNewsContainerDataFF() async {
     await FirebaseFirestore.instance
         .collection('postsData')
         .orderBy('id', descending: false)
@@ -115,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Future<void> fetchGalleryImagesData() async {
+  Future<void> fetchGalleryImagesDataFF() async {
     try {
       fetchedImagesList.clear();
       await FirebaseFirestore.instance
@@ -162,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> fetchPlanetsFromFirebase() async {
+  Future<void> fetchPlanetsDataFF() async {
     fetchedPlanetsList.clear();
     await FirebaseFirestore.instance
         .collection("planetsData")
@@ -185,7 +185,43 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
     if (mounted) {
-      setState(() {});
+      setState(() {
+        fetchedPlanetsList = fetchedPlanetsList;
+      });
+    }
+  }
+
+  Future<void> fetchAdBannerDataFF() async {
+    try {
+      fetchedAdsList.clear();
+      await FirebaseFirestore.instance
+          .collection('AdBannerData')
+          .orderBy('id', descending: false)
+          .get()
+          .then(
+        (value) {
+          for (var element in value.docs) {
+            fetchedAdsList.add(
+              AdModel.init(
+                adImageUrl: element.data()['imageUrl'],
+                adTitle: element.data()['bannerName'],
+                adMessage: element.data()['bannerMessage'],
+                adDescription: element.data()['bannerDescription'],
+                adUrl: element.data()['bannerUrl'],
+                adId: element.data()['id'],
+              ),
+            );
+          }
+        },
+      );
+      if (mounted) {
+        fetchedAdsList = fetchedAdsList;
+        print(fetchedAdsList[0].getAdTitle());
+      }
+    } on FirebaseException catch (e) {
+      if (mounted) {
+        showSnackBar(context: context, text: e.message.toString(), duration: 4);
+      }
     }
   }
 
@@ -196,10 +232,11 @@ class _HomeScreenState extends State<HomeScreen> {
         child: BackgroundImageWidget(
           child: RefreshIndicator(
             onRefresh: () async {
-              await fetchTopNewsContainerData();
-              await fetchPlanetsFromFirebase();
-              await fetchGalleryImagesData();
+              await fetchTopNewsContainerDataFF();
+              await fetchPlanetsDataFF();
+              await fetchGalleryImagesDataFF();
               getUserInfo();
+              await fetchAdBannerDataFF();
             },
             child: SingleChildScrollView(
               child: Column(
@@ -248,7 +285,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                   const SizedBox(height: 35),
-                  const AdvertisementBannerSliderWidget(),
+                  AdvertisementBannerSliderWidget(
+                    adsList: fetchedAdsList,
+                  ),
                   const SizedBox(height: 35),
                   const HorizontalNASAMissionsCarouselSlider(),
                   const SizedBox(height: 35),

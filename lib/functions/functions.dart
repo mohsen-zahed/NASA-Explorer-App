@@ -194,11 +194,22 @@ void redirectToSocialMedia(
       launchUrl(socialMediaLink);
     }
   } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Couldn\'t redirect!'),
-      ),
-    );
+    showSnackBar(context: context, text: 'Couldn\'t redirect!', duration: 3);
+  }
+}
+
+// for redirecting to Ad's url target
+void redirectToAdUrl(
+    {required String link, required BuildContext context}) async {
+  Uri? adUrl;
+
+  adUrl = Uri.parse(link);
+  try {
+    if (await canLaunchUrl(adUrl)) {
+      launchUrl(adUrl);
+    }
+  } catch (e) {
+    showSnackBar(context: context, text: 'Couldn\'t redirect!', duration: 3);
   }
 }
 

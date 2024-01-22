@@ -12,13 +12,11 @@ class SolarSystemSinglCardWidget extends StatefulWidget {
     required this.onTap,
     required this.planetsList,
     required this.currentIndex,
-    required this.cardWallpaper,
   });
   final int index;
   final VoidCallback onTap;
   final List<PlanetModel> planetsList;
   final int currentIndex;
-  final String cardWallpaper;
 
   @override
   State<SolarSystemSinglCardWidget> createState() =>
@@ -40,7 +38,9 @@ class _SolarSystemSinglCardWidgetState
           borderRadius: BorderRadius.circular(15),
           color: kGreyColor800,
           image: DecorationImage(
-            image: CachedNetworkImageProvider(widget.cardWallpaper),
+            image: CachedNetworkImageProvider(
+              widget.planetsList[widget.index].getPlanetWallpaper(),
+            ),
             fit: BoxFit.cover,
           ),
         ),
@@ -70,21 +70,19 @@ class _SolarSystemSinglCardWidgetState
               top: -60,
               left: 0,
               right: 0,
-              child: widget.planetsList.isEmpty
-                  ? const ShimmerEffect()
-                  : CachedNetworkImage(
-                      imageUrl:
-                          widget.planetsList[widget.index].getPlanetImageUrl(),
-                      imageBuilder: (context, imageProvider) => Container(
-                        width: 130,
-                        height: 130,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: imageProvider,
-                          ),
-                        ),
-                      ),
+              child: CachedNetworkImage(
+                imageUrl: widget.planetsList[widget.index].getPlanetImageUrl(),
+                imageBuilder: (context, imageProvider) => Container(
+                  width: 130,
+                  height: 130,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: imageProvider,
                     ),
+                  ),
+                ),
+                placeholder: (context, url) => const ShimmerEffect(),
+              ),
             ),
             Positioned(
               left: 20,

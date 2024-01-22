@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
-import 'package:nasa_explorer_app_project/models/image_model.dart';
 
 // general var
 var demoImagePlaceHolder =

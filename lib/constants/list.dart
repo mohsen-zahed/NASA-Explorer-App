@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/models/image_model.dart';
 import 'package:nasa_explorer_app_project/models/post_model.dart';
-import 'package:nasa_explorer_app_project/models/news_model.dart';
 import 'package:nasa_explorer_app_project/models/planet_model.dart';
 
 List<String> errorList = [];

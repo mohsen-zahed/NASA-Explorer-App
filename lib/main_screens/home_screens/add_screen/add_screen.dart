@@ -68,6 +68,8 @@ class _AddScreenState extends State<AddScreen>
       TextEditingController();
   final TextEditingController _bannerTextEditingController3 =
       TextEditingController();
+  final TextEditingController _bannerTextEditingController4 =
+      TextEditingController();
 
   late TabController _tabController;
 
@@ -130,6 +132,7 @@ class _AddScreenState extends State<AddScreen>
   var _bannerDesc;
   var _bannerPickedImage;
   var _bannerPickedImageFile;
+  var _bannerUrl;
   bool bannerUploading = false;
 
   //* add screen vars
@@ -570,6 +573,7 @@ class _AddScreenState extends State<AddScreen>
         'bannerName': _bannerName,
         'bannerDescription': _bannerDesc,
         'bannerMessage': _bannerMessage,
+        'bannerUrl': _bannerUrl ?? 'https://github.com/mohsen-zahed',
         'postedDate': date,
       });
       setState(() {
@@ -600,6 +604,10 @@ class _AddScreenState extends State<AddScreen>
     _galleryTextEditingController.dispose();
     _postTextEditingController1.dispose();
     _postTextEditingController2.dispose();
+    _bannerTextEditingController1.dispose();
+    _bannerTextEditingController2.dispose();
+    _bannerTextEditingController3.dispose();
+    _bannerTextEditingController4.dispose();
     _tabController.dispose();
   }
 
@@ -1433,6 +1441,12 @@ class _AddScreenState extends State<AddScreen>
                                                 _bannerTextEditingController3,
                                           ),
                                           const SizedBox(height: 10),
+                                          CustomTextField(
+                                            hintText: 'Banner Url',
+                                            textEditingController:
+                                                _bannerTextEditingController4,
+                                          ),
+                                          const SizedBox(height: 10),
                                           CustomElevatedButton(
                                             textButton: bannerUploading
                                                 ? 'Uplaoding...'
@@ -1447,6 +1461,9 @@ class _AddScreenState extends State<AddScreen>
                                                         .text;
                                                 _bannerDesc =
                                                     _bannerTextEditingController3
+                                                        .text;
+                                                _bannerUrl =
+                                                    _bannerTextEditingController4
                                                         .text;
                                               });
                                               if (_bannerTextEditingController1.text.isNotEmpty &&
@@ -1464,6 +1481,8 @@ class _AddScreenState extends State<AddScreen>
                                                       .clear();
                                                   _bannerTextEditingController3
                                                       .clear();
+                                                  _bannerTextEditingController4
+                                                      .clear();
                                                   _bannerPickedImage = '';
                                                   _bannerPickedImageFile = null;
                                                 });
@@ -1471,7 +1490,7 @@ class _AddScreenState extends State<AddScreen>
                                                 showSnackBar(
                                                     context: context,
                                                     text:
-                                                        'No empty field or image is allowed!',
+                                                        'No empty field or image except \'Banner Url\' is allowed!',
                                                     duration: 4);
                                               }
                                               setState(() {

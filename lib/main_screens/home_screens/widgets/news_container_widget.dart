@@ -47,6 +47,8 @@ class _NewsContainerWidgetState extends State<NewsContainerWidget> {
                         options: CarouselOptions(
                           viewportFraction: 1,
                           autoPlay: true,
+                          autoPlayInterval: const Duration(milliseconds: 15000),
+                          autoPlayAnimationDuration: const Duration(seconds: 2),
                           onPageChanged: (index, reason) {
                             setState(() {
                               currentNewsPage = index;

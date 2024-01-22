@@ -65,50 +65,45 @@ class _SolarSystemGalleryScreenState extends State<SolarSystemGalleryScreen> {
               child: SizedBox(
                 height: getMaxHieghtMediaQuery(context),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: getMaxHieghtMediaQuery(context, 0.05)),
                     Expanded(
                       flex: 6,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
-                        child: SizedBox(
-                          width: getMaxWidthMediaQuery(context),
-                          height: getMaxHieghtMediaQuery(context, 0.23),
-                          child: CarouselSlider.builder(
-                            options: CarouselOptions(
-                              viewportFraction: .8,
-                              onPageChanged: (index, reason) {},
-                            ),
-                            itemCount: 3,
-                            itemBuilder: (context, index, realIndex) =>
-                                CachedNetworkImage(
-                              imageUrl:
-                                  itemsList[currentIndex].getPlanetImageUrl(),
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) {
-                                return ShimmerEffect(
-                                  width: getMaxWidthMediaQuery(context),
-                                  height: getMaxHieghtMediaQuery(context, 0.23),
-                                );
-                              },
-                              imageBuilder: (context, imageProvider) {
-                                return Container(
-                                  width: getMaxWidthMediaQuery(context),
-                                  height: getMaxHieghtMediaQuery(context, 0.23),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(),
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.fill,
-                                    ),
+                        child: CarouselSlider.builder(
+                          options: CarouselOptions(
+                            viewportFraction: .8,
+                            onPageChanged: (index, reason) {},
+                          ),
+                          itemCount: 3,
+                          itemBuilder: (context, index, realIndex) =>
+                              CachedNetworkImage(
+                            imageUrl:
+                                itemsList[currentIndex].getPlanetImageUrl(),
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) {
+                              return ShimmerEffect(
+                                width: getMaxWidthMediaQuery(context),
+                                height: getMaxHieghtMediaQuery(context, 0.23),
+                              );
+                            },
+                            imageBuilder: (context, imageProvider) {
+                              return Container(
+                                width: getMaxWidthMediaQuery(context),
+                                height: getMaxHieghtMediaQuery(context, 0.23),
+                                decoration: BoxDecoration(
+                                  border: Border.all(),
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(15),
                                   ),
-                                );
-                              },
-                            ),
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ),
@@ -118,6 +113,7 @@ class _SolarSystemGalleryScreenState extends State<SolarSystemGalleryScreen> {
                       child: Stack(
                         children: [
                           SingleChildScrollView(
+                            physics: const BouncingScrollPhysics(),
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 25),
@@ -236,41 +232,43 @@ class _SolarSystemGalleryScreenState extends State<SolarSystemGalleryScreen> {
                     ),
                     Expanded(
                       flex: 3,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: getMaxWidthMediaQuery(context),
-                            child: CarouselSlider(
-                              items: [
-                                ...List.generate(
-                                  itemsList.length,
-                                  (index) => Padding(
-                                    padding: const EdgeInsets.all(6),
-                                    child: CircleAvatar(
-                                      backgroundImage:
-                                          CachedNetworkImageProvider(
-                                        itemsList[index].getPlanetImageUrl(),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: getMaxWidthMediaQuery(context),
+                              child: CarouselSlider(
+                                items: [
+                                  ...List.generate(
+                                    itemsList.length,
+                                    (index) => Padding(
+                                      padding: const EdgeInsets.all(6),
+                                      child: CircleAvatar(
+                                        backgroundImage:
+                                            CachedNetworkImageProvider(
+                                          itemsList[index].getPlanetImageUrl(),
+                                        ),
+                                        backgroundColor: kTransparentColor,
+                                        maxRadius: 70,
                                       ),
-                                      maxRadius: 70,
                                     ),
                                   ),
-                                ),
-                              ],
-                              options: CarouselOptions(
-                                  viewportFraction: 0.34,
-                                  enableInfiniteScroll: true,
-                                  enlargeCenterPage: true,
-                                  enlargeFactor: 0.5,
-                                  onPageChanged: (index, reason) {
-                                    setState(() {
-                                      currentIndex = index;
-                                    });
-                                  }),
-                            ),
-                          )
-                        ],
+                                ],
+                                options: CarouselOptions(
+                                    viewportFraction: 0.36,
+                                    enableInfiniteScroll: true,
+                                    enlargeCenterPage: true,
+                                    enlargeFactor: 0.5,
+                                    onPageChanged: (index, reason) {
+                                      setState(() {
+                                        currentIndex = index;
+                                      });
+                                    }),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     )
                   ],

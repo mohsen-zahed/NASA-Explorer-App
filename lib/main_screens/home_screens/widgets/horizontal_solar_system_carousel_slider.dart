@@ -5,6 +5,8 @@ import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/sola
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/title_with_view_all_button.dart';
 import 'package:nasa_explorer_app_project/models/planet_model.dart';
 import 'package:nasa_explorer_app_project/widgets/carousel/carousel_slider.dart';
+import 'package:nasa_explorer_app_project/widgets/shimmer_effect.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HorizontalSolarSystemCarouselSlider extends StatefulWidget {
   const HorizontalSolarSystemCarouselSlider({
@@ -40,13 +42,20 @@ class _HorizontalSolarSystemCarouselSliderState
         CarouselSlider.builder(
           itemCount: widget.planetsList.length,
           itemBuilder: (context, index, realIndex) {
-            return SolarSystemSinglCardWidget(
-              currentIndex: currentPlanet,
-              cardWallpaper: widget.planetsList[index].getPlanetWallpaper(),
-              index: index,
-              onTap: () => showSolarBottomSheet(context, index),
-              planetsList: widget.planetsList,
-            );
+            return widget.planetsList.isEmpty
+                ? Padding(
+                    padding: EdgeInsets.only(
+                      left: index == currentPlanet ? 15 : 10,
+                      right: index == currentPlanet ? 0 : 15,
+                    ),
+                    child: const ShimmerEffect(),
+                  )
+                : SolarSystemSinglCardWidget(
+                    currentIndex: currentPlanet,
+                    index: index,
+                    onTap: () => showSolarBottomSheet(context, index),
+                    planetsList: widget.planetsList,
+                  );
           },
           options: CarouselOptions(
             aspectRatio: 2.3,
