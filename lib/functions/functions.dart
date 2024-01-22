@@ -278,10 +278,10 @@ AppBar customAppWidget({required String text}) {
   );
 }
 
-String joinWords({required String text}) {
+String joinWords({required String text, int? end}) {
   List<String> _words = text.split(' ');
   String _extractedWord =
-      _words.sublist(0, _words.length == 1 ? 1 : 2).join(' ');
+      _words.sublist(0, _words.length == 1 ? 1 : end ?? 2).join(' ');
   return _extractedWord;
 }
 

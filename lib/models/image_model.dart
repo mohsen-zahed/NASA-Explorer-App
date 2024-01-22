@@ -7,6 +7,7 @@ class ImageModel {
   late String authorName;
   late int likesCount;
   late bool isLiked;
+  late String postedBy;
 
   ImageModel.init({
     required this.id,
@@ -17,6 +18,7 @@ class ImageModel {
     required this.likesCount,
     required this.isLiked,
     required this.authorImage,
+    required this.postedBy,
   });
 
   int getId() => id;
@@ -27,4 +29,5 @@ class ImageModel {
   String getAuthorName() => authorName;
   int getLikesCount() => likesCount;
   bool getIsLiked() => isLiked;
+  String getPostedBy() => postedBy;
 }

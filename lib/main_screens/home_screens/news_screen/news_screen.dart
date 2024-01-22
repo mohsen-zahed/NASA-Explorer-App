@@ -67,6 +67,7 @@ class _NewsScreenState extends State<NewsScreen> {
               likesCount: element.data()['postLikesCount'],
               isLiked: element.data()['postIsLike'],
               isPostSaved: element.data()['isPostSaved'],
+              postedBy: element.data()['postedBy'],
             ),
           );
         }

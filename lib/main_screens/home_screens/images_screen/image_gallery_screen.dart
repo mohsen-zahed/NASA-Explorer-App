@@ -45,6 +45,7 @@ class _ImageGalleryScreenState extends State<ImageGalleryScreen> {
                 likesCount: element.data()['likesCount'],
                 isLiked: element.data()['isLiked'],
                 authorImage: element.data()['authorImageUrl'],
+                postedBy: element.data()['postedBy'],
               ),
             );
           }

@@ -2,17 +2,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/profile_screen/profile_screen.dart';
 
 class AppLogoAndProfileImage extends StatelessWidget {
   const AppLogoAndProfileImage({
     super.key,
     required this.imageUrl,
     required this.nasaLogoUrl,
-    required this.onProfileImageTap,
   });
   final String imageUrl;
   final String nasaLogoUrl;
-  final VoidCallback onProfileImageTap;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +22,9 @@ class AppLogoAndProfileImage extends StatelessWidget {
         children: [
           Image.asset(nasaLogoUrl, scale: 50),
           GestureDetector(
-            onTap: onProfileImageTap,
+            onTap: () {
+              Navigator.pushNamed(context, ProfileScreen.id);
+            },
             child: Container(
               width: 50,
               height: 50,

@@ -23,6 +23,7 @@ class AdvertisementBannerSliderWidget extends StatefulWidget {
 class _AdvertisementBannerSliderWidgetState
     extends State<AdvertisementBannerSliderWidget> {
   int currentAd = 0;
+  String adTitle = '';
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -58,6 +59,7 @@ class _AdvertisementBannerSliderWidgetState
                               autoPlayCurve: Curves.easeInOut,
                               scrollPhysics: const BouncingScrollPhysics(),
                               enableInfiniteScroll: true,
+                              initialPage: 0,
                               onPageChanged: (index, reason) {
                                 setState(() {
                                   currentAd = index;
@@ -66,6 +68,11 @@ class _AdvertisementBannerSliderWidgetState
                             ),
                             itemCount: widget.adsList.length,
                             itemBuilder: (context, index, realIndex) {
+                              adTitle = joinWords(
+                                text: widget.adsList[index].getAdDescription(),
+                                end: 6,
+                              );
+                              currentAd = index;
                               return Padding(
                                 padding: EdgeInsets.fromLTRB(
                                   currentAd == index ? 0 : 10,
@@ -76,8 +83,8 @@ class _AdvertisementBannerSliderWidgetState
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(15),
                                   child: CachedNetworkImage(
-                                    imageUrl:
-                                        widget.adsList[index].getAdImageUrl(),
+                                    imageUrl: widget.adsList[currentAd]
+                                        .getAdImageUrl(),
                                     imageBuilder: (context, imageProvider) =>
                                         Container(
                                       width: getMaxWidthMediaQuery(context),
@@ -111,7 +118,7 @@ class _AdvertisementBannerSliderWidgetState
                               child: SizedBox(
                                 width: getMaxWidthMediaQuery(context),
                                 child: Text(
-                                  widget.adsList[currentAd].getAdTitle(),
+                                  adTitle,
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleMedium!
@@ -131,7 +138,7 @@ class _AdvertisementBannerSliderWidgetState
                                 vertical: 4,
                               ),
                               child: ElevatedButton(
-                                onPressed: () => redirectToSocialMedia(
+                                onPressed: () => redirectToAdUrl(
                                   context: context,
                                   link: widget.adsList[currentAd].getAdUrl(),
                                 ),

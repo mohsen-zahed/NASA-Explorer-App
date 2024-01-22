@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/images_screen/image_gallery_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/title_with_view_all_button.dart';
 import 'package:nasa_explorer_app_project/models/image_model.dart';
 import 'package:nasa_explorer_app_project/widgets/carousel/carousel_slider.dart';
@@ -12,10 +13,8 @@ class HorizontalImagesCarouselSlider extends StatefulWidget {
   const HorizontalImagesCarouselSlider({
     super.key,
     required this.imagesList,
-    required this.onImagesSeeAllTap,
   });
   final List<ImageModel> imagesList;
-  final VoidCallback onImagesSeeAllTap;
 
   @override
   State<HorizontalImagesCarouselSlider> createState() =>
@@ -33,7 +32,13 @@ class _HorizontalImagesCarouselSliderState
           padding: EdgeInsets.symmetric(horizontal: paddingDefaultValue),
           child: TitleWithViewAllButton(
             title: 'Discover Perfect Images',
-            onViewAllTap: widget.onImagesSeeAllTap,
+            onViewAllTap: () {
+              Navigator.pushNamed(
+                context,
+                ImageGalleryScreen.id,
+                arguments: {'title': 'Discover Perfect Images'},
+              );
+            },
           ),
         ),
         const SizedBox(height: 10),

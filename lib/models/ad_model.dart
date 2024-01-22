@@ -5,6 +5,7 @@ class AdModel {
   late String adDescription;
   late String adUrl;
   late int adId;
+  late String postedBy;
 
   AdModel.init({
     required this.adImageUrl,
@@ -13,6 +14,7 @@ class AdModel {
     required this.adDescription,
     required this.adUrl,
     required this.adId,
+    required this.postedBy,
   });
 
   String getAdImageUrl() => adImageUrl;
@@ -21,4 +23,5 @@ class AdModel {
   String getAdDescription() => adDescription;
   String getAdUrl() => adUrl;
   int getAdId() => adId;
+  String getPostedBy() => postedBy;
 }

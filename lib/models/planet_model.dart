@@ -7,17 +7,19 @@ class PlanetModel {
   String planetHistory;
   String planetClimate;
   String planetWallpaper;
+  String postedBy;
 
-  PlanetModel.create(
-    this.id,
-    this.planetName,
-    this.planetImageUrl,
-    this.planetSubTitle,
-    this.planetIntro,
-    this.planetHistory,
-    this.planetClimate,
-    this.planetWallpaper,
-  );
+  PlanetModel.create({
+    required this.id,
+    required this.planetName,
+    required this.planetImageUrl,
+    required this.planetSubTitle,
+    required this.planetIntro,
+    required this.planetHistory,
+    required this.planetClimate,
+    required this.planetWallpaper,
+    required this.postedBy,
+  });
 
   int getId() => id;
   String getPlanetName() => planetName;
@@ -27,4 +29,5 @@ class PlanetModel {
   String getPlanetIntro() => planetIntro;
   String getPlanetHistory() => planetHistory;
   String getPlanetClimate() => planetClimate;
+  String getPostedBy() => postedBy;
 }

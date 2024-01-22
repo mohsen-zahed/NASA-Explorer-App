@@ -292,6 +292,7 @@ class _AddScreenState extends State<AddScreen>
         'postLikesCount': 0,
         'isPostSaved': false,
         'postIsLike': false,
+        'postedBy': uid,
       });
       setState(() {
         isPostUploading = false;
@@ -338,6 +339,7 @@ class _AddScreenState extends State<AddScreen>
   //       'newsImageUrl': _urlDownloadNewsImage,
   //       'newsDescription': _newsDescription,
   //       'postedDate': date,
+  //        'postedBy': uid,
   //     });
   //     setState(() {
   //       newsUploading = false;
@@ -388,6 +390,7 @@ class _AddScreenState extends State<AddScreen>
         'authorImageUrl': userImage,
         'isLiked': false,
         'likesCount': 0,
+        'postedBy': uid,
       });
       setState(() {
         galleryUploading = false;
@@ -436,6 +439,7 @@ class _AddScreenState extends State<AddScreen>
         'planetHistory': _planetHistory,
         'planetClimate': _planetClimate,
         'postedDate': date,
+        'postedBy': uid,
       });
       setState(() {
         planetUplaoding = false;
@@ -482,6 +486,7 @@ class _AddScreenState extends State<AddScreen>
         'missionSubtitle': _missionSubtitle,
         'missionIntro': _missionIntro,
         'postedDate': date,
+        'postedBy': uid,
       });
       setState(() {
         missionUplaoding = false;
@@ -528,6 +533,7 @@ class _AddScreenState extends State<AddScreen>
         'astronautSubtitle': _astronautSubtitle,
         'astronautIntro': _astronautIntro,
         'postedDate': date,
+        'postedBy': uid,
       });
       setState(() {
         astronautUplaoding = false;
@@ -575,6 +581,7 @@ class _AddScreenState extends State<AddScreen>
         'bannerMessage': _bannerMessage,
         'bannerUrl': _bannerUrl ?? 'https://github.com/mohsen-zahed',
         'postedDate': date,
+        'postedBy': uid,
       });
       setState(() {
         bannerUploading = false;
@@ -988,7 +995,7 @@ class _AddScreenState extends State<AddScreen>
                                           const SizedBox(height: 10),
                                           CustomElevatedButton(
                                             textButton: galleryUploading
-                                                ? 'Uplaoding...'
+                                                ? 'Uploading...'
                                                 : 'Upload Gallery',
                                             onPressed: () async {
                                               setState(() {
@@ -1107,7 +1114,7 @@ class _AddScreenState extends State<AddScreen>
                                           const SizedBox(height: 10),
                                           CustomElevatedButton(
                                             textButton: planetUplaoding
-                                                ? 'Uplaoding...'
+                                                ? 'Uploading...'
                                                 : 'Upload Planet',
                                             onPressed: () async {
                                               setState(() {
@@ -1139,6 +1146,20 @@ class _AddScreenState extends State<AddScreen>
                                                   _planetPickedImageFile !=
                                                       null) {
                                                 await uploadPlanet();
+                                                setState(() {
+                                                  _planetTextEditingController1
+                                                      .clear();
+                                                  _planetTextEditingController2
+                                                      .clear();
+                                                  _planetTextEditingController3
+                                                      .clear();
+                                                  _planetTextEditingController4
+                                                      .clear();
+                                                  _planetTextEditingController5
+                                                      .clear();
+                                                  _planetPickedImage = '';
+                                                  _planetPickedImageFile = null;
+                                                });
                                               } else {
                                                 showSnackBar(
                                                     context: context,
@@ -1226,7 +1247,7 @@ class _AddScreenState extends State<AddScreen>
                                           const SizedBox(height: 10),
                                           CustomElevatedButton(
                                             textButton: missionUplaoding
-                                                ? 'Uplaoding...'
+                                                ? 'Uploading...'
                                                 : 'Upload Mission',
                                             onPressed: () async {
                                               setState(() {
@@ -1248,6 +1269,17 @@ class _AddScreenState extends State<AddScreen>
                                                   _missionPickedImageFile !=
                                                       null) {
                                                 await uploadMission();
+                                                setState(() {
+                                                  _missionTextEditingController1
+                                                      .clear();
+                                                  _missionTextEditingController2
+                                                      .clear();
+                                                  _missionTextEditingController3
+                                                      .clear();
+                                                  _missionPickedImage = '';
+                                                  _missionPickedImageFile =
+                                                      null;
+                                                });
                                               } else {
                                                 showSnackBar(
                                                     context: context,
@@ -1334,7 +1366,7 @@ class _AddScreenState extends State<AddScreen>
                                           const SizedBox(height: 10),
                                           CustomElevatedButton(
                                             textButton: astronautUplaoding
-                                                ? 'Uplaoding...'
+                                                ? 'Uploading...'
                                                 : 'Upload Astronaut',
                                             onPressed: () async {
                                               setState(() {
@@ -1356,6 +1388,17 @@ class _AddScreenState extends State<AddScreen>
                                                   _astronautPickedImageFile !=
                                                       null) {
                                                 await uploadAstronaut();
+                                                setState(() {
+                                                  _astronautTextEditingController1
+                                                      .clear();
+                                                  _astronautTextEditingController2
+                                                      .clear();
+                                                  _astronautTextEditingController3
+                                                      .clear();
+                                                  _astronautPickedImage = '';
+                                                  _astronautPickedImageFile =
+                                                      null;
+                                                });
                                               } else {
                                                 showSnackBar(
                                                     context: context,
@@ -1442,14 +1485,14 @@ class _AddScreenState extends State<AddScreen>
                                           ),
                                           const SizedBox(height: 10),
                                           CustomTextField(
-                                            hintText: 'Banner Url',
+                                            hintText: 'Banner Url - Optional',
                                             textEditingController:
                                                 _bannerTextEditingController4,
                                           ),
                                           const SizedBox(height: 10),
                                           CustomElevatedButton(
                                             textButton: bannerUploading
-                                                ? 'Uplaoding...'
+                                                ? 'Uploading...'
                                                 : 'Upload ADBanner',
                                             onPressed: () async {
                                               setState(() {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/solar_system_gallery_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/solar_system_single_card_widget.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/title_with_view_all_button.dart';
 import 'package:nasa_explorer_app_project/models/planet_model.dart';
@@ -12,11 +13,9 @@ class HorizontalSolarSystemCarouselSlider extends StatefulWidget {
   const HorizontalSolarSystemCarouselSlider({
     super.key,
     required this.planetsList,
-    required this.onSolarViewAllTap,
   });
 
   final List<PlanetModel> planetsList;
-  final VoidCallback onSolarViewAllTap;
 
   @override
   State<HorizontalSolarSystemCarouselSlider> createState() =>
@@ -35,7 +34,12 @@ class _HorizontalSolarSystemCarouselSliderState
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: TitleWithViewAllButton(
             title: 'Solar System',
-            onViewAllTap: widget.onSolarViewAllTap,
+            onViewAllTap: () {
+              Navigator.pushNamed(context, SolarSystemGalleryScreen.id,
+                  arguments: {
+                    'planetsList': widget.planetsList,
+                  });
+            },
           ),
         ),
         const SizedBox(height: 70),

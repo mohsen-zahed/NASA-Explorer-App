@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/news_screen/news_screen.dart';
 import 'package:nasa_explorer_app_project/models/news_model.dart';
 import 'package:nasa_explorer_app_project/widgets/carousel/carousel_slider.dart';
 import 'package:nasa_explorer_app_project/widgets/shimmer_effect.dart';
@@ -11,10 +12,8 @@ import 'package:nasa_explorer_app_project/widgets/shimmer_effect.dart';
 class NewsContainerWidget extends StatefulWidget {
   const NewsContainerWidget({
     super.key,
-    required this.onTap,
     required this.postList,
   });
-  final VoidCallback onTap;
   final List<NewsModel> postList;
 
   @override
@@ -30,7 +29,13 @@ class _NewsContainerWidgetState extends State<NewsContainerWidget> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: paddingDefaultValue),
       child: GestureDetector(
-        onTap: widget.onTap,
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            NewsScreen.id,
+            arguments: {'comingFromSaved': false},
+          );
+        },
         child: widget.postList.isEmpty
             ? ShimmerEffect(
                 width: getMaxWidthMediaQuery(context),
