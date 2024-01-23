@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/nasa_missions_screen/nasa_missions_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/title_with_view_all_button.dart';
 import 'package:nasa_explorer_app_project/models/nasa_missions_model.dart';
 import 'package:nasa_explorer_app_project/widgets/carousel/carousel_slider.dart';
@@ -30,7 +31,9 @@ class _HorizontalNASAMissionsCarouselSliderState
           padding: EdgeInsets.symmetric(horizontal: paddingDefaultValue),
           child: TitleWithViewAllButton(
             title: 'NASA Missions',
-            onViewAllTap: () {},
+            onViewAllTap: () {
+              Navigator.pushNamed(context, NasaMissionsScreen.id);
+            },
           ),
         ),
         const SizedBox(height: 10),

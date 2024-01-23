@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
-import 'package:nasa_explorer_app_project/main_screens/home_screens/solar_system_gallery_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/solar_system_screen/solar_system_gallery_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/solar_system_single_card_widget.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/title_with_view_all_button.dart';
 import 'package:nasa_explorer_app_project/models/planet_model.dart';
