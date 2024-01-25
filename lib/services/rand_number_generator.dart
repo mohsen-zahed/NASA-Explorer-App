@@ -1,26 +1,27 @@
+import 'package:nasa_explorer_app_project/constants/variables.dart';
+import 'package:nasa_explorer_app_project/functions/firebase_functions/firebase_functions.dart';
+
 class NumberGenerator {
-  static int _lastNumber = 0;
-  static int _numberForOthers = 0;
-  static List<int> _generatedNumbersForOthers = [];
-  static List<int> _generatedNumbers = [];
-
-  static int generateNumber() {
-    _lastNumber++;
-    _generatedNumbers.add(_lastNumber);
-    return _lastNumber;
+  static int generateNumber({
+    required String collectionName,
+    required List list,
+    required int lastNum,
+  }) {
+    lastNum++;
+    list.add(lastNum);
+    FirebaseFunctions().saveCollectionIdList(
+      collectionName: collectionName,
+      generatedIds: list,
+      lastNum: lastNum,
+    );
+    return lastNum;
   }
 
-  static int generateNumbersForOther() {
-    _numberForOthers++;
-    _generatedNumbersForOthers.add(_numberForOthers);
-    return _numberForOthers;
-  }
-
-  static List<int> getGeneratedNumbers() {
-    return _generatedNumbers;
+  static List getGeneratedNumbers() {
+    return adDocsIds;
   }
 
   static int getLastGeneratedNumber() {
-    return _lastNumber;
+    return adDocsLastNum;
   }
 }

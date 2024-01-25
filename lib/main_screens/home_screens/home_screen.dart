@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
@@ -16,6 +15,7 @@ import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/hori
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/news_container_widget.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/search_field.dart';
 import 'package:nasa_explorer_app_project/models/ad_model.dart';
+import 'package:nasa_explorer_app_project/models/astronaut_model.dart';
 import 'package:nasa_explorer_app_project/models/image_model.dart';
 import 'package:nasa_explorer_app_project/models/nasa_missions_model.dart';
 import 'package:nasa_explorer_app_project/models/news_model.dart';
@@ -37,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<ImageModel> fetchedImagesList = [];
   List<AdModel> fetchedAdsList = [];
   List<NasaMissionModel> fetchedMissionsList = [];
+  List<AstronautModel> fetchedAstronautsList = [];
 
   @override
   void initState() {
@@ -246,6 +247,34 @@ class _HomeScreenState extends State<HomeScreen> {
               missionExplanation: element.data()['missionIntro'],
               postedDate: element.data()['postedDate'],
               postedBy: uid,
+            ),
+          );
+        }
+      });
+    } on FirebaseException catch (e) {
+      if (mounted) {
+        showSnackBar(context: context, text: e.message.toString(), duration: 4);
+      }
+    }
+  }
+
+  Future<void> fetchAstronautDataFF() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('astronautsData')
+          .orderBy('id', descending: false)
+          .get()
+          .then((value) {
+        for (var element in value.docs) {
+          fetchedAstronautsList.add(
+            AstronautModel.create(
+              id: element.data()['id'],
+              anstronautName: element.data()['astronautName'],
+              dateOfBirth: element.data()['dateOfBirth'],
+              placeOfBirth: element.data()['placeOfBirth'],
+              astronautBiography: element.data()['astronautBiography'],
+              astronautMissions: element.data()['astronautMissions'],
+              astronautImage: element.data()['astronautImageUrl'],
             ),
           );
         }

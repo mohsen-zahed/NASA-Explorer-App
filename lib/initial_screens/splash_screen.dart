@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
+import 'package:nasa_explorer_app_project/functions/firebase_functions/firebase_functions.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/functions/show_snackbar.dart';
 import 'package:nasa_explorer_app_project/initial_screens/no_connection_screen.dart';
@@ -33,6 +34,41 @@ class _SplashScreenState extends State<SplashScreen> {
     isUserConnected = await checkInternetConnectivity(context);
     if (isUserConnected) {
       checkOnboardingScreen();
+      await FirebaseFunctions().getCollectionIdList(
+        collectionName: 'AdBannerData',
+        lastNum: adDocsLastNum,
+        list: adDocsIds,
+      );
+      await FirebaseFunctions().getCollectionIdList(
+        collectionName: 'NasaAstronautsData',
+        list: astDocsIds,
+        lastNum: astDocsLastNum,
+      );
+      await FirebaseFunctions().getCollectionIdList(
+        collectionName: 'NasaMissionsData',
+        lastNum: missionDocsLastNum,
+        list: missionDocsIds,
+      );
+      await FirebaseFunctions().getCollectionIdList(
+        collectionName: 'galleryImagesData',
+        list: galleryDocsIds,
+        lastNum: galleryDocsLastNum,
+      );
+      await FirebaseFunctions().getCollectionIdList(
+        collectionName: 'newsBannerData',
+        list: newsDocsIds,
+        lastNum: newsDocsLastNum,
+      );
+      await FirebaseFunctions().getCollectionIdList(
+        collectionName: 'postsData',
+        list: postDocsIds,
+        lastNum: postDocsLastNum,
+      );
+      await FirebaseFunctions().getCollectionIdList(
+        collectionName: 'users',
+        list: userDocsIds,
+        lastNum: userDocsLastNum,
+      );
       await SharedPreferencesClass()
           .saveUserVisitHomeStatus(alreadyVisited: false);
     } else {

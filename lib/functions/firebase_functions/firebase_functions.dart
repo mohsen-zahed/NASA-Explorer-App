@@ -117,4 +117,49 @@ class FirebaseFunctions {
       return [];
     }
   }
+
+  Future<void> saveCollectionIdList({
+    required String collectionName,
+    required List generatedIds,
+    required int lastNum,
+  }) async {
+    try {
+      DocumentReference x = FirebaseFirestore.instance
+          .collection(collectionName)
+          .doc('listOfIds');
+      for (var i = 0; i < generatedIds.length; i++) {
+        x.update({
+          'idsList': generatedIds[i],
+          'lastNumber': lastNum,
+        });
+      }
+    } on FirebaseException catch (e) {
+      debugPrint(e.message.toString());
+    }
+  }
+
+  Future<void> getCollectionIdList({
+    required String collectionName,
+    required List list,
+    required int lastNum,
+  }) async {
+    try {
+      list.clear();
+      await FirebaseFirestore.instance
+          .collection(collectionName)
+          .doc('listOfIds')
+          .get()
+          .then((value) {
+        list.add(
+          value.data()?['idsList'],
+        );
+        lastNum = value.data()?['lastNumber'];
+        print('object');
+        print(value.data()?['idsList']);
+        print(value.data()?['lastNumber']);
+      });
+    } on FirebaseException catch (e) {
+      debugPrint(e.message.toString());
+    }
+  }
 }

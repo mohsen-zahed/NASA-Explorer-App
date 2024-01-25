@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
+import 'package:nasa_explorer_app_project/functions/firebase_functions/firebase_functions.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/functions/show_snackbar.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/add_screen/widgets/custom_post_text_field.dart';
@@ -54,6 +55,10 @@ class _AddScreenState extends State<AddScreen>
   final TextEditingController _astronautTextEditingController2 =
       TextEditingController();
   final TextEditingController _astronautTextEditingController3 =
+      TextEditingController();
+  final TextEditingController _astronautTextEditingController4 =
+      TextEditingController();
+  final TextEditingController _astronautTextEditingController5 =
       TextEditingController();
 
   final TextEditingController _newsTextEditingController =
@@ -118,8 +123,10 @@ class _AddScreenState extends State<AddScreen>
   //* home screen astronauts vars
   String _urlDownloadAstronautImage = '';
   var _astronautName;
-  var _astronautSubtitle;
-  var _astronautIntro;
+  var _astronautPlaceOfBirth;
+  var _astronautBiography;
+  var _astronautMissions;
+  var _astronautDateOfBith;
   var _astronautPickedImageFile;
   var _astronautPickedImage;
   bool astronautUplaoding = false;
@@ -255,7 +262,11 @@ class _AddScreenState extends State<AddScreen>
       setState(() {
         isPostUploading = true;
       });
-      var _id = NumberGenerator.generateNumbersForOther();
+      var _id = NumberGenerator.generateNumber(
+        collectionName: 'postsData',
+        list: postDocsIds,
+        lastNum: postDocsLastNum,
+      );
       FirebaseFirestore _posts = FirebaseFirestore.instance;
       var _docIDs = _posts.collection('postsData').doc().id;
       if (_postPickedImage != null) {
@@ -280,7 +291,7 @@ class _AddScreenState extends State<AddScreen>
         showSnackBar(
             context: context, text: 'Failed to upload post!', duration: 4);
       }
-      String date = getDate();
+      String date = getCurrentDate();
       await _posts.collection('postsData').doc(_docIDs).set({
         'id': _id,
         'author': userName,
@@ -356,7 +367,11 @@ class _AddScreenState extends State<AddScreen>
       setState(() {
         galleryUploading = true;
       });
-      var _id = NumberGenerator.generateNumbersForOther();
+      var _id = NumberGenerator.generateNumber(
+        collectionName: 'galleryImages',
+        list: galleryDocsIds,
+        lastNum: galleryDocsLastNum,
+      );
       FirebaseFirestore _gallery = FirebaseFirestore.instance;
       var _docIDs = _gallery.collection('galleryImages').doc().id;
       if (_galleryPickedImage != null) {
@@ -380,7 +395,7 @@ class _AddScreenState extends State<AddScreen>
         showSnackBar(
             context: context, text: 'Failed to upload gallery!', duration: 4);
       }
-      String date = getDate();
+      String date = getCurrentDate();
       await _gallery.collection('galleryImagesData').doc(_docIDs).set({
         'id': _id,
         'galleryImageUrl': _urlDownloadGalleryImage,
@@ -429,9 +444,13 @@ class _AddScreenState extends State<AddScreen>
         showSnackBar(
             context: context, text: 'Failed to upload planet!', duration: 4);
       }
-      String date = getDate();
+      String date = getCurrentDate();
       await _planet.collection('planetsData').doc(_docIDs).set({
-        'id': NumberGenerator.generateNumber(),
+        'id': NumberGenerator.generateNumber(
+          collectionName: 'planetsData',
+          list: planetDocsIds,
+          lastNum: planetDocsLastNum,
+        ),
         'imageUrl': _urlDownloadPlanetImage,
         'planetName': _planetName,
         'planetSubtitle': _planetSubtitle,
@@ -478,9 +497,13 @@ class _AddScreenState extends State<AddScreen>
         showSnackBar(
             context: context, text: 'Failed to upload mission!', duration: 4);
       }
-      String date = getDate();
+      String date = getCurrentDate();
       await _mission.collection('NasaMissionsData').doc(_docIDs).set({
-        'id': NumberGenerator.generateNumbersForOther(),
+        'id': NumberGenerator.generateNumber(
+          collectionName: 'NasaMissionsData',
+          list: missionDocsIds,
+          lastNum: missionDocsLastNum,
+        ),
         'imageUrl': _urlDownloadMissionImage,
         'missionName': _missionName,
         'missionSubtitle': _missionSubtitle,
@@ -502,6 +525,11 @@ class _AddScreenState extends State<AddScreen>
     try {
       setState(() {
         astronautUplaoding = true;
+        FirebaseFunctions().getCollectionIdList(
+          collectionName: 'NasaAstronautsData',
+          list: astDocsIds,
+          lastNum: astDocsLastNum,
+        );
       });
       FirebaseFirestore _astro = FirebaseFirestore.instance;
       var _docIDs = _astro.collection('NasaAstronautsData').doc().id;
@@ -525,18 +553,26 @@ class _AddScreenState extends State<AddScreen>
         showSnackBar(
             context: context, text: 'Failed to upload astronaut!', duration: 4);
       }
-      String date = getDate();
+      String date = getCurrentDate();
+
       await _astro.collection('NasaAstronautsData').doc(_docIDs).set({
-        'id': NumberGenerator.generateNumbersForOther(),
+        'id': NumberGenerator.generateNumber(
+          collectionName: 'NasaAstronautsData',
+          list: astDocsIds,
+          lastNum: astDocsLastNum,
+        ),
         'imageUrl': _urlDownloadAstronautImage,
         'astronautName': _astronautName,
-        'astronautSubtitle': _astronautSubtitle,
-        'astronautIntro': _astronautIntro,
+        'astronautPlaceOfBirth': _astronautPlaceOfBirth,
+        'astronautBiography': _astronautBiography,
+        'astronautDateOfBirth': _astronautDateOfBith,
+        'astronautMissions': _astronautMissions,
         'postedDate': date,
         'postedBy': uid,
       });
       setState(() {
         astronautUplaoding = false;
+       
       });
     } on FirebaseFirestore catch (e) {
       if (mounted) {
@@ -572,9 +608,14 @@ class _AddScreenState extends State<AddScreen>
         showSnackBar(
             context: context, text: 'Failed to upload ADBanner!', duration: 4);
       }
-      String date = getDate();
+      String date = getCurrentDate();
+
       await _banner.collection('AdBannerData').doc(_docIDs).set({
-        'id': NumberGenerator.generateNumbersForOther(),
+        'id': NumberGenerator.generateNumber(
+          collectionName: 'AdBannerData',
+          list: adDocsIds,
+          lastNum: adDocsLastNum,
+        ),
         'imageUrl': _urlDownloadBannerImage,
         'bannerName': _bannerName,
         'bannerDescription': _bannerDesc,
@@ -607,6 +648,8 @@ class _AddScreenState extends State<AddScreen>
     _astronautTextEditingController1.dispose();
     _astronautTextEditingController2.dispose();
     _astronautTextEditingController3.dispose();
+    _astronautTextEditingController4.dispose();
+    _astronautTextEditingController5.dispose();
     _newsTextEditingController.dispose();
     _galleryTextEditingController.dispose();
     _postTextEditingController1.dispose();
@@ -1353,13 +1396,33 @@ class _AddScreenState extends State<AddScreen>
                                           ),
                                           const SizedBox(height: 10),
                                           CustomTextField(
-                                            hintText: 'Astronaut Subtitle',
+                                            hintText:
+                                                'Astronaut Place of Birth',
                                             textEditingController:
                                                 _astronautTextEditingController2,
                                           ),
                                           const SizedBox(height: 10),
                                           CustomTextField(
-                                            hintText: 'Astronaut Intro',
+                                            hintText: 'Astronaut Date of Birth',
+                                            isReadOnly: true,
+                                            textEditingController:
+                                                _astronautTextEditingController4,
+                                            onTextFieldTap: () {
+                                              setState(() {
+                                                selectDate(context,
+                                                    _astronautTextEditingController4);
+                                              });
+                                            },
+                                          ),
+                                          const SizedBox(height: 10),
+                                          CustomTextField(
+                                            hintText: 'Astronaut Missions',
+                                            textEditingController:
+                                                _astronautTextEditingController5,
+                                          ),
+                                          const SizedBox(height: 10),
+                                          CustomTextField(
+                                            hintText: 'Astronaut Biography',
                                             textEditingController:
                                                 _astronautTextEditingController3,
                                           ),
@@ -1373,17 +1436,27 @@ class _AddScreenState extends State<AddScreen>
                                                 _astronautName =
                                                     _astronautTextEditingController1
                                                         .text;
-                                                _astronautSubtitle =
+                                                _astronautPlaceOfBirth =
                                                     _astronautTextEditingController2
                                                         .text;
-                                                _astronautIntro =
+                                                _astronautBiography =
                                                     _astronautTextEditingController3
+                                                        .text;
+                                                _astronautDateOfBith =
+                                                    _astronautTextEditingController4
+                                                        .text;
+                                                _astronautMissions =
+                                                    _astronautTextEditingController5
                                                         .text;
                                               });
                                               if (_astronautTextEditingController1.text.isNotEmpty &&
                                                   _astronautTextEditingController2
                                                       .text.isNotEmpty &&
                                                   _astronautTextEditingController3
+                                                      .text.isNotEmpty &&
+                                                  _astronautTextEditingController4
+                                                      .text.isNotEmpty &&
+                                                  _astronautTextEditingController5
                                                       .text.isNotEmpty &&
                                                   _astronautPickedImageFile !=
                                                       null) {
@@ -1394,6 +1467,10 @@ class _AddScreenState extends State<AddScreen>
                                                   _astronautTextEditingController2
                                                       .clear();
                                                   _astronautTextEditingController3
+                                                      .clear();
+                                                  _astronautTextEditingController4
+                                                      .clear();
+                                                  _astronautTextEditingController5
                                                       .clear();
                                                   _astronautPickedImage = '';
                                                   _astronautPickedImageFile =
@@ -1573,6 +1650,8 @@ class _AddScreenState extends State<AddScreen>
             _astronautTextEditingController1.clear();
             _astronautTextEditingController2.clear();
             _astronautTextEditingController3.clear();
+            _astronautTextEditingController4.clear();
+            _astronautTextEditingController5.clear();
             _newsTextEditingController.clear();
             _galleryTextEditingController.clear();
             _postTextEditingController1.clear();

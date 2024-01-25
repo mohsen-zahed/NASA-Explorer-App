@@ -30,5 +30,40 @@ var demoNewsImageHolder =
 
 // home screen variables
 
-
 double paddingDefaultValue = 15.0;
+
+String adKey = 'AdsList';
+String missionsKey = 'MissionsList';
+String galleryKey = 'GalleryList';
+String planetKey = 'PlanetList';
+String postKey = 'PostList';
+String userKey = 'UserList';
+String astKey = 'AstsList';
+String newsKey = 'NewsList';
+
+List<String> collections = [
+  'AdBannerData',
+  'NasaAstronautsData',
+  'NasaMissionsData',
+  'galleryImagesData',
+  'newsBannerData',
+  'postsData',
+  'users',
+];
+
+List adDocsIds = [];
+List astDocsIds = [];
+List missionDocsIds = [];
+List galleryDocsIds = [];
+List newsDocsIds = [];
+List postDocsIds = [];
+List userDocsIds = [];
+List planetDocsIds = [];
+int adDocsLastNum = 0;
+int astDocsLastNum = 0;
+int missionDocsLastNum = 0;
+int galleryDocsLastNum = 0;
+int newsDocsLastNum = 0;
+int postDocsLastNum = 0;
+int userDocsLastNum = 0;
+int planetDocsLastNum = 0;

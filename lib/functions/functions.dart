@@ -8,7 +8,6 @@ import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:nasa_explorer_app_project/functions/show_snackbar.dart';
 import 'package:nasa_explorer_app_project/initial_screens/registration_screen/registration_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/home_screen.dart';
-import 'package:nasa_explorer_app_project/main_screens/home_screens/suspended_main_home.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -285,7 +284,7 @@ String joinWords({required String text, int? end}) {
   return _extractedWord;
 }
 
-String getDate() {
+String getCurrentDate() {
   String postedDay = DateTime.now().day.toString();
   String postedMonth = DateTime.now().month.toString();
   String postedYear = DateTime.now().year.toString();
@@ -301,6 +300,61 @@ String getDate() {
       '$postedYear-$postedMonth-$postedDay | $postedTimeHour:$postedTimeMinute$postedTimeZone';
   return postDate;
 }
+
+String getMonth(int month) {
+  switch (month) {
+    case 1:
+      return 'Jan';
+    case 2:
+      return 'Feb';
+    case 3:
+      return 'Mar';
+    case 4:
+      return 'Apr';
+    case 5:
+      return 'May';
+    case 6:
+      return 'Jun';
+    case 7:
+      return 'Jul';
+    case 8:
+      return 'Aug';
+    case 9:
+      return 'Sep';
+    case 10:
+      return 'Oct';
+    case 11:
+      return 'Nov';
+    case 12:
+      return 'Dec';
+    default:
+      return month.toString();
+  }
+}
+
+Future<void> selectDate(
+    BuildContext context, TextEditingController controller) async {
+  try {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1700),
+      lastDate: DateTime(2101),
+    );
+    if (pickedDate != null) {
+      String year = pickedDate.year.toString();
+      String month = pickedDate.month.toString();
+      String day = pickedDate.day.toString();
+      controller.text = '$year-${getMonth(int.parse(month))}-$day';
+    }
+  } catch (e) {
+    debugPrint(
+      e.toString(),
+    );
+  }
+}
+
+
 //? home screen functions -----
 //? home screen functions -----
 

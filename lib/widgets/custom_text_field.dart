@@ -17,6 +17,8 @@ class CustomTextField extends StatefulWidget {
     this.hintTextColor,
     this.prefixIconColor,
     this.maxLength,
+    this.onTextFieldTap,
+    this.isReadOnly,
   });
   final String hintText;
   final IconData? prefixIcon;
@@ -31,6 +33,8 @@ class CustomTextField extends StatefulWidget {
   final Color? hintTextColor;
   final Color? prefixIconColor;
   final int? maxLength;
+  final VoidCallback? onTextFieldTap;
+  final bool? isReadOnly;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -49,6 +53,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
           keyboardType: widget.textInputType ?? TextInputType.text,
           maxLength: widget.maxLength,
           maxLines: null,
+          readOnly: widget.isReadOnly ?? false,
+          onTap: widget.onTextFieldTap ?? () {},
           style: TextStyle(
             color: kWhiteColor70.withOpacity(0.6),
           ),
