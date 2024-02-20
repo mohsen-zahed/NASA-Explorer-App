@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:nasa_explorer_app_project/constants/variables.dart';
+import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/functions/show_snackbar.dart';
+import 'package:nasa_explorer_app_project/initial_screens/no_connection_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/add_screen/add_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/advertisement_banner_slider_widget.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/app_logo_and_profile_image.dart';
@@ -48,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
     fetchGalleryImagesDataFF();
     fetchAdBannerDataFF();
     fetchNasaMissionsDataFF();
+    fetchAstronautDataFF();
   }
 
   void getUserInfo() async {
@@ -164,32 +167,38 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> fetchPlanetsDataFF() async {
-    fetchedPlanetsList.clear();
-    await FirebaseFirestore.instance
-        .collection("planetsData")
-        .orderBy('id', descending: false)
-        .get()
-        .then((value) {
-      for (var element in value.docs) {
-        fetchedPlanetsList.add(
-          PlanetModel.create(
-            id: element.data()['id'],
-            planetName: element.data()['planetName'],
-            planetImageUrl: element.data()['imageUrl'],
-            planetSubTitle: element.data()['planetSubtitle'],
-            planetIntro: element.data()['planetIntro'],
-            planetHistory: element.data()['planetHistory'],
-            planetClimate: element.data()['planetClimate'],
-            planetWallpaper: element.data()['planetWallpaper'],
-            postedBy: element.data()['postedBy'],
-          ),
-        );
-      }
-    });
-    if (mounted) {
-      setState(() {
-        fetchedPlanetsList = fetchedPlanetsList;
+    try {
+      fetchedPlanetsList.clear();
+      await FirebaseFirestore.instance
+          .collection("planetsData")
+          .orderBy('id', descending: false)
+          .get()
+          .then((value) {
+        for (var element in value.docs) {
+          fetchedPlanetsList.add(
+            PlanetModel.create(
+              id: element.data()['id'],
+              planetName: element.data()['planetName'],
+              planetImageUrl: element.data()['imageUrl'],
+              planetSubTitle: element.data()['planetSubtitle'],
+              planetIntro: element.data()['planetIntro'],
+              planetHistory: element.data()['planetHistory'],
+              planetClimate: element.data()['planetClimate'],
+              planetWallpaper: element.data()['planetWallpaper'],
+              postedBy: element.data()['postedBy'],
+            ),
+          );
+        }
+        if (mounted) {
+          setState(() {
+            fetchedPlanetsList = fetchedPlanetsList;
+          });
+        }
       });
+    } on FirebaseAuthException catch (e) {
+      if (mounted) {
+        showSnackBar(context: context, text: e.message.toString(), duration: 4);
+      }
     }
   }
 
@@ -200,28 +209,26 @@ class _HomeScreenState extends State<HomeScreen> {
           .collection('AdBannerData')
           .orderBy('id', descending: false)
           .get()
-          .then(
-        (value) {
-          for (var element in value.docs) {
-            fetchedAdsList.add(
-              AdModel.init(
-                adImageUrl: element.data()['imageUrl'],
-                adTitle: element.data()['bannerName'],
-                adMessage: element.data()['bannerMessage'],
-                adDescription: element.data()['bannerDescription'],
-                adUrl: element.data()['bannerUrl'],
-                adId: element.data()['id'],
-                postedBy: element.data()['postedBy'],
-              ),
-            );
-          }
-        },
-      );
-      if (mounted) {
-        setState(() {
-          fetchedAdsList = fetchedAdsList;
-        });
-      }
+          .then((value) {
+        for (var element in value.docs) {
+          fetchedAdsList.add(
+            AdModel.init(
+              adImageUrl: element.data()['imageUrl'],
+              adTitle: element.data()['bannerName'],
+              adMessage: element.data()['bannerMessage'],
+              adDescription: element.data()['bannerDescription'],
+              adUrl: element.data()['bannerUrl'],
+              adId: element.data()['id'],
+              postedBy: element.data()['postedBy'],
+            ),
+          );
+        }
+        if (mounted) {
+          setState(() {
+            fetchedAdsList = fetchedAdsList;
+          });
+        }
+      });
     } on FirebaseException catch (e) {
       if (mounted) {
         showSnackBar(context: context, text: e.message.toString(), duration: 4);
@@ -250,6 +257,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         }
+        if (mounted) {
+          setState(() {
+            fetchedMissionsList = fetchedMissionsList;
+          });
+        }
       });
     } on FirebaseException catch (e) {
       if (mounted) {
@@ -260,8 +272,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> fetchAstronautDataFF() async {
     try {
+      fetchedAstronautsList.clear();
       await FirebaseFirestore.instance
-          .collection('astronautsData')
+          .collection('NasaAstronautsData')
           .orderBy('id', descending: false)
           .get()
           .then((value) {
@@ -270,13 +283,18 @@ class _HomeScreenState extends State<HomeScreen> {
             AstronautModel.create(
               id: element.data()['id'],
               anstronautName: element.data()['astronautName'],
-              dateOfBirth: element.data()['dateOfBirth'],
-              placeOfBirth: element.data()['placeOfBirth'],
+              dateOfBirth: element.data()['astronautDateOfBirth'],
+              placeOfBirth: element.data()['astronautPlaceOfBirth'],
               astronautBiography: element.data()['astronautBiography'],
               astronautMissions: element.data()['astronautMissions'],
-              astronautImage: element.data()['astronautImageUrl'],
+              astronautImage: element.data()['imageUrl'],
             ),
           );
+        }
+        if (mounted) {
+          setState(() {
+            fetchedAstrnautsList2 = fetchedAstronautsList;
+          });
         }
       });
     } on FirebaseException catch (e) {
@@ -293,12 +311,24 @@ class _HomeScreenState extends State<HomeScreen> {
         child: BackgroundImageWidget(
           child: RefreshIndicator(
             onRefresh: () async {
-              getUserInfo();
-              await fetchTopNewsContainerDataFF();
-              await fetchPlanetsDataFF();
-              await fetchGalleryImagesDataFF();
-              await fetchAdBannerDataFF();
-              await fetchNasaMissionsDataFF();
+              await checkInternetConnectivity(context);
+              if (isUserConnected) {
+                getUserInfo();
+                await fetchTopNewsContainerDataFF();
+                await fetchPlanetsDataFF();
+                await fetchGalleryImagesDataFF();
+                await fetchAdBannerDataFF();
+                await fetchNasaMissionsDataFF();
+                await fetchAstronautDataFF();
+              } else {
+                if (mounted) {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    NoConnectionScreen.id,
+                    (route) => false,
+                  );
+                }
+              }
             },
             child: SingleChildScrollView(
               child: Column(
@@ -332,7 +362,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     missionsList: fetchedMissionsList,
                   ),
                   const SizedBox(height: 35),
-                  const HorizontalAstronautFiguresSlider(),
+                  HorizontalAstronautFiguresSlider(
+                    astList: fetchedAstronautsList,
+                  ),
                 ],
               ),
             ),

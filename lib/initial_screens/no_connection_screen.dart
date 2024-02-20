@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
+import 'package:nasa_explorer_app_project/constants/variables.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
 
-class NoConnectionScreen extends StatelessWidget {
-  const NoConnectionScreen(
-      {super.key, required this.onRetryPressed, required this.textButton});
-  final VoidCallback onRetryPressed;
-  final String textButton;
+class NoConnectionScreen extends StatefulWidget {
+  static const String id = '/no_connection_screen';
 
+  const NoConnectionScreen({super.key});
+
+  @override
+  State<NoConnectionScreen> createState() => _NoConnectionScreenState();
+}
+
+class _NoConnectionScreenState extends State<NoConnectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +49,9 @@ class NoConnectionScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   IconButton(
-                    onPressed: onRetryPressed,
+                    onPressed: () async {
+                      await checkInternetConnectivity(context);
+                    },
                     icon: const Icon(
                       Icons.restart_alt,
                       size: 35,
@@ -52,7 +59,7 @@ class NoConnectionScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    textButton,
+                    'retry!',
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium!

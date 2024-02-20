@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
@@ -22,8 +25,6 @@ class NewsContainerWidget extends StatefulWidget {
 
 class _NewsContainerWidgetState extends State<NewsContainerWidget> {
   int currentNewsPage = 0;
-  bool autoPlay = false;
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -150,12 +151,11 @@ class _NewsContainerWidgetState extends State<NewsContainerWidget> {
                                               stopPauseOnTap: true,
                                               animatedTexts: [
                                                 TypewriterAnimatedText(
-                                                  cursor: '..|',
+                                                  cursor: '|',
                                                   speed: const Duration(
-                                                    milliseconds: 90,
+                                                    milliseconds: 50,
                                                   ),
-                                                  widget.postList[index]
-                                                      .getDescription(),
+                                                  '${widget.postList[index].getDescription()}',
                                                 ),
                                               ],
                                             ),

@@ -2,8 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
+import 'package:nasa_explorer_app_project/initial_screens/no_connection_screen.dart';
 import 'package:nasa_explorer_app_project/initial_screens/splash_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/add_screen/add_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/astronaut_figures_screen/astronauts_figures_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/images_screen/image_gallery_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/nasa_missions_screen/nasa_missions_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/news_screen/news_screen.dart';
@@ -78,6 +80,8 @@ class MyApp extends StatelessWidget {
             const SolarSystemGalleryScreen(),
         SavedPostsScreen.id: (context) => const SavedPostsScreen(),
         NasaMissionsScreen.id: (context) => const NasaMissionsScreen(),
+        NoConnectionScreen.id: (context) => const NoConnectionScreen(),
+        AstronautFiguresScreen.id: (context) => const AstronautFiguresScreen(),
       },
       home: const SplashScreen(),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/initial_screens/registration_screen/registration_screen.dart';
+import 'package:nasa_explorer_app_project/services/shared_preferences_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HorizontalNextPageWidget extends StatefulWidget {
@@ -20,15 +21,16 @@ class _HorizontalNextPageWidgetState extends State<HorizontalNextPageWidget> {
       children: [
         GestureDetector(
           onTap: () async {
-            SharedPreferences sharedPreferences =
-                await SharedPreferences.getInstance();
-            sharedPreferences.setBool('checked_onboarding', true);
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const RegistrationScreen(),
-                ),
-                (route) => false);
+            await SharedPreferencesClass()
+                .saveOnboardingStatusToSharedPreferences(isLoggedIn: true);
+            if (mounted) {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const RegistrationScreen(),
+                  ),
+                  (route) => false);
+            }
           },
           child: const Icon(
             Icons.arrow_circle_right_outlined,

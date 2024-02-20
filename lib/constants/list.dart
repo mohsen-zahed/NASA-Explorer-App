@@ -1,3 +1,4 @@
+import 'package:nasa_explorer_app_project/models/astronaut_model.dart';
 import 'package:nasa_explorer_app_project/models/image_model.dart';
 import 'package:nasa_explorer_app_project/models/post_model.dart';
 import 'package:nasa_explorer_app_project/models/planet_model.dart';
@@ -161,6 +162,8 @@ List<PostModel> fetchedPostsList = [];
 List<int> bookmarkedNewsToUpload = [];
 
 List<ImageModel> fetchedImagesList = [];
+
+List<AstronautModel> fetchedAstrnautsList2 = [];
 
 var imagesModelList = [];
 

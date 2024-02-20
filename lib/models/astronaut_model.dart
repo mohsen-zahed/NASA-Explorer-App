@@ -13,9 +13,12 @@ class AstronautModel {
     required this.dateOfBirth,
     required this.placeOfBirth,
     required this.astronautBiography,
-    required this.astronautMissions,
+    required String astronautMissions,
     required this.astronautImage,
-  });
+  }) {
+    final separatorPattern = RegExp(r'[,|-| ]');
+    this.astronautMissions = astronautMissions.split(separatorPattern);
+  }
 
   int getId() => id;
   String getAstronautName() => anstronautName;

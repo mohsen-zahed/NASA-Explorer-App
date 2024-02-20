@@ -75,10 +75,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => NoConnectionScreen(
-            onRetryPressed: () async => await redirectToNextScreen(),
-            textButton: 'Retry!',
-          ),
+          builder: (context) => const NoConnectionScreen(),
         ),
       );
       if (mounted) {
@@ -92,36 +89,36 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   checkOnboardingScreen() async {
-    if (await SharedPreferencesClass()
-                .getOnboardingStatusFromSharedPreferences() ==
-            null ||
-        await SharedPreferencesClass()
-                .getOnboardingStatusFromSharedPreferences() ==
-            false) {
+    bool? onboardingStatus = await SharedPreferencesClass()
+        .getOnboardingStatusFromSharedPreferences();
+    if (onboardingStatus == null || onboardingStatus == false) {
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
             builder: (context) => const OnboardingScreen(),
           ),
           (route) => false);
-    }
-    if (await SharedPreferencesClass().getLoginStatusFromSharedPreferences() ==
-            null ||
-        await SharedPreferencesClass().getLoginStatusFromSharedPreferences() ==
-            false) {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const RegistrationScreen(),
-          ),
-          (route) => false);
     } else {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
-          ),
-          (route) => false);
+      if (await SharedPreferencesClass()
+                  .getLoginStatusFromSharedPreferences() ==
+              null ||
+          await SharedPreferencesClass()
+                  .getLoginStatusFromSharedPreferences() ==
+              false) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const RegistrationScreen(),
+            ),
+            (route) => false);
+      } else {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomeScreen(),
+            ),
+            (route) => false);
+      }
     }
   }
 
