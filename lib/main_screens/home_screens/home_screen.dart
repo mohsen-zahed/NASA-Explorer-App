@@ -8,6 +8,10 @@ import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/functions/show_snackbar.dart';
 import 'package:nasa_explorer_app_project/initial_screens/no_connection_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/add_screen/add_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/astronaut_figures_screen/astronauts_figures_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/images_screen/image_gallery_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/nasa_missions_screen/nasa_missions_screen.dart';
+import 'package:nasa_explorer_app_project/main_screens/home_screens/solar_system_screen/solar_system_gallery_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/advertisement_banner_slider_widget.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/app_logo_and_profile_image.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/horizontal_astronaut_figures_slider.dart';
@@ -348,10 +352,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 25),
                   HorizontalImagesCarouselSlider(
                     imagesList: fetchedImagesList,
+                    onCarouselTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        ImageGalleryScreen.id,
+                        arguments: {'title': 'Discover Perfect Images'},
+                      );
+                    },
                   ),
                   const SizedBox(height: 35),
                   HorizontalSolarSystemCarouselSlider(
                     planetsList: fetchedPlanetsList,
+                    onCarouselTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        SolarSystemGalleryScreen.id,
+                      );
+                    },
                   ),
                   const SizedBox(height: 35),
                   AdvertisementBannerSliderWidget(
@@ -359,11 +376,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 35),
                   HorizontalNASAMissionsCarouselSlider(
+                    onCarouselTap: () {
+                      Navigator.pushNamed(context, NasaMissionsScreen.id);
+                    },
                     missionsList: fetchedMissionsList,
                   ),
                   const SizedBox(height: 35),
                   HorizontalAstronautFiguresSlider(
                     astList: fetchedAstronautsList,
+                    onListViewTap: () {
+                      Navigator.pushNamed(context, AstronautFiguresScreen.id);
+                    },
                   ),
                 ],
               ),

@@ -1,21 +1,26 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
+import 'package:nasa_explorer_app_project/functions/show_snackbar.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/solar_system_screen/solar_system_gallery_screen.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/solar_system_single_card_widget.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/widgets/title_with_view_all_button.dart';
+import 'package:nasa_explorer_app_project/models/image_model.dart';
 import 'package:nasa_explorer_app_project/models/planet_model.dart';
 import 'package:nasa_explorer_app_project/widgets/carousel/carousel_slider.dart';
 import 'package:nasa_explorer_app_project/widgets/shimmer_effect.dart';
-import 'package:shimmer/shimmer.dart';
 
 class HorizontalSolarSystemCarouselSlider extends StatefulWidget {
   const HorizontalSolarSystemCarouselSlider({
     super.key,
     required this.planetsList,
+    required this.onCarouselTap,
   });
 
   final List<PlanetModel> planetsList;
+  final VoidCallback onCarouselTap;
 
   @override
   State<HorizontalSolarSystemCarouselSlider> createState() =>
@@ -35,48 +40,53 @@ class _HorizontalSolarSystemCarouselSliderState
           child: TitleWithViewAllButton(
             title: 'Solar System',
             onViewAllTap: () {
-              Navigator.pushNamed(context, SolarSystemGalleryScreen.id,
-                  arguments: {
-                    'planetsList': widget.planetsList,
-                  });
+              Navigator.pushNamed(
+                context,
+                SolarSystemGalleryScreen.id,
+                arguments: {
+                  'planetsList': widget.planetsList,
+                },
+              );
             },
           ),
         ),
         const SizedBox(height: 70),
-        CarouselSlider.builder(
-          itemCount: widget.planetsList.length,
-          itemBuilder: (context, index, realIndex) {
-            return widget.planetsList.isEmpty
-                ? Padding(
-                    padding: EdgeInsets.only(
-                      left: index == currentPlanet ? 15 : 10,
-                      right: index == currentPlanet ? 0 : 15,
-                    ),
-                    child: const ShimmerEffect(),
-                  )
-                : SolarSystemSinglCardWidget(
-                    currentIndex: currentPlanet,
-                    index: index,
-                    onTap: () => showSolarBottomSheet(context, index),
-                    planetsList: widget.planetsList,
-                  );
-          },
-          options: CarouselOptions(
-            aspectRatio: 2.3,
-            viewportFraction: .6,
-            scrollPhysics: const BouncingScrollPhysics(),
-            enlargeCenterPage: true,
-            enlargeFactor: 0,
-            enlargeStrategy: CenterPageEnlargeStrategy.height,
-            clipBehavior: Clip.none,
-            initialPage: 0,
-            scrollDirection: Axis.horizontal,
-            enableInfiniteScroll: false,
-            onPageChanged: (index, reason) {
-              setState(() {
-                currentPlanet = index;
-              });
+        GestureDetector(
+          onTap: widget.onCarouselTap,
+          child: CarouselSlider.builder(
+            itemCount: widget.planetsList.length,
+            itemBuilder: (context, index, realIndex) {
+              return widget.planetsList.isEmpty
+                  ? Padding(
+                      padding: EdgeInsets.only(
+                        left: index == currentPlanet ? 15 : 10,
+                        right: index == currentPlanet ? 0 : 15,
+                      ),
+                      child: const ShimmerEffect(),
+                    )
+                  : SolarSystemSinglCardWidget(
+                      currentIndex: currentPlanet,
+                      index: index,
+                      planetsList: widget.planetsList,
+                    );
             },
+            options: CarouselOptions(
+              aspectRatio: 2.3,
+              viewportFraction: .6,
+              scrollPhysics: const BouncingScrollPhysics(),
+              enlargeCenterPage: true,
+              enlargeFactor: 0,
+              enlargeStrategy: CenterPageEnlargeStrategy.height,
+              clipBehavior: Clip.none,
+              initialPage: 0,
+              scrollDirection: Axis.horizontal,
+              enableInfiniteScroll: false,
+              onPageChanged: (index, reason) {
+                setState(() {
+                  currentPlanet = index;
+                });
+              },
+            ),
           ),
         ),
       ],

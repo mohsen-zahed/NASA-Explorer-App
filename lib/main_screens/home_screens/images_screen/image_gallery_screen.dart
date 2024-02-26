@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:nasa_explorer_app_project/constants/colors.dart';
 import 'package:nasa_explorer_app_project/functions/functions.dart';
 import 'package:nasa_explorer_app_project/functions/show_snackbar.dart';
 import 'package:nasa_explorer_app_project/main_screens/home_screens/images_screen/widgets/vertical_images_grid_view.dart';
 import 'package:nasa_explorer_app_project/models/image_model.dart';
 import 'package:nasa_explorer_app_project/widgets/background_image_widget.dart';
+import 'package:nasa_explorer_app_project/widgets/custom_circular_progress_indicator.dart';
 
 class ImageGalleryScreen extends StatefulWidget {
   const ImageGalleryScreen({super.key});
@@ -83,7 +85,8 @@ class _ImageGalleryScreenState extends State<ImageGalleryScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: isScreenLoading
                 ? const Center(
-                    child: CircularProgressIndicator(),
+                    child: CustomCircularProgressIndicator(
+                        indicatorColor: kWhiteColor),
                   )
                 : VerticalImagesGridView(
                     imagesList: fetchedAllImagesList,

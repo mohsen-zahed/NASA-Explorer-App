@@ -13,8 +13,10 @@ class HorizontalImagesCarouselSlider extends StatefulWidget {
   const HorizontalImagesCarouselSlider({
     super.key,
     required this.imagesList,
+    required this.onCarouselTap,
   });
   final List<ImageModel> imagesList;
+  final VoidCallback onCarouselTap;
 
   @override
   State<HorizontalImagesCarouselSlider> createState() =>
@@ -42,48 +44,51 @@ class _HorizontalImagesCarouselSliderState
           ),
         ),
         const SizedBox(height: 10),
-        CarouselSlider.builder(
-          itemCount: widget.imagesList.length,
-          options: CarouselOptions(
-            height: getMaxHieghtMediaQuery(context, 0.23),
-            viewportFraction: 0.7,
-            enlargeFactor: 0.2,
-            enlargeCenterPage: true,
-            onPageChanged: (index, reason) {
-              setState(() {
-                currentImage = index;
-              });
-            },
-          ),
-          itemBuilder: (context, index, realIndex) => Padding(
-            padding: EdgeInsets.only(
-              left: index == currentImage ? 15 : 0,
-              right: index == widget.imagesList.length ? 0 : 15,
+        GestureDetector(
+          onTap: widget.onCarouselTap,
+          child: CarouselSlider.builder(
+            itemCount: widget.imagesList.length,
+            options: CarouselOptions(
+              height: getMaxHieghtMediaQuery(context, 0.23),
+              viewportFraction: 0.7,
+              enlargeFactor: 0.2,
+              enlargeCenterPage: true,
+              onPageChanged: (index, reason) {
+                setState(() {
+                  currentImage = index;
+                });
+              },
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: widget.imagesList.isEmpty
-                  ? ShimmerEffect(
-                      width: getMaxWidthMediaQuery(context),
-                    )
-                  : CachedNetworkImage(
-                      imageUrl: widget.imagesList[index].getUrl(),
-                      fit: BoxFit.cover,
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                      imageBuilder: (context, imageProvider) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: kWhiteColor,
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
+            itemBuilder: (context, index, realIndex) => Padding(
+              padding: EdgeInsets.only(
+                left: index == currentImage ? 15 : 0,
+                right: index == widget.imagesList.length ? 0 : 15,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: widget.imagesList.isEmpty
+                    ? ShimmerEffect(
+                        width: getMaxWidthMediaQuery(context),
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: widget.imagesList[index].getUrl(),
+                        fit: BoxFit.cover,
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                        imageBuilder: (context, imageProvider) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: kWhiteColor,
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
+                          );
+                        },
+                      ),
+              ),
             ),
           ),
         ),

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:nasa_explorer_app_project/constants/list.dart';
 import 'package:nasa_explorer_app_project/functions/show_snackbar.dart';
 import 'package:nasa_explorer_app_project/initial_screens/registration_screen/registration_screen.dart';
@@ -352,6 +353,13 @@ Future<void> selectDate(
       e.toString(),
     );
   }
+}
+
+LottieBuilder showLottieLoader() {
+  return Lottie.asset(
+    'assets/images/loading_image.json',
+    fit: BoxFit.cover,
+  );
 }
 
 

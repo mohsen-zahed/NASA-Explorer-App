@@ -86,10 +86,7 @@ class _VerticalImagesGridViewState extends State<VerticalImagesGridView>
                         fit: BoxFit.cover,
                         placeholder: (BuildContext context, String url) =>
                             Center(
-                          child: Lottie.asset(
-                            'assets/images/loading_image.json',
-                            fit: BoxFit.cover,
-                          ),
+                          child: showLottieLoader(),
                         ),
                         errorWidget:
                             (BuildContext context, String url, dynamic error) =>

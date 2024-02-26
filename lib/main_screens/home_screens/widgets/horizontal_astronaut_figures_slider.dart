@@ -11,8 +11,10 @@ class HorizontalAstronautFiguresSlider extends StatefulWidget {
   const HorizontalAstronautFiguresSlider({
     super.key,
     required this.astList,
+    required this.onListViewTap,
   });
   final List<AstronautModel> astList;
+  final VoidCallback onListViewTap;
 
   @override
   State<HorizontalAstronautFiguresSlider> createState() =>
@@ -41,86 +43,89 @@ class _HorizontalAstronautFiguresSliderState
           ),
         ),
         const SizedBox(height: 10),
-        SizedBox(
-          width: double.infinity,
-          height: widget.astList.isEmpty
-              ? getMaxHieghtMediaQuery(context, 0.12)
-              : getMaxHieghtMediaQuery(context, 0.15),
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: [
-              ...List.generate(
-                widget.astList.isEmpty ? 5 : widget.astList.length,
-                (index) => widget.astList.isEmpty
-                    ? Padding(
-                        padding: EdgeInsets.only(
-                          left: index == 0 ? 15 : 0,
-                          right: index == 5 ? 0 : 10,
-                        ),
-                        child: Column(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: const ShimmerEffect(
-                                width: 90,
-                                height: 90,
-                              ),
-                            ),
-                            SizedBox(
-                              height: getMaxHieghtMediaQuery(context, 0.01),
-                            ),
-                          ],
-                        ),
-                      )
-                    : Padding(
-                        padding: EdgeInsets.only(
-                          left: index == 0 ? 15 : 0,
-                          right: index == widget.astList.length - 1 ? 0 : 15,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 90,
-                              height: 90,
-                              padding: const EdgeInsets.all(3),
-                              decoration: BoxDecoration(
+        GestureDetector(
+          onTap: widget.onListViewTap,
+          child: SizedBox(
+            width: double.infinity,
+            height: widget.astList.isEmpty
+                ? getMaxHieghtMediaQuery(context, 0.12)
+                : getMaxHieghtMediaQuery(context, 0.15),
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                ...List.generate(
+                  widget.astList.isEmpty ? 5 : widget.astList.length,
+                  (index) => widget.astList.isEmpty
+                      ? Padding(
+                          padding: EdgeInsets.only(
+                            left: index == 0 ? 15 : 0,
+                            right: index == 5 ? 0 : 10,
+                          ),
+                          child: Column(
+                            children: [
+                              ClipRRect(
                                 borderRadius: BorderRadius.circular(100),
-                                border: Border.all(color: kWhiteColor70),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      widget.astList[index].getAstronautImage(),
-                                  fit: BoxFit.cover,
+                                child: const ShimmerEffect(
+                                  width: 90,
+                                  height: 90,
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 8),
-                            ConstrainedBox(
-                              constraints: const BoxConstraints(
-                                maxWidth: 85,
+                              SizedBox(
+                                height: getMaxHieghtMediaQuery(context, 0.01),
                               ),
-                              child: Text(
-                                widget.astList[index].getAstronautName(),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall!
-                                    .copyWith(
-                                      color: kWhiteColor,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 10,
-                                    ),
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
+                            ],
+                          ),
+                        )
+                      : Padding(
+                          padding: EdgeInsets.only(
+                            left: index == 0 ? 15 : 0,
+                            right: index == widget.astList.length - 1 ? 0 : 15,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 90,
+                                height: 90,
+                                padding: const EdgeInsets.all(3),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  border: Border.all(color: kWhiteColor70),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: CachedNetworkImage(
+                                    imageUrl: widget.astList[index]
+                                        .getAstronautImage(),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 8),
+                              ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxWidth: 85,
+                                ),
+                                child: Text(
+                                  widget.astList[index].getAstronautName(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .copyWith(
+                                        color: kWhiteColor,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 10,
+                                      ),
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         )
       ],

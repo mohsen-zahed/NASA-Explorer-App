@@ -44,12 +44,21 @@ class _SingleMissionCardWidgetState extends State<SingleMissionCardWidget> {
               ),
               child: SizedBox(
                 width: double.infinity,
-                child: CachedNetworkImage(
-                  imageUrl: widget.fetchedMissionsList[widget.index]
-                      .getMissionImageUrl(),
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => const ShimmerEffect(),
-                ),
+                height: widget.fetchedMissionsList[widget.index]
+                        .getMissionImageUrl()
+                        .isEmpty
+                    ? getMaxHieghtMediaQuery(context, 0.17)
+                    : null,
+                child: widget.fetchedMissionsList[widget.index]
+                        .getMissionImageUrl()
+                        .isEmpty
+                    ? Center(child: showLottieLoader())
+                    : CachedNetworkImage(
+                        imageUrl: widget.fetchedMissionsList[widget.index]
+                            .getMissionImageUrl(),
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => const ShimmerEffect(),
+                      ),
               ),
             ),
           ),
